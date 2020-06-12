@@ -1,0 +1,59 @@
+# Author: Calvin Lai
+# Creation Date: 03/21/19
+# Last updated: 04/15/19
+# Function: Cleans data
+
+# INSTRUCTION: Replace C:/Users/Calvin/Documents/Dropbox/Projects/ARP/share/ with the name of your directory.
+
+library(tidyverse)
+library(metafor)
+
+# Reading in data ----
+all <- read_delim("C:/Users/Calvin/Documents/Dropbox/Projects/ARP/share/raw_metadataset.txt", delim="\t")
+names(all) <- tolower(names(all)) # Changing var names to lower case
+
+# Removing empty row(s)
+all <- all %>% filter(n > -999)
+
+# Creating cleaned data variables  ----
+#Creating id variable and sorting by that id variable
+all <- all %>% dplyr::arrange(citation,study,sample, measure)
+all <- all %>% mutate(articleid = group_indices(., citation))
+
+# Creating independent sample identifier
+all$sampleid <- NA
+all$sampleid[1] <- 1
+for (i in 2:nrow(all)) {
+  if (
+    (lag(all$study,1)[i] == all$study[i]) == F | 
+    (lag(all$sample,1)[i] == all$sample[i]) == F | 
+    (lag(all$articleid,1)[i] == all$articleid[i]) == F
+  ) {
+    all$sampleid[i] <- lag(all$sampleid,1)[i] + 1
+  } else {
+    all$sampleid[i] <- lag(all$sampleid,1)[i] 
+  }
+}
+
+# Calculating fisher-transformed correlations for TRR
+all <- all %>% mutate(tempestimate = estimate)
+all <- as.tibble(escalc(measure="ZCOR", ri = tempestimate, ni = n, data=all, var.names=c("TRRyi", "TRRvi")))
+all$TRRyi[all$reliability=="IC"] <- NA
+all$TRRvi[all$reliability=="IC"] <- NA
+
+#Calculating transformed alpha estimates for IC
+all <- all %>% mutate(tempestimate = estimate)
+all <- as.tibble(escalc(measure="ABT", ai=tempestimate, mi=parts, ni=n, data=all, var.names=c("ICyi", "ICvi")))
+all$ICyi[all$reliability=="TRR"] <- NA
+all$ICvi[all$reliability=="TRR"] <- NA
+
+
+# Deleting temporary variables
+all <- all %>% select(-tempestimate)
+
+# Reordering variables
+all <- all %>% select(articleid, citation, sampleid, study, sample, measure, reliability, n, estimate, ICyi, ICvi, TRRyi, TRRvi, everything())
+
+# Saving dataset
+write.table(all, "C:/Users/Calvin/Documents/Dropbox/Projects/ARP/share/clean_metadataset.txt", sep="\t",row.names=F)
+
