@@ -7,10 +7,10 @@ add_heterogeneity_metrics_to_forest <- function(fit) {
                "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
 }
 
-setwd("~/git/IRAP-critique/reliability meta analyses/analyses/plots")
+setwd("~/git/irap-reliability-meta-analysis/analyses/plots")
 
-fit_permutations <- read_rds("~/git/IRAP-critique/reliability meta analyses/analyses/models/fit_permutations.rds")
-fit_aa <- read_rds("~/git/IRAP-critique/reliability meta analyses/analyses/models/fit_aa.rds")
+fit_internal_consistency_permuted_estimates <- read_rds("~/git/irap-reliability-meta-analysis/analyses/models/fit_internal_consistency_permuted_estimates.rds")
+fit_test_retest_icc <- read_rds("~/git/irap-reliability-meta-analysis/analyses/models/fit_test_retest_icc.rds")
 
 
 pdf(NULL)
@@ -19,25 +19,25 @@ par(mfrow=c(2,1))
 layout(matrix(c(1,2), 2, 1, byrow = TRUE),
        widths=c(1), heights=c(2.65,1))
 
-metafor::forest(fit_permutations,
+metafor::forest(fit_internal_consistency_permuted_estimates,
                 transf = transf.iabt,
                 xlab = bquote(paste("Cronbach's ", alpha)),
                 addcred = TRUE,
                 refline = FALSE,
                 xlim = c(-1, 1.6),
                 at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
-                mlab = add_heterogeneity_metrics_to_forest(fit_permutations))
+                mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates))
 text(-1, 27, "Internal Consistency", pos = 4)
 text(1.6, 27, bquote(paste(alpha, " [95% CI]")), pos = 2)
 
-metafor::forest(fit_aa,
+metafor::forest(fit_test_retest_icc,
                 transf = transf.ztor,
                 xlab = "Interclass Correlation Coefficient",
                 addcred = TRUE,
                 refline = FALSE,
                 xlim = c(-1, 1.6),
                 at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
-                mlab = add_heterogeneity_metrics_to_forest(fit_aa))
+                mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
 text(-1, 4, "Test-Retest Reliability", pos = 4)
 text(1.6, 4, "ICC [95% CI]", pos = 2)
 
