@@ -84,24 +84,16 @@ data_demographics <-
   read_csv("../data/effect sizes for meta-analyses/data_demographics.csv")
 
 data_test_retest_icc <- 
-  read_csv("../data/effect sizes for meta-analyses/data_test_retest_icc.csv") %>%
-  # FILTER THIS DOMAIN UNTIL CHAD GIVES ME DATA ON WHICH PARTICIPANTS WERE INSTRUCTED TO FAKE
-  filter(!domain %in% c("Friend-enemy", "Lincoln-Hitler"))
+  read_csv("../data/effect sizes for meta-analyses/data_test_retest_icc.csv") 
 
 data_internal_consistency_oddeventrials <- 
-  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_oddeventrials.csv") %>%
-  # FILTER THIS DOMAIN UNTIL CHAD GIVES ME DATA ON WHICH PARTICIPANTS WERE INSTRUCTED TO FAKE
-  filter(!domain %in% c("Friend-Enemy evaluations", "Lincoln-Hitler evaluations"))
+  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_oddeventrials.csv") 
 
 data_internal_consistency_firstsecondhalves <- 
-  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_firstsecondhalves.csv") %>%
-  # FILTER THIS DOMAIN UNTIL CHAD GIVES ME DATA ON WHICH PARTICIPANTS WERE INSTRUCTED TO FAKE
-  filter(!domain %in% c("Friend-Enemy evaluations", "Lincoln-Hitler evaluations"))
+  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_firstsecondhalves.csv") 
 
 data_internal_consistency_permuted_estimates <- 
-  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_permuted_estimates.csv") %>%
-  # FILTER THIS DOMAIN UNTIL CHAD GIVES ME DATA ON WHICH PARTICIPANTS WERE INSTRUCTED TO FAKE
-  filter(!domain %in% c("Friend-Enemy evaluations", "Lincoln-Hitler evaluations"))
+  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_permuted_estimates.csv") 
 
 ```
 
@@ -208,10 +200,6 @@ Bonett transformations
 
 # fit random Effects model 
 fit_firstsecond <- data_internal_consistency_firstsecondhalves %>%
-  
-  # FILTER THIS DOMAIN UNTIL CHAD GIVES ME DATA ON WHICH PARTICIPANTS WERE INSTRUCTED TO FAKE
-  filter(!domain %in% c("Friend-enemy", "Lincoln-Hitler")) %>%
-  
   rma(yi   = yi, 
       vi   = vi, 
       data = .,
@@ -267,10 +255,6 @@ Bonett transformations
 
 # fit random Effects model 
 fit_internal_consistency_permuted_estimates <- data_internal_consistency_permuted_estimates %>%
-  
-  # FILTER THIS DOMAIN UNTIL CHAD GIVES ME DATA ON WHICH PARTICIPANTS WERE INSTRUCTED TO FAKE
-  filter(!domain %in% c("Friend-enemy", "Lincoln-Hitler")) %>%
-  
   rma(yi   = yi, 
       vi   = vi, 
       data = .,
@@ -326,14 +310,10 @@ I.e., Intraclass Correlation Coefficients.
 "It has been argued that test-retest reliability should reflect absolute agreement, rather than consistency, between measurements (Koo & Li, 2016). For example, a perfect correlation between scores at two time points may occur also when there is a systematic difference between time points (i.e. a difference that is about equal for all participants)." (Parsons, Kruijt, & Fox, 2019).
 Absolute agreement therefore also takes within-participant changes into account in its denominator, where consistency does not.
 
-```{r fig.height=5, fig.width=8}
+```{r fig.height=3, fig.width=8}
 
 # fit random Effects model 
 fit_test_retest_icc <- data_test_retest_icc %>%
-  
-  # FILTER THIS DOMAIN UNTIL CHAD GIVES ME DATA ON WHICH PARTICIPANTS WERE INSTRUCTED TO FAKE
-  filter(!domain %in% c("Friend-enemy", "Lincoln-Hitler")) %>%
-  
   rma(yi   = ICC, 
       sei  = se, 
       data = .,
@@ -347,14 +327,14 @@ predictions_test_retest_icc <-
 
 # plot
 metafor::forest(fit_test_retest_icc,
-                xlab = "Absolute agreement ICC",
+                xlab = "Absolute Agreement ICC",
                 addcred = TRUE,
                 refline = FALSE,
                 xlim = c(-1.5, 1.7),
-                at = c(-0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+                at = c(-0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
-text(-1.5, 8, "Study", pos = 4)
-text(1.7, 8, "ICC [95% CI]", pos = 2)
+text(-1.5, 10, "Study", pos = 4)
+text(1.7, 10, "ICC [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 

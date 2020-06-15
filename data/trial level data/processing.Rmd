@@ -122,7 +122,15 @@ data_evalautive_iraps <- read_csv("raw data/evaluative IRAPs/data_cleaned_trial_
                             "1" = "baseline",
                             "2" = "followup"))
 
-temp <- data_evalautive_iraps %>%
+# filter participants who received an intervention before their second IRAP, these aren't strictly test-retest.
+participants_to_be_excluded <- read_csv("raw data/evaluative IRAPs/component studies/participants who received faking instructions.csv") %>%
+  pull(participant_id)
+
+data_evalautive_iraps_after_intervention_exclusions <- data_evalautive_iraps %>%
+  filter(!participant %in% participants_to_be_excluded)
+
+# filter participants who had both baseline and followup data
+temp <- data_evalautive_iraps_after_intervention_exclusions %>%
   ungroup() %>%
   distinct(unique_id, timepoint, .keep_all = TRUE) %>%
   select(unique_id, timepoint, experiment) %>%
@@ -134,10 +142,12 @@ temp <- data_evalautive_iraps %>%
 data_evalautive_iraps_both_timepoints <- temp %>%
   left_join(data_evalautive_iraps, by = "unique_id")
 
+# filter correct number of trials
 data_completeness_evalutative <- data_evalautive_iraps_both_timepoints %>%
   count(unique_id, timepoint) %>%
   filter(n %in% c(144)) # methodologically plausible number of trials
 
+# tidy and add mean_rt for exclusions
 data_rts_and_summmaries_evaluative <- data_evalautive_iraps_both_timepoints %>%
   semi_join(data_completeness_evalutative, by = "unique_id") %>%
   select(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) %>%

@@ -1760,28 +1760,38 @@ div.tocify {
 <span id="cb4-4"><a href="#cb4-4"></a>                            <span class="st">&quot;1&quot;</span> =<span class="st"> &quot;baseline&quot;</span>,</span>
 <span id="cb4-5"><a href="#cb4-5"></a>                            <span class="st">&quot;2&quot;</span> =<span class="st"> &quot;followup&quot;</span>))</span>
 <span id="cb4-6"><a href="#cb4-6"></a></span>
-<span id="cb4-7"><a href="#cb4-7"></a>temp &lt;-<span class="st"> </span>data_evalautive_iraps <span class="op">%&gt;%</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, timepoint, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, experiment) <span class="op">%&gt;%</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">present =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="st">  </span><span class="kw">spread</span>(timepoint, present) <span class="op">%&gt;%</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="st">  </span><span class="kw">filter</span>(baseline <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span> <span class="op">&amp;</span><span class="st"> </span>followup <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="st">  </span><span class="kw">select</span>(unique_id) </span>
-<span id="cb4-15"><a href="#cb4-15"></a></span>
-<span id="cb4-16"><a href="#cb4-16"></a>data_evalautive_iraps_both_timepoints &lt;-<span class="st"> </span>temp <span class="op">%&gt;%</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="st">  </span><span class="kw">left_join</span>(data_evalautive_iraps, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>)</span>
-<span id="cb4-18"><a href="#cb4-18"></a></span>
-<span id="cb4-19"><a href="#cb4-19"></a>data_completeness_evalutative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb4-21"><a href="#cb4-21"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>)) <span class="co"># methodologically plausible number of trials</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a></span>
-<span id="cb4-23"><a href="#cb4-23"></a>data_rts_and_summmaries_evaluative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
-<span id="cb4-24"><a href="#cb4-24"></a><span class="st">  </span><span class="kw">semi_join</span>(data_completeness_evalutative, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) <span class="op">%&gt;%</span></span>
-<span id="cb4-26"><a href="#cb4-26"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">round</span>(<span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb4-28"><a href="#cb4-28"></a><span class="st">  </span><span class="kw">ungroup</span>()</span></code></pre></div>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># filter participants who received an intervention before their second IRAP, these aren&#39;t strictly test-retest.</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>participants_to_be_excluded &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw data/evaluative IRAPs/component studies/participants who received faking instructions.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="st">  </span><span class="kw">pull</span>(participant_id)</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a>data_evalautive_iraps_after_intervention_exclusions &lt;-<span class="st"> </span>data_evalautive_iraps <span class="op">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>participant <span class="op">%in%</span><span class="st"> </span>participants_to_be_excluded)</span>
+<span id="cb4-13"><a href="#cb4-13"></a></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co"># filter participants who had both baseline and followup data</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a>temp &lt;-<span class="st"> </span>data_evalautive_iraps_after_intervention_exclusions <span class="op">%&gt;%</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, timepoint, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, experiment) <span class="op">%&gt;%</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">present =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="st">  </span><span class="kw">spread</span>(timepoint, present) <span class="op">%&gt;%</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="st">  </span><span class="kw">filter</span>(baseline <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span> <span class="op">&amp;</span><span class="st"> </span>followup <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="st">  </span><span class="kw">select</span>(unique_id) </span>
+<span id="cb4-23"><a href="#cb4-23"></a></span>
+<span id="cb4-24"><a href="#cb4-24"></a>data_evalautive_iraps_both_timepoints &lt;-<span class="st"> </span>temp <span class="op">%&gt;%</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="st">  </span><span class="kw">left_join</span>(data_evalautive_iraps, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>)</span>
+<span id="cb4-26"><a href="#cb4-26"></a></span>
+<span id="cb4-27"><a href="#cb4-27"></a><span class="co"># filter correct number of trials</span></span>
+<span id="cb4-28"><a href="#cb4-28"></a>data_completeness_evalutative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb4-30"><a href="#cb4-30"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>)) <span class="co"># methodologically plausible number of trials</span></span>
+<span id="cb4-31"><a href="#cb4-31"></a></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co"># tidy and add mean_rt for exclusions</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a>data_rts_and_summmaries_evaluative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
+<span id="cb4-34"><a href="#cb4-34"></a><span class="st">  </span><span class="kw">semi_join</span>(data_completeness_evalutative, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-35"><a href="#cb4-35"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) <span class="op">%&gt;%</span></span>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb4-37"><a href="#cb4-37"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">round</span>(<span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="st">  </span><span class="kw">ungroup</span>()</span></code></pre></div>
 </div>
 <div id="combine" class="section level2">
 <h2>Combine</h2>
