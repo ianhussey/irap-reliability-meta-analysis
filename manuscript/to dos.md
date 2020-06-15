@@ -1,0 +1,1 @@
+check the faking exclusions - should only be from ideographic

@@ -173,11 +173,11 @@ text(1.6, 27, "Spearman-Brown correlation [95% CI]", pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_oddeven$k, 
-         ", r_sb = ",  round(transf.ztor(predictions_oddeven$pred), 2), 
-         ", 95% CI [", round(transf.ztor(predictions_oddeven$ci.lb), 2), ", ", 
-         round(transf.ztor(predictions_oddeven$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions_oddeven$cr.lb), 2), ", ", 
-         round(transf.ztor(predictions_oddeven$cr.ub), 2), "]") 
+         ", r_sb = ",  round(transf.iabt(predictions_oddeven$pred), 2), 
+         ", 95% CI [", round(transf.iabt(predictions_oddeven$ci.lb), 2), ", ", 
+         round(transf.iabt(predictions_oddeven$ci.ub), 2), "]", 
+         ", 95% CR [", round(transf.iabt(predictions_oddeven$cr.lb), 2), ", ", 
+         round(transf.iabt(predictions_oddeven$cr.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_oddeven$k - 1, ") = ", round(fit_oddeven$QE, 2), 
@@ -226,11 +226,11 @@ text(1.6, 27, "Spearman-Brown correlation [95% CI]", pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_firstsecond$k, 
-         ", r_sb = ",  round(transf.ztor(predictions_firstsecond$pred), 2), 
-         ", 95% CI [", round(transf.ztor(predictions_firstsecond$ci.lb), 2), ", ", 
-         round(transf.ztor(predictions_firstsecond$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions_firstsecond$cr.lb), 2), ", ", 
-         round(transf.ztor(predictions_firstsecond$cr.ub), 2), "]") 
+         ", r_sb = ",  round(transf.iabt(predictions_firstsecond$pred), 2), 
+         ", 95% CI [", round(transf.iabt(predictions_firstsecond$ci.lb), 2), ", ", 
+         round(transf.iabt(predictions_firstsecond$ci.ub), 2), "]", 
+         ", 95% CR [", round(transf.iabt(predictions_firstsecond$cr.lb), 2), ", ", 
+         round(transf.iabt(predictions_firstsecond$cr.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_firstsecond$k - 1, ") = ", round(fit_firstsecond$QE, 2), 
@@ -281,11 +281,11 @@ text(1.6, 27, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates$k, 
-         ", alpha = ",  round(transf.ztor(predictions_permutations$pred), 2), 
-         ", 95% CI [", round(transf.ztor(predictions_permutations$ci.lb), 2), ", ", 
-         round(transf.ztor(predictions_permutations$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions_permutations$cr.lb), 2), ", ", 
-         round(transf.ztor(predictions_permutations$cr.ub), 2), "]") 
+         ", alpha = ",  round(transf.iabt(predictions_permutations$pred), 2), 
+         ", 95% CI [", round(transf.iabt(predictions_permutations$ci.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations$ci.ub), 2), "]", 
+         ", 95% CR [", round(transf.iabt(predictions_permutations$cr.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations$cr.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates$QE, 2), 
@@ -310,7 +310,7 @@ I.e., Intraclass Correlation Coefficients.
 "It has been argued that test-retest reliability should reflect absolute agreement, rather than consistency, between measurements (Koo & Li, 2016). For example, a perfect correlation between scores at two time points may occur also when there is a systematic difference between time points (i.e. a difference that is about equal for all participants)." (Parsons, Kruijt, & Fox, 2019).
 Absolute agreement therefore also takes within-participant changes into account in its denominator, where consistency does not.
 
-```{r fig.height=3, fig.width=8}
+```{r fig.height=6, fig.width=8}
 
 # fit random Effects model 
 fit_test_retest_icc <- data_test_retest_icc %>%
@@ -363,7 +363,9 @@ Heterogeneity: `r meta_heterogeneity`.
 
 # Power implications
 
-r_observed = r_true \* sqrt(ic_a*ic_b)
+max_r_observed = r_true \* sqrt(r_xx*r_yy)
+
+## Internal Consistency
 
 ```{r}
 
@@ -373,9 +375,23 @@ observed_r <- function(true_r, reliability_a, reliability_b) {
 
 max_cor <- observed_r(true_r = 1.0, reliability_a = transf.iabt(predictions_permutations$pred), reliability_b = 1.0)
 
+medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_permutations$pred), reliability_b = 1.0)
+
 ```
 
-Given this meta estimate of internal consistency, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable is `r max_cor`. This has implications for power and sample size determination, which would therefore need to be roughly 33% larger than typically estimated if the IRAP's reliability was taken into account (see Parsons REF).
+Given this meta estimate of reliability, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable is `r max_cor`. For a true correlation of medium size (r = .5), the observed correlation would be `r medium_cor`.
+
+## Test-retest
+
+```{r}
+
+max_cor <- observed_r(true_r = 1.0, reliability_a = transf.ztor(predictions_test_retest_icc$pred), reliability_b = 1.0)
+
+medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_test_retest_icc$pred), reliability_b = 1.0)
+
+```
+
+Given this meta estimate of reliability, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable is `r max_cor`. For a true correlation of medium size (r = .5), the observed correlation would be `r medium_cor`.
 
 # Possbile improvements via lengthening the task
 
@@ -383,9 +399,9 @@ Given this meta estimate of internal consistency, assuming that the internal con
 
 The [Spearman-Brown prediction formula](https://en.wikipedia.org/wiki/Spearman%E2%80%93Brown_prediction_formula#Forecasting_test_length) can be rearranged to make prediction about how the length of the test would need to change to meet a goal reliability:
 
-${\rho }_{xx'}^{*}={\frac {n{\rho }_{xx'}}{1+(n-1){\rho }_{xx'}}}$
+$\rho_{xx'}^*=\frac {n\rho_{xx'}}{1+(n-1)\rho_{xx'}}$
 
-where ${\rho }_{xx'}^{*}$ refers to the goal reliability, ${\rho }_{xx'}$ refers to the current reliability, and ${n}$ refers to the test length multiplier.
+where $\rho_{xx'}^*$ refers to the goal reliability, $\rho_{xx'}$ refers to the current reliability, and $n$ refers to the test length multiplier.
 
 ```{r}
 
