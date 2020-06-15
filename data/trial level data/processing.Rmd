@@ -1,0 +1,271 @@
+---
+title: "Data processing"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+library(tidyverse)
+
+```
+
+# Test retest
+
+## Sexuality
+
+```{r}
+
+# process sexuality data that included two timepoints 
+
+data_input <- read_csv("raw data/test-retest IRAPs/raw/data sexuality test retest - trial level.csv")
+
+data_completeness <- data_input %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon")) %>%
+  count(unique_id, timepoint) %>%
+  filter(n %in% c(480)) # methodologically plausible number of trials
+
+data_rts_and_summmaries_sexuality <- data_input %>%
+  semi_join(data_completeness, by = c("unique_id", "timepoint")) %>%
+  filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon")) %>%
+  separate(trial_and_block, into = c("trial_type", "block", "block_type"), sep = "_") %>%
+  mutate(test_block = ifelse(str_detect(block, "prac"), FALSE, TRUE)) %>%
+  select(unique_id, timepoint, test_block, block_type, trial_type, rt, experiment, block_order) %>%
+  group_by(unique_id, timepoint) %>%
+  mutate(mean_rt = round(mean(rt, na.rm = TRUE), 0)) %>%
+  ungroup() %>%
+  mutate(timepoint = recode(timepoint, 
+                            `7 day followup` = "followup",
+                            `baseline` = "baseline"))
+
+```
+
+## Disgust
+
+```{r}
+
+# process data that was output by/formatted from the VB6 2012+ IRAP
+
+data_input <- read_csv("raw data/nonevaluative IRAPs/raw/IRAP 2012 VB format files/data disgust - trial level.csv") 
+
+data_completeness <- data_input %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon",
+                                "tt1_block4_con", "tt2_block4_con", "tt3_block4_con", "tt4_block4_con", 
+                                "tt1_block4_incon", "tt2_block4_incon", "tt3_block4_incon", "tt4_block4_incon", 
+                                "tt1_block5_con", "tt2_block5_con", "tt3_block5_con", "tt4_block5_con", 
+                                "tt1_block5_incon", "tt2_block5_incon", "tt3_block5_incon", "tt4_block5_incon", 
+                                "tt1_block6_con", "tt2_block6_con", "tt3_block6_con", "tt4_block6_con", 
+                                "tt1_block6_incon", "tt2_block6_incon", "tt3_block6_incon", "tt4_block6_incon")) %>%
+  count(unique_id) %>%
+  filter(n %in% c(384*2)) # methodologically plausible number of trials
+
+data_rts_and_summmaries_digust <- data_input %>%
+  semi_join(data_completeness, by = "unique_id") %>%
+  filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon",
+                                "tt1_block4_con", "tt2_block4_con", "tt3_block4_con", "tt4_block4_con", 
+                                "tt1_block4_incon", "tt2_block4_incon", "tt3_block4_incon", "tt4_block4_incon", 
+                                "tt1_block5_con", "tt2_block5_con", "tt3_block5_con", "tt4_block5_con", 
+                                "tt1_block5_incon", "tt2_block5_incon", "tt3_block5_incon", "tt4_block5_incon", 
+                                "tt1_block6_con", "tt2_block6_con", "tt3_block6_con", "tt4_block6_con", 
+                                "tt1_block6_incon", "tt2_block6_incon", "tt3_block6_incon", "tt4_block6_incon")) %>%
+  separate(trial_and_block, into = c("trial_type", "block", "block_type"), sep = "_") %>%
+  mutate(timepoint = ifelse(str_detect(block, "block1") | str_detect(block, "block2") | str_detect(block, "block3"), 
+                            "baseline", "followup")) %>%
+  select(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) %>%
+  group_by(unique_id, timepoint) %>%
+  mutate(mean_rt = round(mean(rt, na.rm = TRUE), 0)) %>%
+  ungroup()
+
+```
+
+## Evaluative IRAPs
+
+```{r}
+
+data_evalautive_iraps <- read_csv("raw data/evaluative IRAPs/data_cleaned_trial_level.csv") %>%
+  filter(timepoint %in% c(1,2)) %>%
+  mutate(timepoint = recode(timepoint,
+                            "1" = "baseline",
+                            "2" = "followup"))
+
+temp <- data_evalautive_iraps %>%
+  ungroup() %>%
+  distinct(unique_id, timepoint, .keep_all = TRUE) %>%
+  select(unique_id, timepoint, experiment) %>%
+  mutate(present = TRUE) %>%
+  spread(timepoint, present) %>%
+  filter(baseline == TRUE & followup == TRUE) %>%
+  select(unique_id) 
+
+data_evalautive_iraps_both_timepoints <- temp %>%
+  left_join(data_evalautive_iraps, by = "unique_id")
+
+data_completeness_evalutative <- data_evalautive_iraps_both_timepoints %>%
+  count(unique_id, timepoint) %>%
+  filter(n %in% c(144)) # methodologically plausible number of trials
+
+data_rts_and_summmaries_evaluative <- data_evalautive_iraps_both_timepoints %>%
+  semi_join(data_completeness_evalutative, by = "unique_id") %>%
+  select(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) %>%
+  group_by(unique_id, timepoint) %>%
+  mutate(mean_rt = round(mean(rt, na.rm = TRUE), 0)) %>%
+  ungroup()
+
+```
+
+## Combine
+
+```{r}
+
+data_testretest_cleaned_trial_level <- 
+  bind_rows(data_rts_and_summmaries_sexuality, 
+            data_rts_and_summmaries_digust,
+            data_rts_and_summmaries_evaluative) %>%
+  # tidy domain
+  rename(domain = experiment) %>%
+  mutate(domain = dplyr::recode(domain,
+                                "disgust" = "Digust",
+                                "sexuality test retest" = "Sexuality (7 day)",
+                                "chad bodyimage" = "Body image",
+                                "chad friendenemy" = "Friend-enemy",
+                                "chad gender" = "Gender",
+                                "chad lincolnhitler" = "Lincoln-Hitler",
+                                "chad race" = "Race",
+                                "chad religion" = "Religion")) %>%
+  arrange(as.character(domain)) %>%
+  select(unique_id, 
+         domain, timepoint, block_order, block_type, 
+         trial_type, rt, mean_rt)
+
+write_csv(data_testretest_cleaned_trial_level, "data_testretest_cleaned_trial_level.csv")
+
+```
+
+# Internal consistency
+
+```{r}
+
+# Two different data sources (datasets that were had their initial cleaning and organizing done at different times): do final cleaning on these and add them together.
+
+# get data from evaluative IRAPs
+data_input_evaluative <- 
+  read.csv("raw data/evaluative IRAPs/data_cleaned_trial_level.csv") %>%
+  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
+  # tidy domain
+  rename(domain = experiment) %>%
+  mutate(domain = dplyr::recode(domain,
+                                `chad bodyimage` = "Body shape evaluations",
+                                `chad friendenemy` = "Friend-Enemy evaluations",
+                                `chad gender` = "Gender stereotypes",
+                                `chad lincolnhitler` = "Lincoln-Hitler evaluations",
+                                `chad race`	 = "Racial evaluations 2",
+                                `chad religion` = "Christianity-Islam",
+                                `ian death emma` = "Life/Death evaluations 1",
+                                `ian death june` = "Life/Death evaluations 2",
+                                `ian death tarah` = "Life/Death evaluations 3",
+                                `ian race dearbhail` = "Racial evaluations 1",
+                                `ian race katie` = "Racial evaluations 1")) %>%
+  arrange(as.character(domain)) %>%
+  group_by(unique_id) %>%
+  mutate(mean_rt = mean(rt, na.rm = TRUE)) %>%
+  ungroup()
+
+# do exclusions for unique ids with wrong number of trials
+data_participants_with_correct_n_trials <- data_input_evaluative %>%
+  count(unique_id, timepoint) %>%
+  filter(n %in% c(144, 192)) # methodologically plausible number of trials
+
+data_cleaned_ic_evaluative <- semi_join(data_input_evaluative, data_participants_with_correct_n_trials, by = "unique_id")
+
+
+
+# get data from nonevaluative IRAPs
+# nb exclusions for unique ids with wrong number of trials already done in processing
+data_cleaned_ic_nonevaluative <- 
+  read.csv("raw data/nonevaluative IRAPs/data_cleaned_trial_level.csv") %>%
+  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
+  # tidy domain
+  rename(domain = experiment) %>%
+  mutate(domain = dplyr::recode(domain,
+                                `countries acknowledge 1` = "Countries - acknowledge suffering 1",
+                                `countries care 1` = "Countries - care about suffering 1",
+                                `countries 2 acknowledge` = "Countries - acknowledge suffering 2",
+                                `countries 2 care` = "Countries - care about suffering 2",
+                                `disgust` = "Digust sensitivity",
+                                `positive_negative` = "Valenced categories evaluations",
+                                `sexuality` = "Sexuality and arousal",
+                                `food hunger` = "Food and hunger",
+                                `shapes and colors YN rule` = "Shapes and colors 1",
+                                `shapes and colors YN correct` = "Shapes and colors 2",
+                                `shapes and colors TF correct` = "Shapes and colors 3",
+                                `shapes and colors TF rule` = "Shapes and colors 4",
+                                `shapes and colors exp 2 full rule` = "Shapes and colors 5",
+                                `shapes and colors exp 2 minimal rule` = "Shapes and colors 6",
+                                `shapes and colors exp 3` = "Shapes and colors 7")) %>%
+  arrange(as.character(domain)) %>%
+  mutate(timepoint = 1)
+
+
+
+# combined
+data_combined_ic <- 
+  bind_rows(data_cleaned_ic_evaluative, 
+            data_cleaned_ic_nonevaluative) %>%
+  mutate(domain = as.factor(as.character(domain))) %>%
+  filter(timepoint == 1)
+
+# remove participant with the wrong number of trials/duplicate data
+data_n_trials <- data_combined_ic %>%
+  group_by(unique_id, timepoint) %>%
+  summarise(n = n()) %>%
+  filter(n %in% c(144, 192, 240))
+
+data_internalconsistency_cleaned_trial_level <- data_combined_ic %>%
+  semi_join(data_n_trials, by = "unique_id") %>%
+  mutate(timepoint = ifelse(timepoint == 1, "baseline", 
+                            ifelse(timepoint == 2, "followup", timepoint))) %>%
+  select(unique_id, 
+         age,
+         gender,
+         domain, timepoint, block_order, block_type, 
+         trial_type, stimulus_number, stimulus_name, trial_odd_even, rt, mean_rt)
+
+write_csv(data_internalconsistency_cleaned_trial_level, "data_internalconsistency_cleaned_trial_level.csv")
+
+```
+
+

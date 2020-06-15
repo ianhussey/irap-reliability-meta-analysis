@@ -18,6 +18,9 @@ knitr::opts_chunk$set(message = FALSE,
 
 ```{r}
 
+# set seed for computational reproducibility
+set.seed(42)
+
 # dependencies
 library(tidyverse)
 library(metafor)
@@ -72,109 +75,136 @@ options(knitr.table.format = "html")
 
 # Data 
 
-and exclusions for incorrect number of trials
+and exclusion of outliers on the basis of median mean_rt +/- 2MAD
 
 ```{r}
 
-# INTERNAL CONSISTENCY
+data_cleaned_trt <- read.csv("../trial level data/data_testretest_cleaned_trial_level.csv") 
 
-# Two different data sources (datasets that were had their initial cleaning and organizing done at different times): do final cleaning on these and add them together.
+data_cleaned_trt_outliers <- data_cleaned_trt %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  select(unique_id, mean_rt) %>%
+  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
+         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
+  round_df(0) %>%
+  # exclude median +- 2MAD
+  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
+                            mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+  filter(rt_outlier == FALSE) %>%
+  select(unique_id, rt_outlier)
 
-# get data from evaluative IRAPs
-data_input_evaluative <- 
-  read.csv("../evaluative IRAPs/processed/combined_latency_data.csv") %>%
-  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
-  # tidy domain
-  rename(domain = experiment) %>%
-  mutate(domain = dplyr::recode(domain,
-                                `chad bodyimage` = "Body shape evaluations",
-                                `chad friendenemy` = "Friend-Enemy evaluations",
-                                `chad gender` = "Gender stereotypes",
-                                `chad lincolnhitler` = "Lincoln-Hitler evaluations",
-                                `chad race`	 = "Racial evaluations 2",
-                                `chad religion` = "Christianity-Islam",
-                                `ian death emma` = "Life/Death evaluations 1",
-                                `ian death june` = "Life/Death evaluations 2",
-                                `ian death tarah` = "Life/Death evaluations 3",
-                                `ian race dearbhail` = "Racial evaluations 1",
-                                `ian race katie` = "Racial evaluations 1")) %>%
-  arrange(as.character(domain))
-
-# do exclusions for unique ids with wrong number of trials
-data_participants_with_correct_n_trials <- data_input_evaluative %>%
-  count(unique_id) %>%
-  filter(n %in% c(144, 192)) # methodologically plausible number of trials
-
-data_cleaned_ic_evaluative <- semi_join(data_input_evaluative, data_participants_with_correct_n_trials, by = "unique_id")
+data_cleaned_trt_outliers_removed <- data_cleaned_trt %>%
+  full_join(data_cleaned_trt_outliers, by = "unique_id")
 
 
-
-# get data from nonevaluative IRAPs
-# nb exclusions for unique ids with wrong number of trials already done in processing
-data_cleaned_ic_nonevaluative <- 
-  read.csv("../nonevaluative IRAPs/processed/combined_latency_data.csv") %>%
-  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
-  # tidy domain
-  rename(domain = experiment) %>%
-  mutate(domain = dplyr::recode(domain,
-                                `countries acknowledge 1` = "Countries - acknowledge suffering 1",
-                                `countries care 1` = "Countries - care about suffering 1",
-                                `countries 2 acknowledge` = "Countries - acknowledge suffering 2",
-                                `countries 2 care` = "Countries - care about suffering 2",
-                                `disgust` = "Digust sensitivity",
-                                `positive_negative` = "Valenced categories evaluations",
-                                `sexuality` = "Sexuality and arousal",
-                                `food hunger` = "Food and hunger",
-                                `shapes and colors YN rule` = "Shapes and colors 1",
-                                `shapes and colors YN correct` = "Shapes and colors 2",
-                                `shapes and colors TF correct` = "Shapes and colors 3",
-                                `shapes and colors TF rule` = "Shapes and colors 4",
-                                `shapes and colors exp 2 full rule` = "Shapes and colors 5",
-                                `shapes and colors exp 2 minimal rule` = "Shapes and colors 6",
-                                `shapes and colors exp 3` = "Shapes and colors 7")) %>%
-  arrange(as.character(domain)) 
-
-# combined
-data_combined_ic <- bind_rows(data_cleaned_ic_evaluative, 
-                           data_cleaned_ic_nonevaluative) %>%
-  mutate(domain = as.factor(as.character(domain)))
-
-# remove participant with the wrong number of trials/duplicate data
-data_n_trials <- data_combined_ic %>%
-  group_by(unique_id) %>%
-  summarise(n = n()) %>%
-  filter(n %in% c(144, 192, 240))
-
-data_cleaned_ic <- data_combined_ic %>%
-  semi_join(data_n_trials, by = "unique_id")
+# median_est <- data_cleaned_trt_outliers %>%
+#   distinct(median_mean_rt) %>%
+#   pull(median_mean_rt)
+# 
+# mad_est <- data_cleaned_trt_outliers %>%
+#   distinct(mad_mean_rt) %>%
+#   pull(mad_mean_rt)
+# 
+# data_cleaned_trt %>%
+#   distinct(unique_id, .keep_all = TRUE) %>%
+#   select(unique_id, mean_rt) %>%
+#   ggplot(aes(mean_rt)) +
+#   geom_density() +
+#   geom_vline(aes(xintercept = median_est)) +
+#   geom_vline(aes(xintercept = median_est + mad_est*2)) +
+#   geom_vline(aes(xintercept = median_est - mad_est*2))
 
 
+data_cleaned_ic <- read.csv("../trial level data/data_internalconsistency_cleaned_trial_level.csv") 
 
-# TEST RETEST
+data_cleaned_ic_outliers <- data_cleaned_ic %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  select(unique_id, mean_rt) %>%
+  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
+         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
+  round_df(0) %>%
+  # exclude median +- 2MAD
+  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
+                            mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+  filter(rt_outlier == FALSE) %>%
+  select(unique_id, rt_outlier)
 
-data_cleaned_trt <- 
-  read.csv("../test-retest IRAPs/processed/combined_latency_data.csv") %>%
-  # tidy domain
-  rename(domain = experiment) %>%
-  mutate(domain = dplyr::recode(domain,
-                                `disgust` = "Digust sensitivity (immediate followup)",
-                                `sexuality test retest` = "Sexuality and arousal (7 day followup)")) %>%
-  arrange(as.character(domain))
+data_cleaned_ic_outliers_removed <- data_cleaned_ic %>%
+  full_join(data_cleaned_ic_outliers, by = "unique_id")
+
+
+# median_est <- data_cleaned_ic_outliers %>%
+#   distinct(median_mean_rt) %>%
+#   pull(median_mean_rt)
+# 
+# mad_est <- data_cleaned_ic_outliers %>%
+#   distinct(mad_mean_rt) %>%
+#   pull(mad_mean_rt)
+# 
+# data_cleaned_trt %>%
+#   distinct(unique_id, .keep_all = TRUE) %>%
+#   select(unique_id, mean_rt) %>%
+#   ggplot(aes(mean_rt)) +
+#   geom_density() +
+#   geom_vline(aes(xintercept = median_est)) +
+#   geom_vline(aes(xintercept = median_est + mad_est*2)) +
+#   geom_vline(aes(xintercept = median_est - mad_est*2))
 
 ```
 
 # Demographics & sample sizes
 
+whole sample
+
 ```{r}
 
-data_demographics <- 
-  bind_rows(mutate(data_cleaned_ic, type = "internal consistency"),
-          mutate(data_cleaned_trt, type = "test retest")) %>%
-  mutate(unique_id_and_type = paste(unique_id, type)) %>%
+# write demographics to disk
+data_demographics <- data_cleaned_ic_outliers_removed %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id_and_type, unique_id, type, age, gender)
+  select(unique_id, age, gender, rt_outlier)
 
 write_csv(data_demographics, "data_demographics.csv")
+
+
+# print sample sizes
+data_cleaned_ic_outliers_removed %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  count(rt_outlier) %>%
+  rename(n_outlier_exclusions = n) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_cleaned_ic_outliers_removed %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  filter(rt_outlier == FALSE) %>%
+  count() %>%
+  rename(n_ic_after_exlucions = n) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_cleaned_ic_outliers_removed %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  filter(rt_outlier == FALSE) %>%
+  count(domain) %>%
+  rename(n_ic_after_exlucions = n) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_cleaned_trt_outliers_removed %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  filter(rt_outlier == FALSE) %>%
+  count() %>%
+  rename(n_trt_after_exlucions = n) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_cleaned_trt_outliers_removed %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  filter(rt_outlier == FALSE) %>%
+  count(domain) %>%
+  rename(n_trt_after_exlucions = n) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
@@ -184,7 +214,7 @@ write_csv(data_demographics, "data_demographics.csv")
 
 ```{r}
 
-data_D_scores <- data_cleaned_trt %>%
+data_D_scores_trt <- data_cleaned_trt_outliers_removed %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, timepoint) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
@@ -194,43 +224,45 @@ data_D_scores <- data_cleaned_trt %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, D, timepoint) %>%
   spread(timepoint, D) %>%
-  left_join(select(distinct(data_cleaned_trt, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
+  left_join(select(distinct(data_cleaned_trt_outliers_removed, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
+
+```
+```{r fig.height=7, fig.width=7}
+
+ggplot(data_D_scores_trt, aes(baseline, followup)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  facet_wrap(~domain)
 
 ```
 
-## Calcualte effect sizes
+## Calculate effect sizes
 
 ```{r}
 
-fit_digust <- data_D_scores %>%
-  filter(domain == "Digust sensitivity (immediate followup)") %>%
-  select(baseline, followup) %>%
-  ICC(lmer = TRUE)
+calculate_icc <- function(data) {
+  fit <- data %>%
+    select(baseline, followup) %>%
+    ICC(lmer = TRUE)
 
-icc_disgust <- fit_digust$results %>%
-  filter(type == "ICC2") %>%
-  mutate(domain = "Digust sensitivity (immediate followup)") %>%
-  select(domain, type, ICC, "lower bound", "upper bound") %>%
-  mutate(se = (`upper bound` - `lower bound`)/(1.96*2))
+  results <- fit$results %>%
+    filter(type == "ICC2") %>%
+    select(type, ICC, ICC_ci_lower = "lower bound", ICC_ci_upper = "upper bound") %>%
+    mutate(se = (ICC_ci_upper - ICC_ci_lower)/(1.96*2))
+  
+  return(results)
+}
 
+data_test_retest_icc <- data_D_scores_trt %>%
+  group_by(domain) %>%
+  do(calculate_icc(.)) %>%
+  ungroup() %>%
+  left_join(data_D_scores_trt %>%
+              count(domain), by = "domain")
 
-fit_sexuality <- data_D_scores %>%
-  filter(domain == "Sexuality and arousal (7 day followup)") %>%
-  select(baseline, followup) %>%
-  ICC(lmer = TRUE)
-
-icc_sexuality <- fit_sexuality$results %>%
-  filter(type == "ICC2") %>%
-  mutate(domain = "Sexuality and arousal (7 day followup)") %>%
-  select(domain, type, ICC, "lower bound", "upper bound") %>%
-  mutate(se = (`upper bound` - `lower bound`)/(1.96*2))
-
-
-data_test_retest_icc <- 
-  bind_rows(icc_disgust,
-            icc_sexuality) %>%
-  round_df(2) %>%
-  filter(type == "ICC2")
+# data_D_scores_trt %>%
+#   group_by(domain) %>%
+#   summarize(cor = cor(baseline, followup))
 
 write_csv(data_test_retest_icc, "data_test_retest_icc.csv")
 
@@ -251,7 +283,7 @@ Three methods of calculating internal consistency for the Implicit Relational As
 
 ```{r}
 
-data_D_scores <- data_cleaned_ic %>%
+data_D_scores_ic_oddeventrials <- data_cleaned_ic_outliers_removed %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, trial_odd_even) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
@@ -261,7 +293,7 @@ data_D_scores <- data_cleaned_ic %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, D, trial_odd_even) %>%
   spread(trial_odd_even, D) %>%
-  left_join(select(distinct(data_cleaned_ic, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
+  left_join(select(distinct(data_cleaned_ic_outliers_removed, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
 
 ```
 
@@ -272,7 +304,7 @@ Bonett transformations
 ```{r}
 
 # calculate internal consistencies
-data_internal_consistency_oddeventrials <- data_D_scores %>%
+data_internal_consistency_oddeventrials <- data_D_scores_ic_oddeventrials %>%
   dplyr::select(domain, D_odd, D_even) %>%
   na.omit() %>%
   group_by(domain) %>%
@@ -297,19 +329,18 @@ write_csv(data_internal_consistency_oddeventrials, "data_internal_consistency_od
 
 ```{r}
 
-data_n_trials <- 
-  data_cleaned_ic %>%
+data_n_trials_halves <- data_cleaned_ic_outliers_removed %>%
   group_by(unique_id) %>%
   summarize(total_n_trials = n()) 
 
-data_halves <- data_cleaned_ic %>%
-  left_join(data_n_trials, by = "unique_id") %>%
+data_halves <- data_cleaned_ic_outliers_removed %>%
+  left_join(data_n_trials_halves, by = "unique_id") %>%
   group_by(unique_id) %>%
   mutate(trial_n = row_number(),
          half = ifelse(trial_n > (total_n_trials/2), "second", "first")) %>%
   ungroup()
 
-data_D_scores_firstsecond <- data_halves %>%
+data_D_scores_ic_firstsecond <- data_halves %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, half) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
@@ -321,7 +352,7 @@ data_D_scores_firstsecond <- data_halves %>%
   spread(half, D) %>%
   rename(D_first = first, 
          D_second = second) %>%
-  left_join(select(distinct(data_cleaned_ic, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
+  left_join(select(distinct(data_cleaned_ic_outliers_removed, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
 
 ```
 
@@ -332,7 +363,7 @@ Bonett transformations
 ```{r}
 
 # calculate internal consistencies
-data_internal_consistency_firstsecondhalves <- data_D_scores_firstsecond %>%
+data_internal_consistency_firstsecondhalves <- data_D_scores_ic_firstsecond %>%
   dplyr::select(domain, D_first, D_second) %>%
   na.omit() %>%
   group_by(domain) %>%
@@ -357,7 +388,7 @@ ie an estimate of alpha through large number number of random half splits (see P
 
 ### Calculate D scores
 
-Because of the large number of D scores that are calculated (i.e., 2 per participant \* 437 participants \* 2000 permutations = 1.75 million D scores) this section can take a few minutes to run. I've already done some timing optimization to speed up this process by a factor of 5, but perhaps more is possible.
+Because of the large number of D scores that are calculated (i.e., 2 per participant \* N participants \* N permutations = several million D scores) this section can take a few minutes to run. I've already done some timing optimization to speed up this process by a factor of 5, but perhaps more is possible.
 
 ```{r}
 
@@ -369,10 +400,10 @@ if (file.exists("permutations/data_internal_consistency_permutations.RData")) {
 } else {
   
   # n iterations
-  n_iterations <- 5000
+  n_iterations <- 2000
   
   # find domain for each id - to be joined into df further below
-  data_domain_for_each_id <- data_cleaned_ic %>%
+  data_domain_for_each_id <- data_cleaned_ic_outliers_removed %>%
     distinct(unique_id, .keep_all = TRUE) %>%
     select(unique_id, domain)
   
@@ -384,7 +415,7 @@ if (file.exists("permutations/data_internal_consistency_permutations.RData")) {
   pb = txtProgressBar(min = 0, max = n_iterations, initial = 0)
   
   # assign row ids
-  data_cleaned_ic_rownumbers <- data_cleaned_ic %>%
+  data_cleaned_ic_outliers_removed_rownumbers <- data_cleaned_ic_outliers_removed %>%
     arrange(unique_id, block_type) %>%
     rownames_to_column(var = "row_id") %>%
     group_by(unique_id, block_type) %>%
@@ -395,7 +426,7 @@ if (file.exists("permutations/data_internal_consistency_permutations.RData")) {
   for(i in 1:n_iterations){
     
     # sample exactly half of the data and label as subset 'a' vs 'b'
-    max_trials_per_block <- data_cleaned_ic_rownumbers %>%
+    max_trials_per_block <- data_cleaned_ic_outliers_removed_rownumbers %>%
       summarize(max_trials_per_block = max(trial_number)) %>%
       pull(max_trials_per_block)
     
@@ -404,7 +435,7 @@ if (file.exists("permutations/data_internal_consistency_permutations.RData")) {
       arrange(trial_number) %>%
       pull(trial_number)
     
-    data_cleaned_ic_rownumbers_with_subsets <- data_cleaned_ic_rownumbers %>%
+    data_cleaned_ic_outliers_removed_rownumbers_with_subsets <- data_cleaned_ic_outliers_removed_rownumbers %>%
       mutate(subset = ifelse(trial_number %in% trial_subset_a, "a", "b")) %>%
       arrange(unique_id, block_type, trial_number)
     
@@ -420,7 +451,7 @@ if (file.exists("permutations/data_internal_consistency_permutations.RData")) {
     
     # then calculate D1 scores (Greenwald, Banaji & Nosek, 2003)
     # these involve: 1) trimming RTs > 10000 ms, 2) finding a mean rt for each block type, 3) findings an sd for all the pooled RTs across blocks, 4) D = (mean_incon - mean_con)/sd
-    data_temp_1 <- data_cleaned_ic_rownumbers_with_subsets %>%
+    data_temp_1 <- data_cleaned_ic_outliers_removed_rownumbers_with_subsets %>%
       filter(rt <= 10000)
     
     data_temp_2 <- data_temp_1 %>%
@@ -485,7 +516,7 @@ NB forest plot above includes empirical CIs across the permutation resamples usi
 
 ```{r fig.height=8, fig.width=8}
 
-data_n_per_domain <- data_cleaned_ic %>%
+data_n_per_domain <- data_cleaned_ic_outliers_removed %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   count(domain) %>%
   select(domain, n)
