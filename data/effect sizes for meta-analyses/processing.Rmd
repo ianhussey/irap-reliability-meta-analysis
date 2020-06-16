@@ -71,6 +71,9 @@ add_heterogeneity_metrics_to_forest <- function(fit) {
 # table format in output
 options(knitr.table.format = "html") 
 
+# create directory needed to save output
+dir.create("permutations")
+
 ```
 
 # Data 
@@ -227,6 +230,7 @@ data_D_scores_trt <- data_cleaned_trt_outliers_removed %>%
   left_join(select(distinct(data_cleaned_trt_outliers_removed, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
 
 ```
+
 ```{r fig.height=7, fig.width=7}
 
 ggplot(data_D_scores_trt, aes(baseline, followup)) +
@@ -386,13 +390,15 @@ write_csv(data_internal_consistency_firstsecondhalves, "data_internal_consistenc
 
 ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019).
 
+Circa 15 minute runtime
+
 ### Calculate D scores
 
 Because of the large number of D scores that are calculated (i.e., 2 per participant \* N participants \* N permutations = several million D scores) this section can take a few minutes to run. I've already done some timing optimization to speed up this process by a factor of 5, but perhaps more is possible.
 
 ```{r}
 
-# slow runtime - circa 10 minutes, so check if there's saved results already first
+# slow runtime - circa 15 minutes, so check if there's saved results already first
 if (file.exists("permutations/data_internal_consistency_permutations.RData")) {
   
   load("permutations/data_internal_consistency_permutations.RData")

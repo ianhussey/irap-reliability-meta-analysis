@@ -22,36 +22,75 @@ chad bodyimage_41,18,Female,FALSE
 chad bodyimage_43,18,Female,FALSE
 chad bodyimage_45,19,Female,FALSE
 chad bodyimage_5,19,Female,FALSE
-chad religion_12,18,Female,FALSE
-chad religion_203,18,Male,FALSE
-chad religion_215,20,Male,FALSE
-chad religion_104,18,Female,FALSE
-chad religion_108,60,Female,FALSE
-chad religion_112,22,Female,FALSE
-chad religion_116,18,Female,FALSE
-chad religion_120,19,Female,FALSE
-chad religion_128,18,Female,FALSE
-chad religion_16,19,Female,FALSE
-chad religion_20,19,Female,FALSE
-chad religion_209,18,Male,FALSE
-chad religion_212,19,Male,FALSE
-chad religion_239,20,Male,FALSE
-chad religion_242,19,Male,FALSE
-chad religion_248,18,Male,FALSE
-chad religion_251,22,Male,FALSE
-chad religion_254,20,Male,FALSE
-chad religion_257,20,Male,FALSE
-chad religion_260,18,Male,FALSE
-chad religion_266,20,Male,FALSE
-chad religion_269,20,Male,FALSE
-chad religion_272,21,Male,FALSE
-chad religion_306,19,Male,FALSE
-chad religion_309,18,Male,FALSE
-chad religion_318,20,Male,FALSE
-chad religion_321,18,Male,FALSE
-chad religion_324,22,Male,FALSE
-chad religion_40,20,Female,FALSE
-chad religion_8,19,Female,FALSE
+ian death emma_11,19,Female,FALSE
+ian death emma_13,21,Female,FALSE
+ian death emma_15,26,Female,FALSE
+ian death emma_17,20,Female,FALSE
+ian death emma_21,19,Female,FALSE
+ian death emma_25,18,Female,FALSE
+ian death emma_27,21,Female,FALSE
+ian death emma_29,19,Female,FALSE
+ian death emma_31,21,Male,FALSE
+ian death emma_33,20,Male,FALSE
+ian death emma_37,21,Female,FALSE
+ian death emma_39,21,Male,FALSE
+ian death emma_41,18,Female,FALSE
+ian death emma_43,21,Female,FALSE
+ian death emma_45,21,Female,FALSE
+ian death emma_49,25,Female,FALSE
+ian death emma_5,20,Female,NA
+ian death emma_7,18,Female,FALSE
+ian death emma_9,19,Male,FALSE
+ian death june_13,21,Male,FALSE
+ian death june_15,21,Female,NA
+ian death june_17,18,Male,FALSE
+ian death june_21,20,Male,FALSE
+ian death june_23,20,Female,FALSE
+ian death june_25,21,Female,FALSE
+ian death june_27,20,Female,FALSE
+ian death june_29,20,Male,FALSE
+ian death june_31,21,Male,FALSE
+ian death june_33,21,Female,FALSE
+ian death june_35,20,Female,FALSE
+ian death june_37,21,Female,FALSE
+ian death june_39,20,Female,FALSE
+ian death june_3,19,Male,FALSE
+ian death june_43,20,Female,FALSE
+ian death june_51,21,Male,FALSE
+ian death june_55,20,Female,FALSE
+ian death june_57,29,Female,FALSE
+ian death june_5,19,Female,FALSE
+ian death june_65,21,Female,FALSE
+ian death june_7,20,Female,FALSE
+ian death june_9,21,Female,FALSE
+ian death tarah_10,38,Female,FALSE
+ian death tarah_12,28,Female,FALSE
+ian death tarah_13,24,Male,FALSE
+ian death tarah_14,43,Male,FALSE
+ian death tarah_15,18,Female,FALSE
+ian death tarah_16,19,Male,FALSE
+ian death tarah_17,18,Female,FALSE
+ian death tarah_18,31,Male,FALSE
+ian death tarah_19,43,Female,FALSE
+ian death tarah_20,27,Male,FALSE
+ian death tarah_21,42,Female,FALSE
+ian death tarah_22,20,Female,FALSE
+ian death tarah_23,19,Female,FALSE
+ian death tarah_24,25,Male,FALSE
+ian death tarah_26,21,Female,FALSE
+ian death tarah_29,39,Male,FALSE
+ian death tarah_2,32,Male,FALSE
+ian death tarah_30,31,Female,FALSE
+ian death tarah_33,51,Male,FALSE
+ian death tarah_34,20,Female,NA
+ian death tarah_37,31,Female,FALSE
+ian death tarah_38,21,Female,FALSE
+ian death tarah_42,19,Female,FALSE
+ian death tarah_44,21,Female,FALSE
+ian death tarah_5,21,Male,FALSE
+ian death tarah_7,34,Female,FALSE
+ian death tarah_8,NA,NA,NA
+ian death tarah_9,20,Female,FALSE
 chad friendenemy_103,18,Male,FALSE
 chad friendenemy_105,18,Female,FALSE
 chad friendenemy_110,18,Female,FALSE
@@ -193,75 +232,6 @@ chad gender_34,NA,NA,FALSE
 chad gender_42,NA,NA,FALSE
 chad gender_46,NA,NA,FALSE
 chad gender_210,NA,NA,FALSE
-ian death emma_11,19,Female,FALSE
-ian death emma_13,21,Female,FALSE
-ian death emma_15,26,Female,FALSE
-ian death emma_17,20,Female,FALSE
-ian death emma_21,19,Female,FALSE
-ian death emma_25,18,Female,FALSE
-ian death emma_27,21,Female,FALSE
-ian death emma_29,19,Female,FALSE
-ian death emma_31,21,Male,FALSE
-ian death emma_33,20,Male,FALSE
-ian death emma_37,21,Female,FALSE
-ian death emma_39,21,Male,FALSE
-ian death emma_41,18,Female,FALSE
-ian death emma_43,21,Female,FALSE
-ian death emma_45,21,Female,FALSE
-ian death emma_49,25,Female,FALSE
-ian death emma_5,20,Female,NA
-ian death emma_7,18,Female,FALSE
-ian death emma_9,19,Male,FALSE
-ian death june_13,21,Male,FALSE
-ian death june_15,21,Female,NA
-ian death june_17,18,Male,FALSE
-ian death june_21,20,Male,FALSE
-ian death june_23,20,Female,FALSE
-ian death june_25,21,Female,FALSE
-ian death june_27,20,Female,FALSE
-ian death june_29,20,Male,FALSE
-ian death june_31,21,Male,FALSE
-ian death june_33,21,Female,FALSE
-ian death june_35,20,Female,FALSE
-ian death june_37,21,Female,FALSE
-ian death june_39,20,Female,FALSE
-ian death june_3,19,Male,FALSE
-ian death june_43,20,Female,FALSE
-ian death june_51,21,Male,FALSE
-ian death june_55,20,Female,FALSE
-ian death june_57,29,Female,FALSE
-ian death june_5,19,Female,FALSE
-ian death june_65,21,Female,FALSE
-ian death june_7,20,Female,FALSE
-ian death june_9,21,Female,FALSE
-ian death tarah_10,38,Female,FALSE
-ian death tarah_12,28,Female,FALSE
-ian death tarah_13,24,Male,FALSE
-ian death tarah_14,43,Male,FALSE
-ian death tarah_15,18,Female,FALSE
-ian death tarah_16,19,Male,FALSE
-ian death tarah_17,18,Female,FALSE
-ian death tarah_18,31,Male,FALSE
-ian death tarah_19,43,Female,FALSE
-ian death tarah_20,27,Male,FALSE
-ian death tarah_21,42,Female,FALSE
-ian death tarah_22,20,Female,FALSE
-ian death tarah_23,19,Female,FALSE
-ian death tarah_24,25,Male,FALSE
-ian death tarah_26,21,Female,FALSE
-ian death tarah_29,39,Male,FALSE
-ian death tarah_2,32,Male,FALSE
-ian death tarah_30,31,Female,FALSE
-ian death tarah_33,51,Male,FALSE
-ian death tarah_34,20,Female,NA
-ian death tarah_37,31,Female,FALSE
-ian death tarah_38,21,Female,FALSE
-ian death tarah_42,19,Female,FALSE
-ian death tarah_44,21,Female,FALSE
-ian death tarah_5,21,Male,FALSE
-ian death tarah_7,34,Female,FALSE
-ian death tarah_8,NA,NA,NA
-ian death tarah_9,20,Female,FALSE
 chad lincolnhitler_102,18,Male,FALSE
 chad lincolnhitler_104,21,Female,FALSE
 chad lincolnhitler_108,19,Male,FALSE
@@ -397,6 +367,51 @@ chad lincolnhitler_605,NA,NA,FALSE
 chad lincolnhitler_612,NA,NA,FALSE
 chad lincolnhitler_101,NA,NA,FALSE
 chad lincolnhitler_218,NA,NA,FALSE
+chad race_11,19,Female,FALSE
+chad race_0,NA,NA,FALSE
+chad race_214,21,Male,FALSE
+chad race_220,18,Male,FALSE
+chad race_223,18,Male,FALSE
+chad race_232,19,Male,FALSE
+chad race_3,19,Female,FALSE
+chad race_47,18,Female,FALSE
+chad race_103,18,Female,FALSE
+chad race_107,19,Female,FALSE
+chad race_111,19,Female,FALSE
+chad race_115,18,Female,FALSE
+chad race_123,19,Female,FALSE
+chad race_127,19,Female,FALSE
+chad race_205,20,Male,FALSE
+chad race_208,19,Male,FALSE
+chad race_211,18,Male,FALSE
+chad race_217,20,Male,FALSE
+chad race_227,19,Male,FALSE
+chad race_229,24,Male,FALSE
+chad race_233,19,Male,FALSE
+chad race_235,21,Male,FALSE
+chad race_236,20,Male,FALSE
+chad race_238,19,Male,FALSE
+chad race_24,19,Female,FALSE
+chad race_241,20,Male,FALSE
+chad race_244,19,Male,FALSE
+chad race_247,18,Male,FALSE
+chad race_250,19,Male,FALSE
+chad race_256,19,Male,FALSE
+chad race_259,21,Other,FALSE
+chad race_265,19,Male,FALSE
+chad race_268,18,Male,FALSE
+chad race_271,20,Male,FALSE
+chad race_305,20,Male,FALSE
+chad race_308,22,Male,FALSE
+chad race_311,19,Male,FALSE
+chad race_312,18,Male,FALSE
+chad race_314,19,Male,FALSE
+chad race_317,19,Male,FALSE
+chad race_320,20,Male,FALSE
+chad race_323,19,Male,FALSE
+chad race_326,19,Male,FALSE
+chad race_39,19,Female,FALSE
+chad race_7,18,Female,FALSE
 ian race dearbhail_1,22,Male,FALSE
 ian race dearbhail_10,18,Male,FALSE
 ian race dearbhail_11,23,Female,FALSE
@@ -469,51 +484,36 @@ ian race katie_6,19,Female,FALSE
 ian race katie_7,21,Female,FALSE
 ian race katie_8,18,Male,FALSE
 ian race katie_9,23,Female,FALSE
-chad race_11,19,Female,FALSE
-chad race_0,NA,NA,FALSE
-chad race_214,21,Male,FALSE
-chad race_220,18,Male,FALSE
-chad race_223,18,Male,FALSE
-chad race_232,19,Male,FALSE
-chad race_3,19,Female,FALSE
-chad race_47,18,Female,FALSE
-chad race_103,18,Female,FALSE
-chad race_107,19,Female,FALSE
-chad race_111,19,Female,FALSE
-chad race_115,18,Female,FALSE
-chad race_123,19,Female,FALSE
-chad race_127,19,Female,FALSE
-chad race_205,20,Male,FALSE
-chad race_208,19,Male,FALSE
-chad race_211,18,Male,FALSE
-chad race_217,20,Male,FALSE
-chad race_227,19,Male,FALSE
-chad race_229,24,Male,FALSE
-chad race_233,19,Male,FALSE
-chad race_235,21,Male,FALSE
-chad race_236,20,Male,FALSE
-chad race_238,19,Male,FALSE
-chad race_24,19,Female,FALSE
-chad race_241,20,Male,FALSE
-chad race_244,19,Male,FALSE
-chad race_247,18,Male,FALSE
-chad race_250,19,Male,FALSE
-chad race_256,19,Male,FALSE
-chad race_259,21,Other,FALSE
-chad race_265,19,Male,FALSE
-chad race_268,18,Male,FALSE
-chad race_271,20,Male,FALSE
-chad race_305,20,Male,FALSE
-chad race_308,22,Male,FALSE
-chad race_311,19,Male,FALSE
-chad race_312,18,Male,FALSE
-chad race_314,19,Male,FALSE
-chad race_317,19,Male,FALSE
-chad race_320,20,Male,FALSE
-chad race_323,19,Male,FALSE
-chad race_326,19,Male,FALSE
-chad race_39,19,Female,FALSE
-chad race_7,18,Female,FALSE
+chad religion_12,18,Female,FALSE
+chad religion_203,18,Male,FALSE
+chad religion_215,20,Male,FALSE
+chad religion_104,18,Female,FALSE
+chad religion_108,60,Female,FALSE
+chad religion_112,22,Female,FALSE
+chad religion_116,18,Female,FALSE
+chad religion_120,19,Female,FALSE
+chad religion_128,18,Female,FALSE
+chad religion_16,19,Female,FALSE
+chad religion_20,19,Female,FALSE
+chad religion_209,18,Male,FALSE
+chad religion_212,19,Male,FALSE
+chad religion_239,20,Male,FALSE
+chad religion_242,19,Male,FALSE
+chad religion_248,18,Male,FALSE
+chad religion_251,22,Male,FALSE
+chad religion_254,20,Male,FALSE
+chad religion_257,20,Male,FALSE
+chad religion_260,18,Male,FALSE
+chad religion_266,20,Male,FALSE
+chad religion_269,20,Male,FALSE
+chad religion_272,21,Male,FALSE
+chad religion_306,19,Male,FALSE
+chad religion_309,18,Male,FALSE
+chad religion_318,20,Male,FALSE
+chad religion_321,18,Male,FALSE
+chad religion_324,22,Male,FALSE
+chad religion_40,20,Female,FALSE
+chad religion_8,19,Female,FALSE
 countries acknowledge 1 siabP01X,NA,NA,FALSE
 countries acknowledge 1 siabP02X,NA,NA,FALSE
 countries acknowledge 1 siabP04,NA,NA,FALSE
@@ -573,37 +573,6 @@ countries acknowledge 1 willp24,NA,NA,NA
 countries acknowledge 1 willp25,NA,NA,NA
 countries acknowledge 1 willp26,NA,NA,FALSE
 countries acknowledge 1 willp27,NA,NA,NA
-countries 2 acknowledge 19,23,Female,FALSE
-countries 2 acknowledge 20,19,Female,FALSE
-countries 2 acknowledge 21,22,Female,FALSE
-countries 2 acknowledge 22,27,Male,FALSE
-countries 2 acknowledge 23,22,Female,FALSE
-countries 2 acknowledge 25,22,Female,FALSE
-countries 2 acknowledge 24,28,Male,FALSE
-countries 2 acknowledge 27,18,Female,FALSE
-countries 2 acknowledge 26,19,Male,NA
-countries 2 acknowledge 28,21,Female,FALSE
-countries 2 acknowledge 29,19,Female,FALSE
-countries 2 acknowledge 30,21,Male,FALSE
-countries 2 acknowledge 31,42,Male,FALSE
-countries 2 acknowledge 32,21,Male,FALSE
-countries 2 acknowledge 33,20,Male,FALSE
-countries 2 acknowledge 34,18,Female,FALSE
-countries 2 acknowledge 35,21,Female,FALSE
-countries 2 acknowledge 36,22,Female,FALSE
-countries 2 acknowledge 4,20,Female,FALSE
-countries 2 acknowledge 5,22,Male,FALSE
-countries 2 acknowledge 6,21,Male,FALSE
-countries 2 acknowledge 7,20,Male,FALSE
-countries 2 acknowledge 8,21,Female,FALSE
-countries 2 acknowledge 9,23,Female,FALSE
-countries 2 acknowledge 10,21,Female,FALSE
-countries 2 acknowledge 11,20,Female,NA
-countries 2 acknowledge 12,21,Female,FALSE
-countries 2 acknowledge 13,20,Male,FALSE
-countries 2 acknowledge 14,19,Female,FALSE
-countries 2 acknowledge 15,18,Female,NA
-countries 2 acknowledge 1,21,Male,FALSE
 countries care 1 siabP04,NA,NA,FALSE
 countries care 1 siabP05,NA,NA,FALSE
 countries care 1 siabP06,NA,NA,FALSE
@@ -659,6 +628,37 @@ countries care 1 willp23,NA,NA,FALSE
 countries care 1 willp25,NA,NA,NA
 countries care 1 willp26,NA,NA,NA
 countries care 1 willp27,NA,NA,FALSE
+countries 2 acknowledge 19,23,Female,FALSE
+countries 2 acknowledge 20,19,Female,FALSE
+countries 2 acknowledge 21,22,Female,FALSE
+countries 2 acknowledge 22,27,Male,FALSE
+countries 2 acknowledge 23,22,Female,FALSE
+countries 2 acknowledge 25,22,Female,FALSE
+countries 2 acknowledge 24,28,Male,FALSE
+countries 2 acknowledge 27,18,Female,FALSE
+countries 2 acknowledge 26,19,Male,NA
+countries 2 acknowledge 28,21,Female,FALSE
+countries 2 acknowledge 29,19,Female,FALSE
+countries 2 acknowledge 30,21,Male,FALSE
+countries 2 acknowledge 31,42,Male,FALSE
+countries 2 acknowledge 32,21,Male,FALSE
+countries 2 acknowledge 33,20,Male,FALSE
+countries 2 acknowledge 34,18,Female,FALSE
+countries 2 acknowledge 35,21,Female,FALSE
+countries 2 acknowledge 36,22,Female,FALSE
+countries 2 acknowledge 4,20,Female,FALSE
+countries 2 acknowledge 5,22,Male,FALSE
+countries 2 acknowledge 6,21,Male,FALSE
+countries 2 acknowledge 7,20,Male,FALSE
+countries 2 acknowledge 8,21,Female,FALSE
+countries 2 acknowledge 9,23,Female,FALSE
+countries 2 acknowledge 10,21,Female,FALSE
+countries 2 acknowledge 11,20,Female,NA
+countries 2 acknowledge 12,21,Female,FALSE
+countries 2 acknowledge 13,20,Male,FALSE
+countries 2 acknowledge 14,19,Female,FALSE
+countries 2 acknowledge 15,18,Female,NA
+countries 2 acknowledge 1,21,Male,FALSE
 countries 2 care 1,21,Male,FALSE
 countries 2 care 23,22,Female,FALSE
 countries 2 care 25,22,Female,FALSE
