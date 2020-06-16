@@ -715,6 +715,6 @@ trt_length_increase_.70 <- round((goal_test_retest*(1 - current_test_retest)) / 
 
 ```
 
-Using the absolute agreement estimate of 0.40, the IRAP would have to be `r trt_length_increase_.70` times longer for it to have a test-retest of >=.70, `r trt_length_increase_.80` times longer for it to have a test-retest of >=.80, or `r trt_length_increase_.90` times longer for it to have a test-retest of >=.90.
+Using the absolute agreement estimate of `r round(transf.ztor(predictions_test_retest_icc$pred), 2)`, the IRAP would have to be `r trt_length_increase_.70` times longer for it to have a test-retest of >=.70, `r trt_length_increase_.80` times longer for it to have a test-retest of >=.80, or `r trt_length_increase_.90` times longer for it to have a test-retest of >=.90.
 
 
