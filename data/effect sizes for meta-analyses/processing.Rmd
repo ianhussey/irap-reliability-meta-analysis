@@ -84,7 +84,7 @@ and exclusion of outliers on the basis of median mean_rt +/- 2MAD
 
 data_cleaned_trt <- read.csv("../trial level data/data_testretest_cleaned_trial_level.csv") 
 
-data_cleaned_trt_outliers <- data_cleaned_trt %>%
+temp <- data_cleaned_trt %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   select(unique_id, mean_rt) %>%
   mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
@@ -96,8 +96,12 @@ data_cleaned_trt_outliers <- data_cleaned_trt %>%
   filter(rt_outlier == FALSE) %>%
   select(unique_id, rt_outlier)
 
-data_cleaned_trt_outliers_removed <- data_cleaned_trt %>%
-  full_join(data_cleaned_trt_outliers, by = "unique_id")
+data_cleaned_trt_outliers <- data_cleaned_trt %>%
+  full_join(temp, by = "unique_id") %>%
+  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
+
+data_cleaned_trt_outliers_removed <- data_cleaned_trt_outliers %>%
+  filter(rt_outlier == FALSE)
 
 
 # median_est <- data_cleaned_trt_outliers %>%
@@ -120,7 +124,7 @@ data_cleaned_trt_outliers_removed <- data_cleaned_trt %>%
 
 data_cleaned_ic <- read.csv("../trial level data/data_internalconsistency_cleaned_trial_level.csv") 
 
-data_cleaned_ic_outliers <- data_cleaned_ic %>%
+temp2 <- data_cleaned_ic %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   select(unique_id, mean_rt) %>%
   mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
@@ -132,8 +136,12 @@ data_cleaned_ic_outliers <- data_cleaned_ic %>%
   filter(rt_outlier == FALSE) %>%
   select(unique_id, rt_outlier)
 
-data_cleaned_ic_outliers_removed <- data_cleaned_ic %>%
-  full_join(data_cleaned_ic_outliers, by = "unique_id")
+data_cleaned_ic_outliers <- data_cleaned_ic %>%
+  full_join(temp2, by = "unique_id") %>%
+  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
+
+data_cleaned_ic_outliers_removed <- data_cleaned_ic_outliers %>%
+  filter(rt_outlier == FALSE)
 
 
 # median_est <- data_cleaned_ic_outliers %>%
@@ -162,7 +170,7 @@ whole sample
 ```{r}
 
 # write demographics to disk
-data_demographics <- data_cleaned_ic_outliers_removed %>%
+data_demographics <- data_cleaned_ic_outliers %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   select(unique_id, age, gender, rt_outlier)
 
@@ -170,7 +178,7 @@ write_csv(data_demographics, "data_demographics.csv")
 
 
 # print sample sizes
-data_cleaned_ic_outliers_removed %>%
+data_cleaned_ic_outliers %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   count(rt_outlier) %>%
   rename(n_outlier_exclusions = n) %>%
@@ -179,24 +187,14 @@ data_cleaned_ic_outliers_removed %>%
 
 data_cleaned_ic_outliers_removed %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  filter(rt_outlier == FALSE) %>%
-  count() %>%
-  rename(n_ic_after_exlucions = n) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_cleaned_ic_outliers_removed %>%
-  distinct(unique_id, .keep_all = TRUE) %>%
-  filter(rt_outlier == FALSE) %>%
   count(domain) %>%
   rename(n_ic_after_exlucions = n) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
-data_cleaned_trt_outliers_removed %>%
+data_cleaned_trt_outliers %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  filter(rt_outlier == FALSE) %>%
-  count() %>%
+  count(rt_outlier) %>%
   rename(n_trt_after_exlucions = n) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)

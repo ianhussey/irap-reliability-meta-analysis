@@ -38,11 +38,11 @@ ian death emma_41,18,Female,FALSE
 ian death emma_43,21,Female,FALSE
 ian death emma_45,21,Female,FALSE
 ian death emma_49,25,Female,FALSE
-ian death emma_5,20,Female,NA
+ian death emma_5,20,Female,TRUE
 ian death emma_7,18,Female,FALSE
 ian death emma_9,19,Male,FALSE
 ian death june_13,21,Male,FALSE
-ian death june_15,21,Female,NA
+ian death june_15,21,Female,TRUE
 ian death june_17,18,Male,FALSE
 ian death june_21,20,Male,FALSE
 ian death june_23,20,Female,FALSE
@@ -82,14 +82,14 @@ ian death tarah_29,39,Male,FALSE
 ian death tarah_2,32,Male,FALSE
 ian death tarah_30,31,Female,FALSE
 ian death tarah_33,51,Male,FALSE
-ian death tarah_34,20,Female,NA
+ian death tarah_34,20,Female,TRUE
 ian death tarah_37,31,Female,FALSE
 ian death tarah_38,21,Female,FALSE
 ian death tarah_42,19,Female,FALSE
 ian death tarah_44,21,Female,FALSE
 ian death tarah_5,21,Male,FALSE
 ian death tarah_7,34,Female,FALSE
-ian death tarah_8,NA,NA,NA
+ian death tarah_8,NA,NA,TRUE
 ian death tarah_9,20,Female,FALSE
 chad friendenemy_103,18,Male,FALSE
 chad friendenemy_105,18,Female,FALSE
@@ -114,7 +114,7 @@ chad friendenemy_173,18,Female,FALSE
 chad friendenemy_175,20,Female,FALSE
 chad friendenemy_180,18,Male,FALSE
 chad friendenemy_182,19,Male,FALSE
-chad friendenemy_187,18,Male,NA
+chad friendenemy_187,18,Male,TRUE
 chad friendenemy_189,19,Female,FALSE
 chad friendenemy_202,NA,NA,FALSE
 chad friendenemy_212,18,Male,FALSE
@@ -132,10 +132,10 @@ chad friendenemy_331,19,Female,FALSE
 chad friendenemy_338,18,Female,FALSE
 chad friendenemy_340,19,Female,FALSE
 chad friendenemy_345,21,Female,FALSE
-chad friendenemy_347,28,Male,NA
+chad friendenemy_347,28,Male,TRUE
 chad friendenemy_352,19,Female,FALSE
 chad friendenemy_354,18,Female,FALSE
-chad friendenemy_359,19,Female,NA
+chad friendenemy_359,19,Female,TRUE
 chad friendenemy_361,18,Male,FALSE
 chad friendenemy_366,21,Male,FALSE
 chad friendenemy_368,18,Male,FALSE
@@ -153,7 +153,7 @@ chad friendenemy_603,19,Female,FALSE
 chad friendenemy_605,18,Male,FALSE
 chad friendenemy_610,19,Male,FALSE
 chad friendenemy_612,18,Male,FALSE
-chad friendenemy_217,18,Male,NA
+chad friendenemy_217,18,Male,TRUE
 chad friendenemy_410,18,Female,FALSE
 chad friendenemy_104,NA,NA,FALSE
 chad friendenemy_111,NA,NA,FALSE
@@ -180,7 +180,7 @@ chad friendenemy_339,NA,NA,FALSE
 chad friendenemy_346,NA,NA,FALSE
 chad friendenemy_353,NA,NA,FALSE
 chad friendenemy_360,NA,NA,FALSE
-chad friendenemy_367,NA,NA,NA
+chad friendenemy_367,NA,NA,TRUE
 chad friendenemy_374,NA,NA,FALSE
 chad friendenemy_404,NA,NA,FALSE
 chad friendenemy_504,NA,NA,FALSE
@@ -191,7 +191,7 @@ chad friendenemy_611,NA,NA,FALSE
 chad friendenemy_225,NA,NA,FALSE
 chad friendenemy_126,NA,NA,FALSE
 chad friendenemy_205,NA,NA,FALSE
-chad friendenemy_213,NA,NA,NA
+chad friendenemy_213,NA,NA,TRUE
 chad gender_10,NA,NA,FALSE
 chad gender_14,NA,NA,FALSE
 chad gender_201,NA,NA,FALSE
@@ -244,7 +244,7 @@ chad lincolnhitler_122,20,Female,FALSE
 chad lincolnhitler_123,18,Female,FALSE
 chad lincolnhitler_125,19,Male,FALSE
 chad lincolnhitler_129,20,Male,FALSE
-chad lincolnhitler_130,18,Female,NA
+chad lincolnhitler_130,18,Female,TRUE
 chad lincolnhitler_132,18,Female,FALSE
 chad lincolnhitler_136,21,Male,FALSE
 chad lincolnhitler_137,18,Female,FALSE
@@ -293,7 +293,7 @@ chad lincolnhitler_343,18,Male,FALSE
 chad lincolnhitler_344,29,Female,FALSE
 chad lincolnhitler_346,18,Female,FALSE
 chad lincolnhitler_350,18,Female,FALSE
-chad lincolnhitler_351,18,Male,NA
+chad lincolnhitler_351,18,Male,TRUE
 chad lincolnhitler_353,18,Male,FALSE
 chad lincolnhitler_357,19,Male,FALSE
 chad lincolnhitler_358,19,Female,FALSE
@@ -308,9 +308,9 @@ chad lincolnhitler_401,18,Female,FALSE
 chad lincolnhitler_402,18,Female,FALSE
 chad lincolnhitler_404,19,Female,FALSE
 chad lincolnhitler_408,27,Male,FALSE
-chad lincolnhitler_411,18,Male,NA
+chad lincolnhitler_411,18,Male,TRUE
 chad lincolnhitler_501,18,Female,FALSE
-chad lincolnhitler_502,18,Male,NA
+chad lincolnhitler_502,18,Male,TRUE
 chad lincolnhitler_504,20,Female,FALSE
 chad lincolnhitler_508,18,Female,FALSE
 chad lincolnhitler_509,19,Female,FALSE
@@ -432,7 +432,7 @@ ian race dearbhail_24,23,Female,FALSE
 ian race dearbhail_25,24,Male,FALSE
 ian race dearbhail_26,49,Male,FALSE
 ian race dearbhail_27,18,Female,FALSE
-ian race dearbhail_28,18,Female,NA
+ian race dearbhail_28,18,Female,TRUE
 ian race dearbhail_3,22,Female,FALSE
 ian race dearbhail_31,22,Female,FALSE
 ian race dearbhail_32,18,Female,FALSE
@@ -521,19 +521,19 @@ countries acknowledge 1 siabP05,NA,NA,FALSE
 countries acknowledge 1 siabP06,NA,NA,FALSE
 countries acknowledge 1 siabP07,NA,NA,FALSE
 countries acknowledge 1 siabP10,NA,NA,FALSE
-countries acknowledge 1 siabP11,NA,NA,NA
-countries acknowledge 1 siabP12,NA,NA,NA
+countries acknowledge 1 siabP11,NA,NA,TRUE
+countries acknowledge 1 siabP12,NA,NA,TRUE
 countries acknowledge 1 siabP13,NA,NA,FALSE
-countries acknowledge 1 siabP14,NA,NA,NA
+countries acknowledge 1 siabP14,NA,NA,TRUE
 countries acknowledge 1 siabP15,NA,NA,FALSE
 countries acknowledge 1 siabP16,NA,NA,FALSE
 countries acknowledge 1 siabP17,NA,NA,FALSE
-countries acknowledge 1 siabP18,NA,NA,NA
+countries acknowledge 1 siabP18,NA,NA,TRUE
 countries acknowledge 1 siabP19,NA,NA,FALSE
 countries acknowledge 1 siabP20,NA,NA,FALSE
-countries acknowledge 1 siabP21,NA,NA,NA
+countries acknowledge 1 siabP21,NA,NA,TRUE
 countries acknowledge 1 siabP22,NA,NA,FALSE
-countries acknowledge 1 siabP23,NA,NA,NA
+countries acknowledge 1 siabP23,NA,NA,TRUE
 countries acknowledge 1 siabP24,NA,NA,FALSE
 countries acknowledge 1 siabP26,NA,NA,FALSE
 countries acknowledge 1 siabP27,NA,NA,FALSE
@@ -541,7 +541,7 @@ countries acknowledge 1 siabP28,NA,NA,FALSE
 countries acknowledge 1 siabP29,NA,NA,FALSE
 countries acknowledge 1 siabP30,NA,NA,FALSE
 countries acknowledge 1 siabP31,NA,NA,FALSE
-countries acknowledge 1 siabP32,NA,NA,NA
+countries acknowledge 1 siabP32,NA,NA,TRUE
 countries acknowledge 1 siabP33,NA,NA,FALSE
 countries acknowledge 1 siabP34,NA,NA,FALSE
 countries acknowledge 1 siabP35,NA,NA,FALSE
@@ -549,7 +549,7 @@ countries acknowledge 1 siabP38,NA,NA,FALSE
 countries acknowledge 1 siabP39,NA,NA,FALSE
 countries acknowledge 1 siabP40,NA,NA,FALSE
 countries acknowledge 1 siabP41,NA,NA,FALSE
-countries acknowledge 1 willP13,NA,NA,NA
+countries acknowledge 1 willP13,NA,NA,TRUE
 countries acknowledge 1 willp03,NA,NA,FALSE
 countries acknowledge 1 willp04,NA,NA,FALSE
 countries acknowledge 1 willp05,NA,NA,FALSE
@@ -557,10 +557,10 @@ countries acknowledge 1 willp06,NA,NA,FALSE
 countries acknowledge 1 willp07,NA,NA,FALSE
 countries acknowledge 1 willp09,NA,NA,FALSE
 countries acknowledge 1 willp10,NA,NA,FALSE
-countries acknowledge 1 willp11,NA,NA,NA
+countries acknowledge 1 willp11,NA,NA,TRUE
 countries acknowledge 1 willp1,NA,NA,FALSE
-countries acknowledge 1 willp14,NA,NA,NA
-countries acknowledge 1 willp15,NA,NA,NA
+countries acknowledge 1 willp14,NA,NA,TRUE
+countries acknowledge 1 willp15,NA,NA,TRUE
 countries acknowledge 1 willp16,NA,NA,FALSE
 countries acknowledge 1 willp17,NA,NA,FALSE
 countries acknowledge 1 willp18,NA,NA,FALSE
@@ -569,27 +569,27 @@ countries acknowledge 1 willp20,NA,NA,FALSE
 countries acknowledge 1 willp21,NA,NA,FALSE
 countries acknowledge 1 willp2,NA,NA,FALSE
 countries acknowledge 1 willp23,NA,NA,FALSE
-countries acknowledge 1 willp24,NA,NA,NA
-countries acknowledge 1 willp25,NA,NA,NA
+countries acknowledge 1 willp24,NA,NA,TRUE
+countries acknowledge 1 willp25,NA,NA,TRUE
 countries acknowledge 1 willp26,NA,NA,FALSE
-countries acknowledge 1 willp27,NA,NA,NA
+countries acknowledge 1 willp27,NA,NA,TRUE
 countries care 1 siabP04,NA,NA,FALSE
 countries care 1 siabP05,NA,NA,FALSE
 countries care 1 siabP06,NA,NA,FALSE
 countries care 1 siabP07,NA,NA,FALSE
 countries care 1 siabP09,NA,NA,FALSE
 countries care 1 siabP10,NA,NA,FALSE
-countries care 1 siabP11,NA,NA,NA
-countries care 1 siabP12,NA,NA,NA
+countries care 1 siabP11,NA,NA,TRUE
+countries care 1 siabP12,NA,NA,TRUE
 countries care 1 siabP13,NA,NA,FALSE
-countries care 1 siabP14,NA,NA,NA
+countries care 1 siabP14,NA,NA,TRUE
 countries care 1 siabP15,NA,NA,FALSE
 countries care 1 siabP16,NA,NA,FALSE
 countries care 1 siabP17,NA,NA,FALSE
 countries care 1 siabP18,NA,NA,FALSE
 countries care 1 siabP19,NA,NA,FALSE
-countries care 1 siabP20,NA,NA,NA
-countries care 1 siabP21,NA,NA,NA
+countries care 1 siabP20,NA,NA,TRUE
+countries care 1 siabP21,NA,NA,TRUE
 countries care 1 siabP23,NA,NA,FALSE
 countries care 1 siabP24,NA,NA,FALSE
 countries care 1 siabP26,NA,NA,FALSE
@@ -610,7 +610,7 @@ countries care 1 willP04,NA,NA,FALSE
 countries care 1 willP06,NA,NA,FALSE
 countries care 1 willp0,NA,NA,FALSE
 countries care 1 willp05,NA,NA,FALSE
-countries care 1 willp07,NA,NA,NA
+countries care 1 willp07,NA,NA,TRUE
 countries care 1 willp08,NA,NA,FALSE
 countries care 1 willp09,NA,NA,FALSE
 countries care 1 willp10,NA,NA,FALSE
@@ -619,14 +619,14 @@ countries care 1 willp1,NA,NA,FALSE
 countries care 1 willp13,NA,NA,FALSE
 countries care 1 willp16,NA,NA,FALSE
 countries care 1 willp17,NA,NA,FALSE
-countries care 1 willp18,NA,NA,NA
+countries care 1 willp18,NA,NA,TRUE
 countries care 1 willp19,NA,NA,FALSE
 countries care 1 willp20,NA,NA,FALSE
-countries care 1 willp21,NA,NA,NA
+countries care 1 willp21,NA,NA,TRUE
 countries care 1 willp2,NA,NA,FALSE
 countries care 1 willp23,NA,NA,FALSE
-countries care 1 willp25,NA,NA,NA
-countries care 1 willp26,NA,NA,NA
+countries care 1 willp25,NA,NA,TRUE
+countries care 1 willp26,NA,NA,TRUE
 countries care 1 willp27,NA,NA,FALSE
 countries 2 acknowledge 19,23,Female,FALSE
 countries 2 acknowledge 20,19,Female,FALSE
@@ -636,7 +636,7 @@ countries 2 acknowledge 23,22,Female,FALSE
 countries 2 acknowledge 25,22,Female,FALSE
 countries 2 acknowledge 24,28,Male,FALSE
 countries 2 acknowledge 27,18,Female,FALSE
-countries 2 acknowledge 26,19,Male,NA
+countries 2 acknowledge 26,19,Male,TRUE
 countries 2 acknowledge 28,21,Female,FALSE
 countries 2 acknowledge 29,19,Female,FALSE
 countries 2 acknowledge 30,21,Male,FALSE
@@ -653,41 +653,41 @@ countries 2 acknowledge 7,20,Male,FALSE
 countries 2 acknowledge 8,21,Female,FALSE
 countries 2 acknowledge 9,23,Female,FALSE
 countries 2 acknowledge 10,21,Female,FALSE
-countries 2 acknowledge 11,20,Female,NA
+countries 2 acknowledge 11,20,Female,TRUE
 countries 2 acknowledge 12,21,Female,FALSE
 countries 2 acknowledge 13,20,Male,FALSE
 countries 2 acknowledge 14,19,Female,FALSE
-countries 2 acknowledge 15,18,Female,NA
+countries 2 acknowledge 15,18,Female,TRUE
 countries 2 acknowledge 1,21,Male,FALSE
 countries 2 care 1,21,Male,FALSE
 countries 2 care 23,22,Female,FALSE
 countries 2 care 25,22,Female,FALSE
 countries 2 care 24,28,Male,FALSE
-countries 2 care 27,18,Female,NA
-countries 2 care 26,19,Male,NA
-countries 2 care 28,21,Female,NA
+countries 2 care 27,18,Female,TRUE
+countries 2 care 26,19,Male,TRUE
+countries 2 care 28,21,Female,TRUE
 countries 2 care 29,19,Female,FALSE
 countries 2 care 30,42,Male,FALSE
 countries 2 care 32,21,Male,FALSE
 countries 2 care 33,20,Male,FALSE
 countries 2 care 34,18,Female,FALSE
-countries 2 care 35,21,Female,NA
-countries 2 care 36,22,Female,NA
+countries 2 care 35,21,Female,TRUE
+countries 2 care 36,22,Female,TRUE
 countries 2 care 4,20,Female,FALSE
 countries 2 care 5,22,Male,FALSE
 countries 2 care 6,21,Male,FALSE
 countries 2 care 7,20,Male,FALSE
 countries 2 care 8,21,Female,FALSE
-countries 2 care 10,21,Female,NA
+countries 2 care 10,21,Female,TRUE
 countries 2 care 11,20,Female,FALSE
 countries 2 care 13,20,Male,FALSE
 countries 2 care 16,20,Female,FALSE
-countries 2 care 14,19,Female,NA
+countries 2 care 14,19,Female,TRUE
 disgust 14,NA,NA,FALSE
 disgust 1,NA,NA,FALSE
 disgust 5,NA,NA,FALSE
-disgust 8,NA,NA,NA
-disgust 37,NA,NA,NA
+disgust 8,NA,NA,TRUE
+disgust 37,NA,NA,TRUE
 disgust 39,NA,NA,FALSE
 disgust 20,NA,NA,FALSE
 disgust 6,NA,NA,FALSE
@@ -699,12 +699,12 @@ disgust 16,NA,NA,FALSE
 disgust 25,NA,NA,FALSE
 disgust 24,NA,NA,FALSE
 disgust 17,NA,NA,FALSE
-disgust 26,NA,NA,NA
+disgust 26,NA,NA,TRUE
 disgust 19,NA,NA,FALSE
 disgust 21,NA,NA,FALSE
 disgust 101,NA,NA,FALSE
 disgust 34,NA,NA,FALSE
-disgust 35,NA,NA,NA
+disgust 35,NA,NA,TRUE
 disgust 23,NA,NA,FALSE
 disgust 12,NA,NA,FALSE
 disgust 22,NA,NA,FALSE
@@ -735,7 +735,7 @@ disgust_038.1 disgust cont con EA 2,NA,NA,FALSE
 disgust_040.1 disgust cont con EA,NA,NA,FALSE
 disgust_041.1 disgust cont con EA,NA,NA,FALSE
 disgust_042.1 disgust cont con EA,NA,NA,FALSE
-disgust_43.1,NA,NA,NA
+disgust_43.1,NA,NA,TRUE
 disgust_044.1 disgst cont con eb,NA,NA,FALSE
 disgust_025 disgust cont con eb,NA,NA,FALSE
 disgust_047.1 disgst incon cont eA,NA,NA,FALSE
@@ -760,7 +760,7 @@ disgust_16.1,NA,NA,FALSE
 disgust_17.1,NA,NA,FALSE
 disgust_19.1,NA,NA,FALSE
 disgust_20.1,NA,NA,FALSE
-disgust_21.1,NA,NA,NA
+disgust_21.1,NA,NA,TRUE
 disgust_22.1,NA,NA,FALSE
 disgust_24.1,NA,NA,FALSE
 disgust_15.1,NA,NA,FALSE
@@ -778,7 +778,7 @@ food hunger 21a,NA,NA,FALSE
 food hunger 23a,NA,NA,FALSE
 food hunger 25a,NA,NA,FALSE
 food hunger 27a,NA,NA,FALSE
-food hunger 29a,NA,NA,NA
+food hunger 29a,NA,NA,TRUE
 food hunger 33a,NA,NA,FALSE
 food hunger 3a,NA,NA,FALSE
 food hunger 5a,NA,NA,FALSE
@@ -801,7 +801,7 @@ sexuality_Participant 37a,NA,NA,FALSE
 sexuality_Participant 38a,NA,NA,FALSE
 sexuality_Participant 41a,NA,NA,FALSE
 sexuality_Participant 5a,NA,NA,FALSE
-sexuality_Participant 61a,NA,NA,NA
+sexuality_Participant 61a,NA,NA,TRUE
 sexuality_Participant 6a,NA,NA,FALSE
 sexuality_Participant 9a,NA,NA,FALSE
 shapesandcolors YN rule 24,20,Female,FALSE
@@ -811,17 +811,17 @@ shapesandcolors YN rule 30,19,Female,FALSE
 shapesandcolors YN rule 32,19,Female,FALSE
 shapesandcolors YN rule 15,19,Male,FALSE
 shapesandcolors YN rule 16,20,Female,FALSE
-shapesandcolors YN rule 17,19,Female,NA
+shapesandcolors YN rule 17,19,Female,TRUE
 shapesandcolors YN rule 18,20,Male,FALSE
-shapesandcolors YN rule 19,18,Female,NA
+shapesandcolors YN rule 19,18,Female,TRUE
 shapesandcolors YN rule 20,18,Female,FALSE
 shapesandcolors YN rule 21,19,Male,FALSE
 shapesandcolors YN rule 22,20,Female,FALSE
-shapesandcolors YN rule 10,20,Female,NA
+shapesandcolors YN rule 10,20,Female,TRUE
 shapesandcolors YN correct 25,21,Female,FALSE
 shapesandcolors YN correct 26,19,Female,FALSE
 shapesandcolors YN correct 27,20,Female,FALSE
-shapesandcolors YN correct 30,21,Male,NA
+shapesandcolors YN correct 30,21,Male,TRUE
 shapesandcolors YN correct 32,19,Female,FALSE
 shapesandcolors YN correct 34,17,Female,FALSE
 shapesandcolors YN correct 17,20,Female,FALSE
@@ -829,7 +829,7 @@ shapesandcolors YN correct 18,19,Female,FALSE
 shapesandcolors YN correct 19,19,Male,FALSE
 shapesandcolors YN correct 20,21,Male,FALSE
 shapesandcolors YN correct 21,20,Male,FALSE
-shapesandcolors YN correct 22,21,Female,NA
+shapesandcolors YN correct 22,21,Female,TRUE
 shapesandcolors YN correct 15,19,Female,FALSE
 shapesandcolors TF correct 10,20,Female,FALSE
 shapesandcolors TF correct 11,21,Male,FALSE
@@ -838,25 +838,25 @@ shapesandcolors TF correct 31,21,Female,FALSE
 shapesandcolors TF correct 35,20,Male,FALSE
 shapesandcolors TF correct 2,22,Male,FALSE
 shapesandcolors TF correct 5,18,Male,FALSE
-shapesandcolors TF correct 6,21,Female,NA
-shapesandcolors TF correct 7,25,Male,NA
+shapesandcolors TF correct 6,21,Female,TRUE
+shapesandcolors TF correct 7,25,Male,TRUE
 shapesandcolors TF correct 8,18,Female,FALSE
 shapesandcolors TF correct 9,19,Female,FALSE
 shapesandcolors TF correct 1,19,Male,FALSE
 shapesandcolors TF rule 12,21,Male,FALSE
-shapesandcolors TF rule 33,21,Female,NA
+shapesandcolors TF rule 33,21,Female,TRUE
 shapesandcolors TF rule 35,22,Male,FALSE
 shapesandcolors TF rule 2,21,Female,FALSE
 shapesandcolors TF rule 3,19,Male,FALSE
 shapesandcolors TF rule 4,19,Female,FALSE
 shapesandcolors TF rule 5,19,Male,FALSE
 shapesandcolors TF rule 6,18,Male,FALSE
-shapesandcolors TF rule 9,19,Female,NA
-shapesandcolors TF rule 11,19,Female,NA
+shapesandcolors TF rule 9,19,Female,TRUE
+shapesandcolors TF rule 11,19,Female,TRUE
 shapes and colors exp 2 full rule 102,NA,NA,FALSE
 shapes and colors exp 2 full rule 107,NA,NA,FALSE
 shapes and colors exp 2 full rule 112,NA,NA,FALSE
-shapes and colors exp 2 full rule 117,NA,NA,NA
+shapes and colors exp 2 full rule 117,NA,NA,TRUE
 shapes and colors exp 2 full rule 12,NA,NA,FALSE
 shapes and colors exp 2 full rule 122,NA,NA,FALSE
 shapes and colors exp 2 full rule 123,NA,NA,FALSE
@@ -868,13 +868,13 @@ shapes and colors exp 2 full rule 22,NA,NA,FALSE
 shapes and colors exp 2 full rule 27,NA,NA,FALSE
 shapes and colors exp 2 full rule 32,NA,NA,FALSE
 shapes and colors exp 2 full rule 37,NA,NA,FALSE
-shapes and colors exp 2 full rule 42,NA,NA,NA
+shapes and colors exp 2 full rule 42,NA,NA,TRUE
 shapes and colors exp 2 full rule 47,NA,NA,FALSE
 shapes and colors exp 2 full rule 57,NA,NA,FALSE
 shapes and colors exp 2 full rule 62,NA,NA,FALSE
 shapes and colors exp 2 full rule 7,NA,NA,FALSE
 shapes and colors exp 2 full rule 72,NA,NA,FALSE
-shapes and colors exp 2 full rule 77,NA,NA,NA
+shapes and colors exp 2 full rule 77,NA,NA,TRUE
 shapes and colors exp 2 full rule 87,NA,NA,FALSE
 shapes and colors exp 2 full rule 92,NA,NA,FALSE
 shapes and colors exp 2 full rule 97,NA,NA,FALSE
@@ -893,14 +893,14 @@ shapes and colors exp 2 minimal rule 160,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 165,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 170,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 175,NA,NA,FALSE
-shapes and colors exp 2 minimal rule 185,NA,NA,NA
+shapes and colors exp 2 minimal rule 185,NA,NA,TRUE
 shapes and colors exp 2 minimal rule 195,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 25,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 35,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 40,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 5,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 50,NA,NA,FALSE
-shapes and colors exp 2 minimal rule 65,NA,NA,NA
+shapes and colors exp 2 minimal rule 65,NA,NA,TRUE
 shapes and colors exp 2 minimal rule 70,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 75,NA,NA,FALSE
 shapes and colors exp 2 minimal rule 80,NA,NA,FALSE
@@ -918,7 +918,7 @@ shapes and colors exp 3 24TF,NA,NA,FALSE
 shapes and colors exp 3 3,NA,NA,FALSE
 shapes and colors exp 3 4,NA,NA,FALSE
 shapes and colors exp 3 5,NA,NA,FALSE
-shapes and colors exp 3 7,NA,NA,NA
+shapes and colors exp 3 7,NA,NA,TRUE
 shapes and colors exp 3 8,NA,NA,FALSE
 shapes and colors exp 3 9TF,NA,NA,FALSE
 positive_negative_032.1 (control),NA,NA,FALSE
@@ -931,7 +931,7 @@ positive_negative_039.1 control,NA,NA,FALSE
 positive_negative_040.1 control,NA,NA,FALSE
 positive_negative_041.1 cont,NA,NA,FALSE
 positive_negative_042.1 contol,NA,NA,FALSE
-positive_negative_043.1 cont,NA,NA,NA
+positive_negative_043.1 cont,NA,NA,TRUE
 positive_negative_044.1 cont,NA,NA,FALSE
 positive_negative_045.1 cont,NA,NA,FALSE
 positive_negative_046.1 cont,NA,NA,FALSE
