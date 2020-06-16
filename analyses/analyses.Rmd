@@ -303,6 +303,34 @@ Meta effect: `r meta_effect`.
 
 Heterogeneity: `r meta_heterogeneity`.
 
+### GOSH
+
+```{r fig.height=5, fig.width=5}
+
+if(!file.exists("models/fit_gosh_ic.rds")){
+  
+  fit_gosh_ic <- gosh(fit_internal_consistency_permuted_estimates, 
+                    parallel = "multicore", 
+                    ncpus = 4)
+  
+  write_rds(fit_gosh_ic, "models/fit_gosh_ic.rds")
+  
+} else {
+  
+  fit_gosh_ic <- read_rds("models/fit_gosh_ic.rds")
+  
+}
+
+plot(fit_gosh_ic, breaks = 20)
+
+tibble(mean_es_est = round(mean(fit_gosh_ic$res$estimate, na.rm = TRUE), 2),
+       mean_I2_est = round(mean(fit_gosh_ic$res$I2, na.rm = TRUE), 1),
+       mean_H2_est = round(mean(fit_gosh_ic$res$H2, na.rm = TRUE), 1)) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
 # Test-retest reliability
 
 I.e., Intraclass Correlation Coefficients.
@@ -360,6 +388,34 @@ write_rds(fit_test_retest_icc, "models/fit_test_retest_icc.rds")
 Meta effect: `r meta_effect`.
 
 Heterogeneity: `r meta_heterogeneity`.
+
+## GOSH
+
+```{r fig.height=5, fig.width=5}
+
+if(!file.exists("models/fit_gosh_trt.rds")){
+  
+  fit_gosh_trt <- gosh(fit_internal_consistency_permuted_estimates, 
+                       parallel = "multicore", 
+                       ncpus = 4)
+  
+  write_rds(fit_gosh_trt, "models/fit_gosh_trt.rds")
+  
+} else {
+  
+  fit_gosh_trt <- read_rds("models/fit_gosh_trt.rds")
+  
+}
+
+plot(fit_gosh_trt, breaks = 20)
+
+tibble(mean_es_est = round(mean(fit_gosh_trt$res$estimate, na.rm = TRUE), 2),
+       mean_I2_est = round(mean(fit_gosh_trt$res$I2, na.rm = TRUE), 1),
+       mean_H2_est = round(mean(fit_gosh_trt$res$H2, na.rm = TRUE), 1)) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
 
 # Power implications
 
