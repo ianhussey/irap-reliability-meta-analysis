@@ -30,7 +30,7 @@ library(tidyverse)
 
 # process sexuality data that included two timepoints 
 
-data_input <- read_csv("raw data/test-retest IRAPs/raw/data sexuality test retest - trial level.csv")
+data_input <- read_csv("tidied data/test-retest IRAPs/raw/data sexuality test retest - trial level.csv")
 
 data_completeness <- data_input %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -69,7 +69,7 @@ data_rts_and_summmaries_sexuality <- data_input %>%
 
 # process data that was output by/formatted from the VB6 2012+ IRAP
 
-data_input <- read_csv("raw data/nonevaluative IRAPs/raw/IRAP 2012 VB format files/data disgust - trial level.csv") 
+data_input <- read_csv("tidied data/nonevaluative IRAPs/raw/IRAP 2012 VB format files/data disgust - trial level.csv") 
 
 data_completeness <- data_input %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -116,21 +116,14 @@ data_rts_and_summmaries_digust <- data_input %>%
 
 ```{r}
 
-data_evalautive_iraps <- read_csv("raw data/evaluative IRAPs/data_cleaned_trial_level.csv") %>%
+data_evalautive_iraps <- read_csv("tidied data/evaluative IRAPs/data_cleaned_trial_level.csv") %>%
   filter(timepoint %in% c(1,2)) %>%
   mutate(timepoint = recode(timepoint,
                             "1" = "baseline",
                             "2" = "followup"))
 
-# filter participants who received an intervention before their second IRAP, these aren't strictly test-retest.
-participants_to_be_excluded <- read_csv("raw data/evaluative IRAPs/component studies/participants who received faking instructions.csv") %>%
-  pull(participant_id)
-
-data_evalautive_iraps_after_intervention_exclusions <- data_evalautive_iraps %>%
-  filter(!participant %in% participants_to_be_excluded)
-
 # filter participants who had both baseline and followup data
-temp <- data_evalautive_iraps_after_intervention_exclusions %>%
+temp <- data_evalautive_iraps %>%
   ungroup() %>%
   distinct(unique_id, timepoint, .keep_all = TRUE) %>%
   select(unique_id, timepoint, experiment) %>%
@@ -168,14 +161,32 @@ data_testretest_cleaned_trial_level <-
   # tidy domain
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
-                                "disgust" = "Digust",
-                                "sexuality test retest" = "Sexuality (7 day)",
                                 "chad bodyimage" = "Body image",
-                                "chad friendenemy" = "Friend-enemy",
+                                "chad friendenemy" = "Friend-Enemy",
                                 "chad gender" = "Gender",
                                 "chad lincolnhitler" = "Lincoln-Hitler",
-                                "chad race" = "Race",
-                                "chad religion" = "Religion")) %>%
+                                "chad race"	 = "Race (1)",
+                                "ian race dearbhail" = "Race (2)",
+                                "ian race katie" = "Race (3)",
+                                "chad religion" = "Religion",
+                                "ian death emma" = "Death (1)",
+                                "ian death june" = "Death (2)",
+                                "ian death tarah" = "Death (3)",
+                                "disgust" = "Digust",
+                                "sexuality test retest" = "Sexuality (7 day)",
+                                "countries acknowledge 1" = "Countries (1)",
+                                "countries care 1" = "Countries (2)",
+                                "countries 2 acknowledge" = "Countries (3)",
+                                "countries 2 care" = "Countries (4)",
+                                "positive_negative" = "Valenced words",
+                                "food hunger" = "Hunger",
+                                "shapes and colors YN rule" = "Shapes & colors (1)",
+                                "shapes and colors YN correct" = "Shapes & colors (2)",
+                                "shapes and colors TF correct" = "Shapes & colors (3)",
+                                "shapes and colors TF rule" = "Shapes & colors (4)",
+                                "shapes and colors exp 2 full rule" = "Shapes & colors (5)",
+                                "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
+                                "shapes and colors exp 3" = "Shapes & colors (7)")) %>%
   arrange(as.character(domain)) %>%
   select(unique_id, 
          domain, timepoint, block_order, block_type, 
@@ -193,22 +204,38 @@ write_csv(data_testretest_cleaned_trial_level, "data_testretest_cleaned_trial_le
 
 # get data from evaluative IRAPs
 data_input_evaluative <- 
-  read.csv("raw data/evaluative IRAPs/data_cleaned_trial_level.csv") %>%
+  read.csv("tidied data/evaluative IRAPs/data_cleaned_trial_level.csv") %>%
   mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
   # tidy domain
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
-                                `chad bodyimage` = "Body shape evaluations",
-                                `chad friendenemy` = "Friend-Enemy evaluations",
-                                `chad gender` = "Gender stereotypes",
-                                `chad lincolnhitler` = "Lincoln-Hitler evaluations",
-                                `chad race`	 = "Racial evaluations 2",
-                                `chad religion` = "Christianity-Islam",
-                                `ian death emma` = "Life/Death evaluations 1",
-                                `ian death june` = "Life/Death evaluations 2",
-                                `ian death tarah` = "Life/Death evaluations 3",
-                                `ian race dearbhail` = "Racial evaluations 1",
-                                `ian race katie` = "Racial evaluations 1")) %>%
+                                "chad bodyimage" = "Body image",
+                                "chad friendenemy" = "Friend-Enemy",
+                                "chad gender" = "Gender",
+                                "chad lincolnhitler" = "Lincoln-Hitler",
+                                "chad race"	 = "Race (1)",
+                                "ian race dearbhail" = "Race (2)",
+                                "ian race katie" = "Race (3)",
+                                "chad religion" = "Religion",
+                                "ian death emma" = "Death (1)",
+                                "ian death june" = "Death (2)",
+                                "ian death tarah" = "Death (3)",
+                                "disgust" = "Digust",
+                                # "sexuality test retest" = "Sexuality (7 day)",
+                                "sexuality" = "Sexuality",
+                                "countries acknowledge 1" = "Countries (1)",
+                                "countries care 1" = "Countries (2)",
+                                "countries 2 acknowledge" = "Countries (3)",
+                                "countries 2 care" = "Countries (4)",
+                                "positive_negative" = "Valenced words",
+                                "food hunger" = "Hunger",
+                                "shapes and colors YN rule" = "Shapes & colors (1)",
+                                "shapes and colors YN correct" = "Shapes & colors (2)",
+                                "shapes and colors TF correct" = "Shapes & colors (3)",
+                                "shapes and colors TF rule" = "Shapes & colors (4)",
+                                "shapes and colors exp 2 full rule" = "Shapes & colors (5)",
+                                "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
+                                "shapes and colors exp 3" = "Shapes & colors (7)")) %>%
   arrange(as.character(domain)) %>%
   group_by(unique_id) %>%
   mutate(mean_rt = mean(rt, na.rm = TRUE)) %>%
@@ -226,26 +253,38 @@ data_cleaned_ic_evaluative <- semi_join(data_input_evaluative, data_participants
 # get data from nonevaluative IRAPs
 # nb exclusions for unique ids with wrong number of trials already done in processing
 data_cleaned_ic_nonevaluative <- 
-  read.csv("raw data/nonevaluative IRAPs/data_cleaned_trial_level.csv") %>%
+  read.csv("tidied data/nonevaluative IRAPs/data_cleaned_trial_level.csv") %>%
   mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
   # tidy domain
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
-                                `countries acknowledge 1` = "Countries - acknowledge suffering 1",
-                                `countries care 1` = "Countries - care about suffering 1",
-                                `countries 2 acknowledge` = "Countries - acknowledge suffering 2",
-                                `countries 2 care` = "Countries - care about suffering 2",
-                                `disgust` = "Digust sensitivity",
-                                `positive_negative` = "Valenced categories evaluations",
-                                `sexuality` = "Sexuality and arousal",
-                                `food hunger` = "Food and hunger",
-                                `shapes and colors YN rule` = "Shapes and colors 1",
-                                `shapes and colors YN correct` = "Shapes and colors 2",
-                                `shapes and colors TF correct` = "Shapes and colors 3",
-                                `shapes and colors TF rule` = "Shapes and colors 4",
-                                `shapes and colors exp 2 full rule` = "Shapes and colors 5",
-                                `shapes and colors exp 2 minimal rule` = "Shapes and colors 6",
-                                `shapes and colors exp 3` = "Shapes and colors 7")) %>%
+                                "chad bodyimage" = "Body image",
+                                "chad friendenemy" = "Friend-Enemy",
+                                "chad gender" = "Gender",
+                                "chad lincolnhitler" = "Lincoln-Hitler",
+                                "chad race"	 = "Race (1)",
+                                "ian race dearbhail" = "Race (2)",
+                                "ian race katie" = "Race (3)",
+                                "chad religion" = "Religion",
+                                "ian death emma" = "Death (1)",
+                                "ian death june" = "Death (2)",
+                                "ian death tarah" = "Death (3)",
+                                "disgust" = "Digust",
+                                # "sexuality test retest" = "Sexuality (7 day)",
+                                "sexuality" = "Sexuality",
+                                "countries acknowledge 1" = "Countries (1)",
+                                "countries care 1" = "Countries (2)",
+                                "countries 2 acknowledge" = "Countries (3)",
+                                "countries 2 care" = "Countries (4)",
+                                "positive_negative" = "Valenced words",
+                                "food hunger" = "Hunger",
+                                "shapes and colors YN rule" = "Shapes & colors (1)",
+                                "shapes and colors YN correct" = "Shapes & colors (2)",
+                                "shapes and colors TF correct" = "Shapes & colors (3)",
+                                "shapes and colors TF rule" = "Shapes & colors (4)",
+                                "shapes and colors exp 2 full rule" = "Shapes & colors (5)",
+                                "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
+                                "shapes and colors exp 3" = "Shapes & colors (7)")) %>%
   arrange(as.character(domain)) %>%
   mutate(timepoint = 1)
 

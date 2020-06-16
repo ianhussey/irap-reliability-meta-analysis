@@ -11,7 +11,7 @@
 
 <meta name="author" content="Ian Hussey" />
 
-<meta name="date" content="2020-06-15" />
+<meta name="date" content="2020-06-16" />
 
 <title>Data processing</title>
 
@@ -1664,7 +1664,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Data processing</h1>
 <h4 class="author">Ian Hussey</h4>
-<h4 class="date">15 June 2020</h4>
+<h4 class="date">16 June 2020</h4>
 
 </div>
 
@@ -1676,7 +1676,7 @@ div.tocify {
 <h2>Sexuality</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># process sexuality data that included two timepoints </span></span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>data_input &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw data/test-retest IRAPs/raw/data sexuality test retest - trial level.csv&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>data_input &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;tidied data/test-retest IRAPs/raw/data sexuality test retest - trial level.csv&quot;</span>)</span>
 <span id="cb2-4"><a href="#cb2-4"></a></span>
 <span id="cb2-5"><a href="#cb2-5"></a>data_completeness &lt;-<span class="st"> </span>data_input <span class="op">%&gt;%</span></span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
@@ -1711,7 +1711,7 @@ div.tocify {
 <h2>Disgust</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># process data that was output by/formatted from the VB6 2012+ IRAP</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a>data_input &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw data/nonevaluative IRAPs/raw/IRAP 2012 VB format files/data disgust - trial level.csv&quot;</span>) </span>
+<span id="cb3-3"><a href="#cb3-3"></a>data_input &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;tidied data/nonevaluative IRAPs/raw/IRAP 2012 VB format files/data disgust - trial level.csv&quot;</span>) </span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
 <span id="cb3-5"><a href="#cb3-5"></a>data_completeness &lt;-<span class="st"> </span>data_input <span class="op">%&gt;%</span></span>
 <span id="cb3-6"><a href="#cb3-6"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
@@ -1754,44 +1754,37 @@ div.tocify {
 </div>
 <div id="evaluative-iraps" class="section level2">
 <h2>Evaluative IRAPs</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_evalautive_iraps &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw data/evaluative IRAPs/data_cleaned_trial_level.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_evalautive_iraps &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;tidied data/evaluative IRAPs/data_cleaned_trial_level.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">filter</span>(timepoint <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">timepoint =</span> <span class="kw">recode</span>(timepoint,</span>
 <span id="cb4-4"><a href="#cb4-4"></a>                            <span class="st">&quot;1&quot;</span> =<span class="st"> &quot;baseline&quot;</span>,</span>
 <span id="cb4-5"><a href="#cb4-5"></a>                            <span class="st">&quot;2&quot;</span> =<span class="st"> &quot;followup&quot;</span>))</span>
 <span id="cb4-6"><a href="#cb4-6"></a></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># filter participants who received an intervention before their second IRAP, these aren&#39;t strictly test-retest.</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a>participants_to_be_excluded &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw data/evaluative IRAPs/component studies/participants who received faking instructions.csv&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="st">  </span><span class="kw">pull</span>(participant_id)</span>
-<span id="cb4-10"><a href="#cb4-10"></a></span>
-<span id="cb4-11"><a href="#cb4-11"></a>data_evalautive_iraps_after_intervention_exclusions &lt;-<span class="st"> </span>data_evalautive_iraps <span class="op">%&gt;%</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>participant <span class="op">%in%</span><span class="st"> </span>participants_to_be_excluded)</span>
-<span id="cb4-13"><a href="#cb4-13"></a></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="co"># filter participants who had both baseline and followup data</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a>temp &lt;-<span class="st"> </span>data_evalautive_iraps_after_intervention_exclusions <span class="op">%&gt;%</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, timepoint, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, experiment) <span class="op">%&gt;%</span></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">present =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="st">  </span><span class="kw">spread</span>(timepoint, present) <span class="op">%&gt;%</span></span>
-<span id="cb4-21"><a href="#cb4-21"></a><span class="st">  </span><span class="kw">filter</span>(baseline <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span> <span class="op">&amp;</span><span class="st"> </span>followup <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a><span class="st">  </span><span class="kw">select</span>(unique_id) </span>
-<span id="cb4-23"><a href="#cb4-23"></a></span>
-<span id="cb4-24"><a href="#cb4-24"></a>data_evalautive_iraps_both_timepoints &lt;-<span class="st"> </span>temp <span class="op">%&gt;%</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="st">  </span><span class="kw">left_join</span>(data_evalautive_iraps, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>)</span>
-<span id="cb4-26"><a href="#cb4-26"></a></span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="co"># filter correct number of trials</span></span>
-<span id="cb4-28"><a href="#cb4-28"></a>data_completeness_evalutative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
-<span id="cb4-29"><a href="#cb4-29"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb4-30"><a href="#cb4-30"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>)) <span class="co"># methodologically plausible number of trials</span></span>
-<span id="cb4-31"><a href="#cb4-31"></a></span>
-<span id="cb4-32"><a href="#cb4-32"></a><span class="co"># tidy and add mean_rt for exclusions</span></span>
-<span id="cb4-33"><a href="#cb4-33"></a>data_rts_and_summmaries_evaluative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
-<span id="cb4-34"><a href="#cb4-34"></a><span class="st">  </span><span class="kw">semi_join</span>(data_completeness_evalutative, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-35"><a href="#cb4-35"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) <span class="op">%&gt;%</span></span>
-<span id="cb4-36"><a href="#cb4-36"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb4-37"><a href="#cb4-37"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">round</span>(<span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb4-38"><a href="#cb4-38"></a><span class="st">  </span><span class="kw">ungroup</span>()</span></code></pre></div>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># filter participants who had both baseline and followup data</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>temp &lt;-<span class="st"> </span>data_evalautive_iraps <span class="op">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, timepoint, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, experiment) <span class="op">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">present =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="st">  </span><span class="kw">spread</span>(timepoint, present) <span class="op">%&gt;%</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="st">  </span><span class="kw">filter</span>(baseline <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span> <span class="op">&amp;</span><span class="st"> </span>followup <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="st">  </span><span class="kw">select</span>(unique_id) </span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a>data_evalautive_iraps_both_timepoints &lt;-<span class="st"> </span>temp <span class="op">%&gt;%</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="st">  </span><span class="kw">left_join</span>(data_evalautive_iraps, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>)</span>
+<span id="cb4-19"><a href="#cb4-19"></a></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co"># filter correct number of trials</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a>data_completeness_evalutative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>)) <span class="co"># methodologically plausible number of trials</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a></span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="co"># tidy and add mean_rt for exclusions</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>data_rts_and_summmaries_evaluative &lt;-<span class="st"> </span>data_evalautive_iraps_both_timepoints <span class="op">%&gt;%</span></span>
+<span id="cb4-27"><a href="#cb4-27"></a><span class="st">  </span><span class="kw">semi_join</span>(data_completeness_evalutative, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-28"><a href="#cb4-28"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) <span class="op">%&gt;%</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb4-30"><a href="#cb4-30"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">round</span>(<span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb4-31"><a href="#cb4-31"></a><span class="st">  </span><span class="kw">ungroup</span>()</span></code></pre></div>
 </div>
 <div id="combine" class="section level2">
 <h2>Combine</h2>
@@ -1802,20 +1795,38 @@ div.tocify {
 <span id="cb5-5"><a href="#cb5-5"></a><span class="st">  </span><span class="co"># tidy domain</span></span>
 <span id="cb5-6"><a href="#cb5-6"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">domain =</span> experiment) <span class="op">%&gt;%</span></span>
 <span id="cb5-7"><a href="#cb5-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(domain,</span>
-<span id="cb5-8"><a href="#cb5-8"></a>                                <span class="st">&quot;disgust&quot;</span> =<span class="st"> &quot;Digust&quot;</span>,</span>
-<span id="cb5-9"><a href="#cb5-9"></a>                                <span class="st">&quot;sexuality test retest&quot;</span> =<span class="st"> &quot;Sexuality (7 day)&quot;</span>,</span>
-<span id="cb5-10"><a href="#cb5-10"></a>                                <span class="st">&quot;chad bodyimage&quot;</span> =<span class="st"> &quot;Body image&quot;</span>,</span>
-<span id="cb5-11"><a href="#cb5-11"></a>                                <span class="st">&quot;chad friendenemy&quot;</span> =<span class="st"> &quot;Friend-enemy&quot;</span>,</span>
-<span id="cb5-12"><a href="#cb5-12"></a>                                <span class="st">&quot;chad gender&quot;</span> =<span class="st"> &quot;Gender&quot;</span>,</span>
-<span id="cb5-13"><a href="#cb5-13"></a>                                <span class="st">&quot;chad lincolnhitler&quot;</span> =<span class="st"> &quot;Lincoln-Hitler&quot;</span>,</span>
-<span id="cb5-14"><a href="#cb5-14"></a>                                <span class="st">&quot;chad race&quot;</span> =<span class="st"> &quot;Race&quot;</span>,</span>
-<span id="cb5-15"><a href="#cb5-15"></a>                                <span class="st">&quot;chad religion&quot;</span> =<span class="st"> &quot;Religion&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="st">  </span><span class="kw">select</span>(unique_id, </span>
-<span id="cb5-18"><a href="#cb5-18"></a>         domain, timepoint, block_order, block_type, </span>
-<span id="cb5-19"><a href="#cb5-19"></a>         trial_type, rt, mean_rt)</span>
-<span id="cb5-20"><a href="#cb5-20"></a></span>
-<span id="cb5-21"><a href="#cb5-21"></a><span class="kw">write_csv</span>(data_testretest_cleaned_trial_level, <span class="st">&quot;data_testretest_cleaned_trial_level.csv&quot;</span>)</span></code></pre></div>
+<span id="cb5-8"><a href="#cb5-8"></a>                                <span class="st">&quot;chad bodyimage&quot;</span> =<span class="st"> &quot;Body image&quot;</span>,</span>
+<span id="cb5-9"><a href="#cb5-9"></a>                                <span class="st">&quot;chad friendenemy&quot;</span> =<span class="st"> &quot;Friend-Enemy&quot;</span>,</span>
+<span id="cb5-10"><a href="#cb5-10"></a>                                <span class="st">&quot;chad gender&quot;</span> =<span class="st"> &quot;Gender&quot;</span>,</span>
+<span id="cb5-11"><a href="#cb5-11"></a>                                <span class="st">&quot;chad lincolnhitler&quot;</span> =<span class="st"> &quot;Lincoln-Hitler&quot;</span>,</span>
+<span id="cb5-12"><a href="#cb5-12"></a>                                <span class="st">&quot;chad race&quot;</span>  =<span class="st"> &quot;Race (1)&quot;</span>,</span>
+<span id="cb5-13"><a href="#cb5-13"></a>                                <span class="st">&quot;ian race dearbhail&quot;</span> =<span class="st"> &quot;Race (2)&quot;</span>,</span>
+<span id="cb5-14"><a href="#cb5-14"></a>                                <span class="st">&quot;ian race katie&quot;</span> =<span class="st"> &quot;Race (3)&quot;</span>,</span>
+<span id="cb5-15"><a href="#cb5-15"></a>                                <span class="st">&quot;chad religion&quot;</span> =<span class="st"> &quot;Religion&quot;</span>,</span>
+<span id="cb5-16"><a href="#cb5-16"></a>                                <span class="st">&quot;ian death emma&quot;</span> =<span class="st"> &quot;Death (1)&quot;</span>,</span>
+<span id="cb5-17"><a href="#cb5-17"></a>                                <span class="st">&quot;ian death june&quot;</span> =<span class="st"> &quot;Death (2)&quot;</span>,</span>
+<span id="cb5-18"><a href="#cb5-18"></a>                                <span class="st">&quot;ian death tarah&quot;</span> =<span class="st"> &quot;Death (3)&quot;</span>,</span>
+<span id="cb5-19"><a href="#cb5-19"></a>                                <span class="st">&quot;disgust&quot;</span> =<span class="st"> &quot;Digust&quot;</span>,</span>
+<span id="cb5-20"><a href="#cb5-20"></a>                                <span class="st">&quot;sexuality test retest&quot;</span> =<span class="st"> &quot;Sexuality (7 day)&quot;</span>,</span>
+<span id="cb5-21"><a href="#cb5-21"></a>                                <span class="st">&quot;countries acknowledge 1&quot;</span> =<span class="st"> &quot;Countries (1)&quot;</span>,</span>
+<span id="cb5-22"><a href="#cb5-22"></a>                                <span class="st">&quot;countries care 1&quot;</span> =<span class="st"> &quot;Countries (2)&quot;</span>,</span>
+<span id="cb5-23"><a href="#cb5-23"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> =<span class="st"> &quot;Countries (3)&quot;</span>,</span>
+<span id="cb5-24"><a href="#cb5-24"></a>                                <span class="st">&quot;countries 2 care&quot;</span> =<span class="st"> &quot;Countries (4)&quot;</span>,</span>
+<span id="cb5-25"><a href="#cb5-25"></a>                                <span class="st">&quot;positive_negative&quot;</span> =<span class="st"> &quot;Valenced words&quot;</span>,</span>
+<span id="cb5-26"><a href="#cb5-26"></a>                                <span class="st">&quot;food hunger&quot;</span> =<span class="st"> &quot;Hunger&quot;</span>,</span>
+<span id="cb5-27"><a href="#cb5-27"></a>                                <span class="st">&quot;shapes and colors YN rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (1)&quot;</span>,</span>
+<span id="cb5-28"><a href="#cb5-28"></a>                                <span class="st">&quot;shapes and colors YN correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (2)&quot;</span>,</span>
+<span id="cb5-29"><a href="#cb5-29"></a>                                <span class="st">&quot;shapes and colors TF correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (3)&quot;</span>,</span>
+<span id="cb5-30"><a href="#cb5-30"></a>                                <span class="st">&quot;shapes and colors TF rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (4)&quot;</span>,</span>
+<span id="cb5-31"><a href="#cb5-31"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (5)&quot;</span>,</span>
+<span id="cb5-32"><a href="#cb5-32"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (6)&quot;</span>,</span>
+<span id="cb5-33"><a href="#cb5-33"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (7)&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb5-34"><a href="#cb5-34"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
+<span id="cb5-35"><a href="#cb5-35"></a><span class="st">  </span><span class="kw">select</span>(unique_id, </span>
+<span id="cb5-36"><a href="#cb5-36"></a>         domain, timepoint, block_order, block_type, </span>
+<span id="cb5-37"><a href="#cb5-37"></a>         trial_type, rt, mean_rt)</span>
+<span id="cb5-38"><a href="#cb5-38"></a></span>
+<span id="cb5-39"><a href="#cb5-39"></a><span class="kw">write_csv</span>(data_testretest_cleaned_trial_level, <span class="st">&quot;data_testretest_cleaned_trial_level.csv&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="internal-consistency" class="section level1">
@@ -1824,88 +1835,116 @@ div.tocify {
 <span id="cb6-2"><a href="#cb6-2"></a></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="co"># get data from evaluative IRAPs</span></span>
 <span id="cb6-4"><a href="#cb6-4"></a>data_input_evaluative &lt;-<span class="st"> </span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="st">  </span><span class="kw">read.csv</span>(<span class="st">&quot;raw data/evaluative IRAPs/data_cleaned_trial_level.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="st">  </span><span class="kw">read.csv</span>(<span class="st">&quot;tidied data/evaluative IRAPs/data_cleaned_trial_level.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb6-6"><a href="#cb6-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">trial_odd_even =</span> <span class="kw">ifelse</span>(<span class="kw">row_number</span>() <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;D_odd&quot;</span>, <span class="st">&quot;D_even&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb6-7"><a href="#cb6-7"></a><span class="st">  </span><span class="co"># tidy domain</span></span>
 <span id="cb6-8"><a href="#cb6-8"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">domain =</span> experiment) <span class="op">%&gt;%</span></span>
 <span id="cb6-9"><a href="#cb6-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(domain,</span>
-<span id="cb6-10"><a href="#cb6-10"></a>                                <span class="st">`</span><span class="dt">chad bodyimage</span><span class="st">`</span> =<span class="st"> &quot;Body shape evaluations&quot;</span>,</span>
-<span id="cb6-11"><a href="#cb6-11"></a>                                <span class="st">`</span><span class="dt">chad friendenemy</span><span class="st">`</span> =<span class="st"> &quot;Friend-Enemy evaluations&quot;</span>,</span>
-<span id="cb6-12"><a href="#cb6-12"></a>                                <span class="st">`</span><span class="dt">chad gender</span><span class="st">`</span> =<span class="st"> &quot;Gender stereotypes&quot;</span>,</span>
-<span id="cb6-13"><a href="#cb6-13"></a>                                <span class="st">`</span><span class="dt">chad lincolnhitler</span><span class="st">`</span> =<span class="st"> &quot;Lincoln-Hitler evaluations&quot;</span>,</span>
-<span id="cb6-14"><a href="#cb6-14"></a>                                <span class="st">`</span><span class="dt">chad race</span><span class="st">`</span>  =<span class="st"> &quot;Racial evaluations 2&quot;</span>,</span>
-<span id="cb6-15"><a href="#cb6-15"></a>                                <span class="st">`</span><span class="dt">chad religion</span><span class="st">`</span> =<span class="st"> &quot;Christianity-Islam&quot;</span>,</span>
-<span id="cb6-16"><a href="#cb6-16"></a>                                <span class="st">`</span><span class="dt">ian death emma</span><span class="st">`</span> =<span class="st"> &quot;Life/Death evaluations 1&quot;</span>,</span>
-<span id="cb6-17"><a href="#cb6-17"></a>                                <span class="st">`</span><span class="dt">ian death june</span><span class="st">`</span> =<span class="st"> &quot;Life/Death evaluations 2&quot;</span>,</span>
-<span id="cb6-18"><a href="#cb6-18"></a>                                <span class="st">`</span><span class="dt">ian death tarah</span><span class="st">`</span> =<span class="st"> &quot;Life/Death evaluations 3&quot;</span>,</span>
-<span id="cb6-19"><a href="#cb6-19"></a>                                <span class="st">`</span><span class="dt">ian race dearbhail</span><span class="st">`</span> =<span class="st"> &quot;Racial evaluations 1&quot;</span>,</span>
-<span id="cb6-20"><a href="#cb6-20"></a>                                <span class="st">`</span><span class="dt">ian race katie</span><span class="st">`</span> =<span class="st"> &quot;Racial evaluations 1&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id) <span class="op">%&gt;%</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb6-24"><a href="#cb6-24"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
-<span id="cb6-25"><a href="#cb6-25"></a></span>
-<span id="cb6-26"><a href="#cb6-26"></a><span class="co"># do exclusions for unique ids with wrong number of trials</span></span>
-<span id="cb6-27"><a href="#cb6-27"></a>data_participants_with_correct_n_trials &lt;-<span class="st"> </span>data_input_evaluative <span class="op">%&gt;%</span></span>
-<span id="cb6-28"><a href="#cb6-28"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb6-29"><a href="#cb6-29"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>, <span class="dv">192</span>)) <span class="co"># methodologically plausible number of trials</span></span>
-<span id="cb6-30"><a href="#cb6-30"></a></span>
-<span id="cb6-31"><a href="#cb6-31"></a>data_cleaned_ic_evaluative &lt;-<span class="st"> </span><span class="kw">semi_join</span>(data_input_evaluative, data_participants_with_correct_n_trials, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>)</span>
-<span id="cb6-32"><a href="#cb6-32"></a></span>
-<span id="cb6-33"><a href="#cb6-33"></a></span>
-<span id="cb6-34"><a href="#cb6-34"></a></span>
-<span id="cb6-35"><a href="#cb6-35"></a><span class="co"># get data from nonevaluative IRAPs</span></span>
-<span id="cb6-36"><a href="#cb6-36"></a><span class="co"># nb exclusions for unique ids with wrong number of trials already done in processing</span></span>
-<span id="cb6-37"><a href="#cb6-37"></a>data_cleaned_ic_nonevaluative &lt;-<span class="st"> </span></span>
-<span id="cb6-38"><a href="#cb6-38"></a><span class="st">  </span><span class="kw">read.csv</span>(<span class="st">&quot;raw data/nonevaluative IRAPs/data_cleaned_trial_level.csv&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb6-39"><a href="#cb6-39"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">trial_odd_even =</span> <span class="kw">ifelse</span>(<span class="kw">row_number</span>() <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;D_odd&quot;</span>, <span class="st">&quot;D_even&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb6-40"><a href="#cb6-40"></a><span class="st">  </span><span class="co"># tidy domain</span></span>
-<span id="cb6-41"><a href="#cb6-41"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">domain =</span> experiment) <span class="op">%&gt;%</span></span>
-<span id="cb6-42"><a href="#cb6-42"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(domain,</span>
-<span id="cb6-43"><a href="#cb6-43"></a>                                <span class="st">`</span><span class="dt">countries acknowledge 1</span><span class="st">`</span> =<span class="st"> &quot;Countries - acknowledge suffering 1&quot;</span>,</span>
-<span id="cb6-44"><a href="#cb6-44"></a>                                <span class="st">`</span><span class="dt">countries care 1</span><span class="st">`</span> =<span class="st"> &quot;Countries - care about suffering 1&quot;</span>,</span>
-<span id="cb6-45"><a href="#cb6-45"></a>                                <span class="st">`</span><span class="dt">countries 2 acknowledge</span><span class="st">`</span> =<span class="st"> &quot;Countries - acknowledge suffering 2&quot;</span>,</span>
-<span id="cb6-46"><a href="#cb6-46"></a>                                <span class="st">`</span><span class="dt">countries 2 care</span><span class="st">`</span> =<span class="st"> &quot;Countries - care about suffering 2&quot;</span>,</span>
-<span id="cb6-47"><a href="#cb6-47"></a>                                <span class="st">`</span><span class="dt">disgust</span><span class="st">`</span> =<span class="st"> &quot;Digust sensitivity&quot;</span>,</span>
-<span id="cb6-48"><a href="#cb6-48"></a>                                <span class="st">`</span><span class="dt">positive_negative</span><span class="st">`</span> =<span class="st"> &quot;Valenced categories evaluations&quot;</span>,</span>
-<span id="cb6-49"><a href="#cb6-49"></a>                                <span class="st">`</span><span class="dt">sexuality</span><span class="st">`</span> =<span class="st"> &quot;Sexuality and arousal&quot;</span>,</span>
-<span id="cb6-50"><a href="#cb6-50"></a>                                <span class="st">`</span><span class="dt">food hunger</span><span class="st">`</span> =<span class="st"> &quot;Food and hunger&quot;</span>,</span>
-<span id="cb6-51"><a href="#cb6-51"></a>                                <span class="st">`</span><span class="dt">shapes and colors YN rule</span><span class="st">`</span> =<span class="st"> &quot;Shapes and colors 1&quot;</span>,</span>
-<span id="cb6-52"><a href="#cb6-52"></a>                                <span class="st">`</span><span class="dt">shapes and colors YN correct</span><span class="st">`</span> =<span class="st"> &quot;Shapes and colors 2&quot;</span>,</span>
-<span id="cb6-53"><a href="#cb6-53"></a>                                <span class="st">`</span><span class="dt">shapes and colors TF correct</span><span class="st">`</span> =<span class="st"> &quot;Shapes and colors 3&quot;</span>,</span>
-<span id="cb6-54"><a href="#cb6-54"></a>                                <span class="st">`</span><span class="dt">shapes and colors TF rule</span><span class="st">`</span> =<span class="st"> &quot;Shapes and colors 4&quot;</span>,</span>
-<span id="cb6-55"><a href="#cb6-55"></a>                                <span class="st">`</span><span class="dt">shapes and colors exp 2 full rule</span><span class="st">`</span> =<span class="st"> &quot;Shapes and colors 5&quot;</span>,</span>
-<span id="cb6-56"><a href="#cb6-56"></a>                                <span class="st">`</span><span class="dt">shapes and colors exp 2 minimal rule</span><span class="st">`</span> =<span class="st"> &quot;Shapes and colors 6&quot;</span>,</span>
-<span id="cb6-57"><a href="#cb6-57"></a>                                <span class="st">`</span><span class="dt">shapes and colors exp 3</span><span class="st">`</span> =<span class="st"> &quot;Shapes and colors 7&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb6-58"><a href="#cb6-58"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
-<span id="cb6-59"><a href="#cb6-59"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">timepoint =</span> <span class="dv">1</span>)</span>
-<span id="cb6-60"><a href="#cb6-60"></a></span>
-<span id="cb6-61"><a href="#cb6-61"></a></span>
-<span id="cb6-62"><a href="#cb6-62"></a></span>
-<span id="cb6-63"><a href="#cb6-63"></a><span class="co"># combined</span></span>
-<span id="cb6-64"><a href="#cb6-64"></a>data_combined_ic &lt;-<span class="st"> </span></span>
-<span id="cb6-65"><a href="#cb6-65"></a><span class="st">  </span><span class="kw">bind_rows</span>(data_cleaned_ic_evaluative, </span>
-<span id="cb6-66"><a href="#cb6-66"></a>            data_cleaned_ic_nonevaluative) <span class="op">%&gt;%</span></span>
-<span id="cb6-67"><a href="#cb6-67"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> <span class="kw">as.factor</span>(<span class="kw">as.character</span>(domain))) <span class="op">%&gt;%</span></span>
-<span id="cb6-68"><a href="#cb6-68"></a><span class="st">  </span><span class="kw">filter</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</span>
-<span id="cb6-69"><a href="#cb6-69"></a></span>
-<span id="cb6-70"><a href="#cb6-70"></a><span class="co"># remove participant with the wrong number of trials/duplicate data</span></span>
-<span id="cb6-71"><a href="#cb6-71"></a>data_n_trials &lt;-<span class="st"> </span>data_combined_ic <span class="op">%&gt;%</span></span>
-<span id="cb6-72"><a href="#cb6-72"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb6-73"><a href="#cb6-73"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb6-74"><a href="#cb6-74"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>, <span class="dv">192</span>, <span class="dv">240</span>))</span>
-<span id="cb6-75"><a href="#cb6-75"></a></span>
-<span id="cb6-76"><a href="#cb6-76"></a>data_internalconsistency_cleaned_trial_level &lt;-<span class="st"> </span>data_combined_ic <span class="op">%&gt;%</span></span>
-<span id="cb6-77"><a href="#cb6-77"></a><span class="st">  </span><span class="kw">semi_join</span>(data_n_trials, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb6-78"><a href="#cb6-78"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">timepoint =</span> <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;baseline&quot;</span>, </span>
-<span id="cb6-79"><a href="#cb6-79"></a>                            <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;followup&quot;</span>, timepoint))) <span class="op">%&gt;%</span></span>
-<span id="cb6-80"><a href="#cb6-80"></a><span class="st">  </span><span class="kw">select</span>(unique_id, </span>
-<span id="cb6-81"><a href="#cb6-81"></a>         age,</span>
-<span id="cb6-82"><a href="#cb6-82"></a>         gender,</span>
-<span id="cb6-83"><a href="#cb6-83"></a>         domain, timepoint, block_order, block_type, </span>
-<span id="cb6-84"><a href="#cb6-84"></a>         trial_type, stimulus_number, stimulus_name, trial_odd_even, rt, mean_rt)</span>
-<span id="cb6-85"><a href="#cb6-85"></a></span>
-<span id="cb6-86"><a href="#cb6-86"></a><span class="kw">write_csv</span>(data_internalconsistency_cleaned_trial_level, <span class="st">&quot;data_internalconsistency_cleaned_trial_level.csv&quot;</span>)</span></code></pre></div>
+<span id="cb6-10"><a href="#cb6-10"></a>                                <span class="st">&quot;chad bodyimage&quot;</span> =<span class="st"> &quot;Body image&quot;</span>,</span>
+<span id="cb6-11"><a href="#cb6-11"></a>                                <span class="st">&quot;chad friendenemy&quot;</span> =<span class="st"> &quot;Friend-Enemy&quot;</span>,</span>
+<span id="cb6-12"><a href="#cb6-12"></a>                                <span class="st">&quot;chad gender&quot;</span> =<span class="st"> &quot;Gender&quot;</span>,</span>
+<span id="cb6-13"><a href="#cb6-13"></a>                                <span class="st">&quot;chad lincolnhitler&quot;</span> =<span class="st"> &quot;Lincoln-Hitler&quot;</span>,</span>
+<span id="cb6-14"><a href="#cb6-14"></a>                                <span class="st">&quot;chad race&quot;</span>  =<span class="st"> &quot;Race (1)&quot;</span>,</span>
+<span id="cb6-15"><a href="#cb6-15"></a>                                <span class="st">&quot;ian race dearbhail&quot;</span> =<span class="st"> &quot;Race (2)&quot;</span>,</span>
+<span id="cb6-16"><a href="#cb6-16"></a>                                <span class="st">&quot;ian race katie&quot;</span> =<span class="st"> &quot;Race (3)&quot;</span>,</span>
+<span id="cb6-17"><a href="#cb6-17"></a>                                <span class="st">&quot;chad religion&quot;</span> =<span class="st"> &quot;Religion&quot;</span>,</span>
+<span id="cb6-18"><a href="#cb6-18"></a>                                <span class="st">&quot;ian death emma&quot;</span> =<span class="st"> &quot;Death (1)&quot;</span>,</span>
+<span id="cb6-19"><a href="#cb6-19"></a>                                <span class="st">&quot;ian death june&quot;</span> =<span class="st"> &quot;Death (2)&quot;</span>,</span>
+<span id="cb6-20"><a href="#cb6-20"></a>                                <span class="st">&quot;ian death tarah&quot;</span> =<span class="st"> &quot;Death (3)&quot;</span>,</span>
+<span id="cb6-21"><a href="#cb6-21"></a>                                <span class="st">&quot;disgust&quot;</span> =<span class="st"> &quot;Digust&quot;</span>,</span>
+<span id="cb6-22"><a href="#cb6-22"></a>                                <span class="co"># &quot;sexuality test retest&quot; = &quot;Sexuality (7 day)&quot;,</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a>                                <span class="st">&quot;sexuality&quot;</span> =<span class="st"> &quot;Sexuality&quot;</span>,</span>
+<span id="cb6-24"><a href="#cb6-24"></a>                                <span class="st">&quot;countries acknowledge 1&quot;</span> =<span class="st"> &quot;Countries (1)&quot;</span>,</span>
+<span id="cb6-25"><a href="#cb6-25"></a>                                <span class="st">&quot;countries care 1&quot;</span> =<span class="st"> &quot;Countries (2)&quot;</span>,</span>
+<span id="cb6-26"><a href="#cb6-26"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> =<span class="st"> &quot;Countries (3)&quot;</span>,</span>
+<span id="cb6-27"><a href="#cb6-27"></a>                                <span class="st">&quot;countries 2 care&quot;</span> =<span class="st"> &quot;Countries (4)&quot;</span>,</span>
+<span id="cb6-28"><a href="#cb6-28"></a>                                <span class="st">&quot;positive_negative&quot;</span> =<span class="st"> &quot;Valenced words&quot;</span>,</span>
+<span id="cb6-29"><a href="#cb6-29"></a>                                <span class="st">&quot;food hunger&quot;</span> =<span class="st"> &quot;Hunger&quot;</span>,</span>
+<span id="cb6-30"><a href="#cb6-30"></a>                                <span class="st">&quot;shapes and colors YN rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (1)&quot;</span>,</span>
+<span id="cb6-31"><a href="#cb6-31"></a>                                <span class="st">&quot;shapes and colors YN correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (2)&quot;</span>,</span>
+<span id="cb6-32"><a href="#cb6-32"></a>                                <span class="st">&quot;shapes and colors TF correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (3)&quot;</span>,</span>
+<span id="cb6-33"><a href="#cb6-33"></a>                                <span class="st">&quot;shapes and colors TF rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (4)&quot;</span>,</span>
+<span id="cb6-34"><a href="#cb6-34"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (5)&quot;</span>,</span>
+<span id="cb6-35"><a href="#cb6-35"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (6)&quot;</span>,</span>
+<span id="cb6-36"><a href="#cb6-36"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (7)&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb6-37"><a href="#cb6-37"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id) <span class="op">%&gt;%</span></span>
+<span id="cb6-39"><a href="#cb6-39"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb6-41"><a href="#cb6-41"></a></span>
+<span id="cb6-42"><a href="#cb6-42"></a><span class="co"># do exclusions for unique ids with wrong number of trials</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a>data_participants_with_correct_n_trials &lt;-<span class="st"> </span>data_input_evaluative <span class="op">%&gt;%</span></span>
+<span id="cb6-44"><a href="#cb6-44"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>, <span class="dv">192</span>)) <span class="co"># methodologically plausible number of trials</span></span>
+<span id="cb6-46"><a href="#cb6-46"></a></span>
+<span id="cb6-47"><a href="#cb6-47"></a>data_cleaned_ic_evaluative &lt;-<span class="st"> </span><span class="kw">semi_join</span>(data_input_evaluative, data_participants_with_correct_n_trials, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>)</span>
+<span id="cb6-48"><a href="#cb6-48"></a></span>
+<span id="cb6-49"><a href="#cb6-49"></a></span>
+<span id="cb6-50"><a href="#cb6-50"></a></span>
+<span id="cb6-51"><a href="#cb6-51"></a><span class="co"># get data from nonevaluative IRAPs</span></span>
+<span id="cb6-52"><a href="#cb6-52"></a><span class="co"># nb exclusions for unique ids with wrong number of trials already done in processing</span></span>
+<span id="cb6-53"><a href="#cb6-53"></a>data_cleaned_ic_nonevaluative &lt;-<span class="st"> </span></span>
+<span id="cb6-54"><a href="#cb6-54"></a><span class="st">  </span><span class="kw">read.csv</span>(<span class="st">&quot;tidied data/nonevaluative IRAPs/data_cleaned_trial_level.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-55"><a href="#cb6-55"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">trial_odd_even =</span> <span class="kw">ifelse</span>(<span class="kw">row_number</span>() <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;D_odd&quot;</span>, <span class="st">&quot;D_even&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb6-56"><a href="#cb6-56"></a><span class="st">  </span><span class="co"># tidy domain</span></span>
+<span id="cb6-57"><a href="#cb6-57"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">domain =</span> experiment) <span class="op">%&gt;%</span></span>
+<span id="cb6-58"><a href="#cb6-58"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(domain,</span>
+<span id="cb6-59"><a href="#cb6-59"></a>                                <span class="st">&quot;chad bodyimage&quot;</span> =<span class="st"> &quot;Body image&quot;</span>,</span>
+<span id="cb6-60"><a href="#cb6-60"></a>                                <span class="st">&quot;chad friendenemy&quot;</span> =<span class="st"> &quot;Friend-Enemy&quot;</span>,</span>
+<span id="cb6-61"><a href="#cb6-61"></a>                                <span class="st">&quot;chad gender&quot;</span> =<span class="st"> &quot;Gender&quot;</span>,</span>
+<span id="cb6-62"><a href="#cb6-62"></a>                                <span class="st">&quot;chad lincolnhitler&quot;</span> =<span class="st"> &quot;Lincoln-Hitler&quot;</span>,</span>
+<span id="cb6-63"><a href="#cb6-63"></a>                                <span class="st">&quot;chad race&quot;</span>  =<span class="st"> &quot;Race (1)&quot;</span>,</span>
+<span id="cb6-64"><a href="#cb6-64"></a>                                <span class="st">&quot;ian race dearbhail&quot;</span> =<span class="st"> &quot;Race (2)&quot;</span>,</span>
+<span id="cb6-65"><a href="#cb6-65"></a>                                <span class="st">&quot;ian race katie&quot;</span> =<span class="st"> &quot;Race (3)&quot;</span>,</span>
+<span id="cb6-66"><a href="#cb6-66"></a>                                <span class="st">&quot;chad religion&quot;</span> =<span class="st"> &quot;Religion&quot;</span>,</span>
+<span id="cb6-67"><a href="#cb6-67"></a>                                <span class="st">&quot;ian death emma&quot;</span> =<span class="st"> &quot;Death (1)&quot;</span>,</span>
+<span id="cb6-68"><a href="#cb6-68"></a>                                <span class="st">&quot;ian death june&quot;</span> =<span class="st"> &quot;Death (2)&quot;</span>,</span>
+<span id="cb6-69"><a href="#cb6-69"></a>                                <span class="st">&quot;ian death tarah&quot;</span> =<span class="st"> &quot;Death (3)&quot;</span>,</span>
+<span id="cb6-70"><a href="#cb6-70"></a>                                <span class="st">&quot;disgust&quot;</span> =<span class="st"> &quot;Digust&quot;</span>,</span>
+<span id="cb6-71"><a href="#cb6-71"></a>                                <span class="co"># &quot;sexuality test retest&quot; = &quot;Sexuality (7 day)&quot;,</span></span>
+<span id="cb6-72"><a href="#cb6-72"></a>                                <span class="st">&quot;sexuality&quot;</span> =<span class="st"> &quot;Sexuality&quot;</span>,</span>
+<span id="cb6-73"><a href="#cb6-73"></a>                                <span class="st">&quot;countries acknowledge 1&quot;</span> =<span class="st"> &quot;Countries (1)&quot;</span>,</span>
+<span id="cb6-74"><a href="#cb6-74"></a>                                <span class="st">&quot;countries care 1&quot;</span> =<span class="st"> &quot;Countries (2)&quot;</span>,</span>
+<span id="cb6-75"><a href="#cb6-75"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> =<span class="st"> &quot;Countries (3)&quot;</span>,</span>
+<span id="cb6-76"><a href="#cb6-76"></a>                                <span class="st">&quot;countries 2 care&quot;</span> =<span class="st"> &quot;Countries (4)&quot;</span>,</span>
+<span id="cb6-77"><a href="#cb6-77"></a>                                <span class="st">&quot;positive_negative&quot;</span> =<span class="st"> &quot;Valenced words&quot;</span>,</span>
+<span id="cb6-78"><a href="#cb6-78"></a>                                <span class="st">&quot;food hunger&quot;</span> =<span class="st"> &quot;Hunger&quot;</span>,</span>
+<span id="cb6-79"><a href="#cb6-79"></a>                                <span class="st">&quot;shapes and colors YN rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (1)&quot;</span>,</span>
+<span id="cb6-80"><a href="#cb6-80"></a>                                <span class="st">&quot;shapes and colors YN correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (2)&quot;</span>,</span>
+<span id="cb6-81"><a href="#cb6-81"></a>                                <span class="st">&quot;shapes and colors TF correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (3)&quot;</span>,</span>
+<span id="cb6-82"><a href="#cb6-82"></a>                                <span class="st">&quot;shapes and colors TF rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (4)&quot;</span>,</span>
+<span id="cb6-83"><a href="#cb6-83"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (5)&quot;</span>,</span>
+<span id="cb6-84"><a href="#cb6-84"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (6)&quot;</span>,</span>
+<span id="cb6-85"><a href="#cb6-85"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (7)&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb6-86"><a href="#cb6-86"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
+<span id="cb6-87"><a href="#cb6-87"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">timepoint =</span> <span class="dv">1</span>)</span>
+<span id="cb6-88"><a href="#cb6-88"></a></span>
+<span id="cb6-89"><a href="#cb6-89"></a></span>
+<span id="cb6-90"><a href="#cb6-90"></a></span>
+<span id="cb6-91"><a href="#cb6-91"></a><span class="co"># combined</span></span>
+<span id="cb6-92"><a href="#cb6-92"></a>data_combined_ic &lt;-<span class="st"> </span></span>
+<span id="cb6-93"><a href="#cb6-93"></a><span class="st">  </span><span class="kw">bind_rows</span>(data_cleaned_ic_evaluative, </span>
+<span id="cb6-94"><a href="#cb6-94"></a>            data_cleaned_ic_nonevaluative) <span class="op">%&gt;%</span></span>
+<span id="cb6-95"><a href="#cb6-95"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> <span class="kw">as.factor</span>(<span class="kw">as.character</span>(domain))) <span class="op">%&gt;%</span></span>
+<span id="cb6-96"><a href="#cb6-96"></a><span class="st">  </span><span class="kw">filter</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb6-97"><a href="#cb6-97"></a></span>
+<span id="cb6-98"><a href="#cb6-98"></a><span class="co"># remove participant with the wrong number of trials/duplicate data</span></span>
+<span id="cb6-99"><a href="#cb6-99"></a>data_n_trials &lt;-<span class="st"> </span>data_combined_ic <span class="op">%&gt;%</span></span>
+<span id="cb6-100"><a href="#cb6-100"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb6-101"><a href="#cb6-101"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb6-102"><a href="#cb6-102"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>, <span class="dv">192</span>, <span class="dv">240</span>))</span>
+<span id="cb6-103"><a href="#cb6-103"></a></span>
+<span id="cb6-104"><a href="#cb6-104"></a>data_internalconsistency_cleaned_trial_level &lt;-<span class="st"> </span>data_combined_ic <span class="op">%&gt;%</span></span>
+<span id="cb6-105"><a href="#cb6-105"></a><span class="st">  </span><span class="kw">semi_join</span>(data_n_trials, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-106"><a href="#cb6-106"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">timepoint =</span> <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;baseline&quot;</span>, </span>
+<span id="cb6-107"><a href="#cb6-107"></a>                            <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;followup&quot;</span>, timepoint))) <span class="op">%&gt;%</span></span>
+<span id="cb6-108"><a href="#cb6-108"></a><span class="st">  </span><span class="kw">select</span>(unique_id, </span>
+<span id="cb6-109"><a href="#cb6-109"></a>         age,</span>
+<span id="cb6-110"><a href="#cb6-110"></a>         gender,</span>
+<span id="cb6-111"><a href="#cb6-111"></a>         domain, timepoint, block_order, block_type, </span>
+<span id="cb6-112"><a href="#cb6-112"></a>         trial_type, stimulus_number, stimulus_name, trial_odd_even, rt, mean_rt)</span>
+<span id="cb6-113"><a href="#cb6-113"></a></span>
+<span id="cb6-114"><a href="#cb6-114"></a><span class="kw">write_csv</span>(data_internalconsistency_cleaned_trial_level, <span class="st">&quot;data_internalconsistency_cleaned_trial_level.csv&quot;</span>)</span></code></pre></div>
 </div>
 
 
