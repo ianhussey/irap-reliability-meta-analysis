@@ -11,12 +11,6 @@ output:
     toc_float: yes
 ---
 
-# To do
-
-- lincoln-hitler and friend enemy iraps are currently filtered out. Chad says some participants got faking instructions and other didn't; these need to be excluded
-- standardize domain names between IC and TRT in data processing
-- ensure ICC calculations are correct - some domains look suspiciously symmetrical around zero. plotting of D scores needed.
-
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message = FALSE,
                       warning = FALSE)
@@ -24,12 +18,16 @@ knitr::opts_chunk$set(message = FALSE,
 
 ```{r}
 
+set.seed(42)
+
 # dependencies
 library(tidyverse)
 library(metafor)
 library(knitr)
 library(kableExtra)
 library(psych)
+library(ggExtra)
+library(scales) 
 
 # function to round all numeric vars in a data frame
 round_df <- function(df, n_digits = 3) {
@@ -73,6 +71,10 @@ add_heterogeneity_metrics_to_forest <- function(fit) {
 
 # table format in output
 options(knitr.table.format = "html") 
+
+# create directory needed to save output
+dir.create("models")
+dir.create("plots")
 
 ```
 
@@ -167,8 +169,8 @@ metafor::forest(fit_oddeven,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_oddeven))
-text(-1.4, 27, "Study", pos = 4)
-text(1.6, 27, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 28, "Study", pos = 4)
+text(1.6, 28, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -220,8 +222,8 @@ metafor::forest(fit_firstsecond,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond))
-text(-1.4, 27, "Study", pos = 4)
-text(1.6, 27, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 28, "Study", pos = 4)
+text(1.6, 28, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -275,8 +277,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates))
-text(-1.4, 27, "Study", pos = 4)
-text(1.6, 27, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 28, "Study", pos = 4)
+text(1.6, 28, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -305,13 +307,16 @@ Heterogeneity: `r meta_heterogeneity`.
 
 ### GOSH
 
+Sexuality IRAP seems to be an outlier
+
 ```{r fig.height=5, fig.width=5}
 
 if(!file.exists("models/fit_gosh_ic.rds")){
   
   fit_gosh_ic <- gosh(fit_internal_consistency_permuted_estimates, 
-                    parallel = "multicore", 
-                    ncpus = 4)
+                      subsets = 5000,
+                      parallel = "multicore",  # change to "snow" on windows
+                      ncpus = 4)
   
   write_rds(fit_gosh_ic, "models/fit_gosh_ic.rds")
   
@@ -321,11 +326,181 @@ if(!file.exists("models/fit_gosh_ic.rds")){
   
 }
 
-plot(fit_gosh_ic, breaks = 20)
+data_for_plotting_ic <- 
+  bind_cols(as.tibble(fit_gosh_ic$incl) %>%
+              # the study to be separated is here listed by order (counting down from top of forest plot)
+              select(include = "18"),  
+            as.tibble(fit_gosh_ic$res)) %>%
+  mutate(IRAP = ifelse(include, "Sexuality", "All other domains"),
+         alpha = transf.iabt(estimate)) %>%
+  # randomize rows to improve plotting
+  sample_frac(size = 1)
 
-tibble(mean_es_est = round(mean(fit_gosh_ic$res$estimate, na.rm = TRUE), 2),
-       mean_I2_est = round(mean(fit_gosh_ic$res$I2, na.rm = TRUE), 1),
-       mean_H2_est = round(mean(fit_gosh_ic$res$H2, na.rm = TRUE), 1)) %>%
+# ggplot(data_for_plotting_ic, aes(alpha, I2)) +
+#   geom_point(alpha = 0.4) +
+#   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
+#   theme_classic()
+
+p1 <- 
+  ggplot(data_for_plotting_ic, aes(alpha, I2, color = IRAP)) +
+  geom_point(alpha = 0.5) +
+  scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
+  theme_classic() + 
+  xlab(bquote("Cronbach's " ~alpha)) +
+  ylab(expression(italic("I")^"2")) +
+  theme(legend.position = c(0.2, 0.85), 
+        legend.background = element_rect(fill = scales::alpha("white", 0)))
+
+plot_gosh_ic <- 
+  ggMarginal(p1, 
+             type = "densigram",
+             size = 4,
+             margins = "both",
+             groupFill = TRUE)
+
+plot_gosh_ic
+
+write_rds(plot_gosh_ic, "models/plot_gosh_ic.rds")
+
+data_for_plotting_ic %>%
+  group_by(IRAP) %>%
+  summarize(alpha_median = median(alpha, na.rm = TRUE),
+            alpha_ci_lower = quantile(alpha, 0.025, na.rm = TRUE),
+            alpha_ci_upper = quantile(alpha, 0.975, na.rm = TRUE),
+            I2_median = median(I2, na.rm = TRUE),
+            I2_ci_lower = quantile(I2, 0.025, na.rm = TRUE),
+            I2_ci_upper = quantile(I2, 0.975, na.rm = TRUE),
+            H2_median = median(H2, na.rm = TRUE),
+            H2_ci_lower = quantile(H2, 0.025, na.rm = TRUE),
+            H2_ci_upper = quantile(H2, 0.975, na.rm = TRUE)) %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+### Sensitivity analysis
+
+excluding Sexuality IRAP as an outlier
+
+```{r fig.height=8, fig.width=8}
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates_sensitivity <- data_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain)
+
+# make predictions 
+predictions_permutations_sensitivity <-
+  predict(fit_internal_consistency_permuted_estimates_sensitivity, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
+                xlab = bquote(paste("Cronbach's ", alpha)),
+                addcred = TRUE,
+                refline = FALSE,
+                transf = transf.iabt,
+                xlim = c(-1.4, 1.6),
+                at = c(0, 0.25, 0.5, 0.75, 1),
+                mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
+text(-1.4, 27, "Study", pos = 4)
+text(1.6, 27, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_sensitivity$k, 
+         ", alpha = ",  round(transf.iabt(predictions_permutations_sensitivity$pred), 2), 
+         ", 95% CI [", round(transf.iabt(predictions_permutations_sensitivity$ci.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations_sensitivity$ci.ub), 2), "]", 
+         ", 95% CR [", round(transf.iabt(predictions_permutations_sensitivity$cr.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations_sensitivity$cr.ub), 2), "]") 
+
+meta_heterogeneity <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates_sensitivity$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates_sensitivity$QE, 2), 
+         ", p ", ifelse(fit_internal_consistency_permuted_estimates_sensitivity$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_internal_consistency_permuted_estimates_sensitivity$QEp, 4)))),
+         ", tau^2 = ", round(fit_internal_consistency_permuted_estimates_sensitivity$tau2, 2), 
+         ", I^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity$I2, 2),
+         "%, H^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity$H2, 2))
+
+# save to disk for making pdf plot
+write_rds(fit_internal_consistency_permuted_estimates_sensitivity, "models/fit_internal_consistency_permuted_estimates_sensitivity.rds")
+
+```
+
+Meta effect: `r meta_effect`.
+
+Heterogeneity: `r meta_heterogeneity`.
+
+#### GOSH
+
+Sexuality IRAP seems to be an outlier
+
+```{r fig.height=5, fig.width=5}
+
+if(!file.exists("models/fit_gosh_ic_sensitivity.rds")){
+  
+  fit_gosh_ic_sensitivity <- gosh(fit_internal_consistency_permuted_estimates_sensitivity, 
+                                  subsets = 5000,
+                                  parallel = "multicore",  # change to "snow" on windows
+                                  ncpus = 4)
+  
+  write_rds(fit_gosh_ic_sensitivity, "models/fit_gosh_ic_sensitivity.rds")
+  
+} else {
+  
+  fit_gosh_ic_sensitivity <- read_rds("models/fit_gosh_ic_sensitivity.rds")
+  
+}
+
+data_for_plotting_ic_sensitivity <- 
+  as.tibble(fit_gosh_ic_sensitivity$res) %>%
+  mutate(Type = "Other IRAPs",
+         alpha = transf.iabt(estimate)) %>%
+  # randomize rows to improve plotting
+  sample_frac(size = 1)
+
+# ggplot(data_for_plotting_ic_sensitivity, aes(alpha, I2)) +
+#   geom_point(alpha = 0.4) +
+#   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
+#   theme_classic()
+
+p3 <- 
+  ggplot(data_for_plotting_ic_sensitivity, aes(alpha, I2, color = Type)) +
+  geom_point(alpha = 0.5) +
+  scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
+  theme_classic() + 
+  xlab(bquote("Cronbach's " ~alpha)) +
+  ylab(expression(italic("I")^"2")) +
+  theme(legend.position = c(0.2, 0.85)) +
+  theme(legend.position = "none") 
+
+plot_gosh_ic_sensitivity <- 
+  ggMarginal(p3, 
+             type = "densigram",
+             size = 4,
+             margins = "both",
+             groupFill = TRUE)
+
+plot_gosh_ic_sensitivity
+
+write_rds(plot_gosh_ic_sensitivity, "models/plot_gosh_ic_sensitivity.rds")
+
+data_for_plotting_ic_sensitivity %>%
+  summarize(alpha_median = median(alpha, na.rm = TRUE),
+            alpha_ci_lower = quantile(alpha, 0.025, na.rm = TRUE),
+            alpha_ci_upper = quantile(alpha, 0.975, na.rm = TRUE),
+            I2_median = median(I2, na.rm = TRUE),
+            I2_ci_lower = quantile(I2, 0.025, na.rm = TRUE),
+            I2_ci_upper = quantile(I2, 0.975, na.rm = TRUE),
+            H2_median = median(H2, na.rm = TRUE),
+            H2_ci_lower = quantile(H2, 0.025, na.rm = TRUE),
+            H2_ci_upper = quantile(H2, 0.975, na.rm = TRUE)) %>%
+  round_df(2) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -395,8 +570,8 @@ Heterogeneity: `r meta_heterogeneity`.
 
 if(!file.exists("models/fit_gosh_trt.rds")){
   
-  fit_gosh_trt <- gosh(fit_internal_consistency_permuted_estimates, 
-                       parallel = "multicore", 
+  fit_gosh_trt <- gosh(fit_test_retest_icc, 
+                       parallel = "multicore", # change to "snow" on windows
                        ncpus = 4)
   
   write_rds(fit_gosh_trt, "models/fit_gosh_trt.rds")
@@ -407,11 +582,49 @@ if(!file.exists("models/fit_gosh_trt.rds")){
   
 }
 
-plot(fit_gosh_trt, breaks = 20)
+data_for_plotting_trt <- 
+  as.tibble(fit_gosh_trt$res) %>%
+  mutate(Type = "Other IRAPs",
+         ICC = transf.ztor(estimate)) %>%
+  # randomize rows to improve plotting
+  sample_frac(size = 1)
 
-tibble(mean_es_est = round(mean(fit_gosh_trt$res$estimate, na.rm = TRUE), 2),
-       mean_I2_est = round(mean(fit_gosh_trt$res$I2, na.rm = TRUE), 1),
-       mean_H2_est = round(mean(fit_gosh_trt$res$H2, na.rm = TRUE), 1)) %>%
+# ggplot(data_for_plotting_ic, aes(alpha, I2)) +
+#   geom_point(alpha = 0.4) +
+#   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
+#   theme_classic()
+
+p2 <- 
+  ggplot(data_for_plotting_trt, aes(ICC, I2, color = Type)) +
+  geom_point(alpha = 0.8) +
+  scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
+  theme_classic() + 
+  xlab("Absolute Agreement ICC") +
+  ylab(expression(italic("I")^"2")) +
+  theme(legend.position = "none") 
+
+plot_gosh_trt <- 
+  ggMarginal(p2, 
+             type = "densigram",
+             size = 4,
+             margins = "both",
+             groupFill = TRUE)
+
+plot_gosh_trt
+
+write_rds(plot_gosh_trt, "models/plot_gosh_trt.rds")
+  
+data_for_plotting_trt %>%
+  summarize(ICC_median = median(ICC, na.rm = TRUE),
+            ICC_ci_lower = quantile(ICC, 0.025, na.rm = TRUE),
+            ICC_ci_upper = quantile(ICC, 0.975, na.rm = TRUE),
+            I2_median = median(I2, na.rm = TRUE),
+            I2_ci_lower = quantile(I2, 0.025, na.rm = TRUE),
+            I2_ci_upper = quantile(I2, 0.975, na.rm = TRUE),
+            H2_median = median(H2, na.rm = TRUE),
+            H2_ci_lower = quantile(H2, 0.025, na.rm = TRUE),
+            H2_ci_upper = quantile(H2, 0.975, na.rm = TRUE)) %>%
+  round_df(2) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -419,7 +632,9 @@ tibble(mean_es_est = round(mean(fit_gosh_trt$res$estimate, na.rm = TRUE), 2),
 
 # Power implications
 
-max_r_observed = r_true \* sqrt(r_xx*r_yy)
+Maximum observed correlation of two measures is a function of their true correlation and the reliability (i.e., self-correlation) of each measure.
+
+$r_{xy}=\frac{\rho_{xy}}{\sqrt{\rho_{xx}\rho_{yy}}}$
 
 ## Internal Consistency
 
@@ -429,13 +644,13 @@ observed_r <- function(true_r, reliability_a, reliability_b) {
   round(true_r * sqrt(reliability_a*reliability_b), 2)
 }
 
-max_cor <- observed_r(true_r = 1.0, reliability_a = transf.iabt(predictions_permutations$pred), reliability_b = 1.0)
+max_cor <- observed_r(true_r = 1.0, reliability_a = transf.iabt(predictions_permutations_sensitivity$pred), reliability_b = 1.0)
 
-medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_permutations$pred), reliability_b = 1.0)
+medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_permutations_sensitivity$pred), reliability_b = 1.0)
 
 ```
 
-Given this meta estimate of reliability, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable is `r max_cor`. For a true correlation of medium size (r = .5), the observed correlation would be `r medium_cor`.
+Given this meta estimate of reliability, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable (i.e., when true correlation is 1.0) is `r max_cor`. For a true correlation of medium size (r = .5), the observed correlation would be `r medium_cor`.
 
 ## Test-retest
 
@@ -447,7 +662,7 @@ medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_t
 
 ```
 
-Given this meta estimate of reliability, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable is `r max_cor`. For a true correlation of medium size (r = .5), the observed correlation would be `r medium_cor`.
+Given this meta estimate of reliability, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable (i.e., when true correlation is 1.0) is `r max_cor`. For a true correlation of medium size (r = .5), the observed correlation would be `r medium_cor`.
 
 # Possbile improvements via lengthening the task
 
@@ -461,7 +676,7 @@ where $\rho_{xx'}^*$ refers to the goal reliability, $\rho_{xx'}$ refers to the 
 
 ```{r}
 
-current_ic <- transf.iabt(predictions_permutations$pred)
+current_ic <- transf.iabt(predictions_permutations_sensitivity$pred)
 
 goal_ic <- 0.70
 ic_length_increase_.70 <- round((goal_ic*(1 - current_ic)) / (current_ic*(1 - goal_ic)), 1)
@@ -474,7 +689,7 @@ ic_length_increase_.90 <- round((goal_ic*(1 - current_ic)) / (current_ic*(1 - go
 
 ```
 
-Using $a$ = `r round(transf.iabt(predictions_permutations$pred), 2)`, the IRAP would have to be `r ic_length_increase_.70` times longer for it to have an internal consistency of >=.70, `r ic_length_increase_.80` times longer for it to have an internal consistency of >=.80, or `r ic_length_increase_.90` times longer for it to have an internal consistency of >=.90.
+Using $a$ = `r round(transf.iabt(predictions_permutations_sensitivity$pred), 2)`, the IRAP would have to be `r ic_length_increase_.70` times longer for it to have an internal consistency of >=.70, `r ic_length_increase_.80` times longer for it to have an internal consistency of >=.80, or `r ic_length_increase_.90` times longer for it to have an internal consistency of >=.90.
 
 
 ## Test-retest
