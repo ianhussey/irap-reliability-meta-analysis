@@ -169,8 +169,8 @@ metafor::forest(fit_oddeven,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_oddeven))
-text(-1.4, 28, "Study", pos = 4)
-text(1.6, 28, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 39, "Study", pos = 4)
+text(1.6, 39, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -222,8 +222,8 @@ metafor::forest(fit_firstsecond,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond))
-text(-1.4, 28, "Study", pos = 4)
-text(1.6, 28, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 39, "Study", pos = 4)
+text(1.6, 39, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -277,8 +277,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates))
-text(-1.4, 28, "Study", pos = 4)
-text(1.6, 28, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 39, "Study", pos = 4)
+text(1.6, 39, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -408,8 +408,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
-text(-1.4, 27, "Study", pos = 4)
-text(1.6, 27, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 38, "Study", pos = 4)
+text(1.6, 38, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 

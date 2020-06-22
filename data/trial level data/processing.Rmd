@@ -30,7 +30,7 @@ library(tidyverse)
 
 # process sexuality data that included two timepoints 
 
-data_input <- read_csv("tidied data/test-retest IRAPs/raw/data sexuality test retest - trial level.csv")
+data_input <- read_csv("tidied data/test-retest IRAPs/component studies/data sexuality test retest - trial level.csv")
 
 data_completeness <- data_input %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -69,7 +69,7 @@ data_rts_and_summmaries_sexuality <- data_input %>%
 
 # process data that was output by/formatted from the VB6 2012+ IRAP
 
-data_input <- read_csv("tidied data/nonevaluative IRAPs/raw/IRAP 2012 VB format files/data disgust - trial level.csv") 
+data_input <- read_csv("tidied data/nonevaluative IRAPs/component studies/IRAP 2012 VB format files/data disgust - trial level.csv") 
 
 data_completeness <- data_input %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -161,9 +161,20 @@ data_testretest_cleaned_trial_level <-
   # tidy domain
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
+                                "clintontrump" = "Clinton-Trump",				
+                                "menwomen" = "Gender (2)",				
+                                "richpoor" = "Rich-Poor",
+                                "ADHD" = "ADHD",				
+                                "PTSD" = "PTSD",				
+                                "schizophrenia" = "Schizophrenia",
+                                "agreeableness" = "Personality - Agreeableness",
+                                "conscientiousness" = "Personality - Conscientiousness",
+                                "extraversion" = "Personality - Extraversion",
+                                "neuroticism" = "Personality - Neuroticism",
+                                "openness" = "Personality - Openness",
                                 "chad bodyimage" = "Body image",
                                 "chad friendenemy" = "Friend-Enemy",
-                                "chad gender" = "Gender",
+                                "chad gender" = "Gender (1)",
                                 "chad lincolnhitler" = "Lincoln-Hitler",
                                 "chad race"	 = "Race (1)",
                                 "ian race dearbhail" = "Race (2)",
@@ -209,9 +220,20 @@ data_input_evaluative <-
   # tidy domain
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
+                                "clintontrump" = "Clinton-Trump",				
+                                "menwomen" = "Gender (2)",				
+                                "richpoor" = "Rich-Poor",
+                                "ADHD" = "ADHD",				
+                                "PTSD" = "PTSD",				
+                                "schizophrenia" = "Schizophrenia",
+                                "agreeableness" = "Personality - Agreeableness",
+                                "conscientiousness" = "Personality - Conscientiousness",
+                                "extraversion" = "Personality - Extraversion",
+                                "neuroticism" = "Personality - Neuroticism",
+                                "openness" = "Personality - Openness",
                                 "chad bodyimage" = "Body image",
                                 "chad friendenemy" = "Friend-Enemy",
-                                "chad gender" = "Gender",
+                                "chad gender" = "Gender (1)",
                                 "chad lincolnhitler" = "Lincoln-Hitler",
                                 "chad race"	 = "Race (1)",
                                 "ian race dearbhail" = "Race (2)",
@@ -244,7 +266,7 @@ data_input_evaluative <-
 # do exclusions for unique ids with wrong number of trials
 data_participants_with_correct_n_trials <- data_input_evaluative %>%
   count(unique_id, timepoint) %>%
-  filter(n %in% c(144, 192)) # methodologically plausible number of trials
+  filter(n %in% c(144, 192, 288, 432)) # methodologically plausible number of trials
 
 data_cleaned_ic_evaluative <- semi_join(data_input_evaluative, data_participants_with_correct_n_trials, by = "unique_id")
 
@@ -258,9 +280,20 @@ data_cleaned_ic_nonevaluative <-
   # tidy domain
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
+                                "clintontrump" = "Clinton-Trump",				
+                                "menwomen" = "Gender (2)",				
+                                "richpoor" = "Rich-Poor",
+                                "ADHD" = "ADHD",				
+                                "PTSD" = "PTSD",				
+                                "schizophrenia" = "Schizophrenia",
+                                "agreeableness" = "Personality - Agreeableness",
+                                "conscientiousness" = "Personality - Conscientiousness",
+                                "extraversion" = "Personality - Extraversion",
+                                "neuroticism" = "Personality - Neuroticism",
+                                "openness" = "Personality - Openness",
                                 "chad bodyimage" = "Body image",
                                 "chad friendenemy" = "Friend-Enemy",
-                                "chad gender" = "Gender",
+                                "chad gender" = "Gender (1)",
                                 "chad lincolnhitler" = "Lincoln-Hitler",
                                 "chad race"	 = "Race (1)",
                                 "ian race dearbhail" = "Race (2)",
@@ -286,7 +319,10 @@ data_cleaned_ic_nonevaluative <-
                                 "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
                                 "shapes and colors exp 3" = "Shapes & colors (7)")) %>%
   arrange(as.character(domain)) %>%
-  mutate(timepoint = 1)
+  mutate(timepoint = 1) %>%
+  group_by(unique_id) %>%
+  mutate(mean_rt = mean(rt, na.rm = TRUE)) %>%
+  ungroup()
 
 
 
@@ -301,7 +337,7 @@ data_combined_ic <-
 data_n_trials <- data_combined_ic %>%
   group_by(unique_id, timepoint) %>%
   summarise(n = n()) %>%
-  filter(n %in% c(144, 192, 240))
+  filter(n %in% c(144, 192, 240, 288, 432))
 
 data_internalconsistency_cleaned_trial_level <- data_combined_ic %>%
   semi_join(data_n_trials, by = "unique_id") %>%
@@ -316,5 +352,4 @@ data_internalconsistency_cleaned_trial_level <- data_combined_ic %>%
 write_csv(data_internalconsistency_cleaned_trial_level, "data_internalconsistency_cleaned_trial_level.csv")
 
 ```
-
 

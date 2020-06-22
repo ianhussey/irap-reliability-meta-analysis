@@ -388,7 +388,7 @@ write_csv(data_internal_consistency_firstsecondhalves, "data_internal_consistenc
 
 ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019).
 
-Circa 15 minute runtime
+Circa 25 minute runtime
 
 ### Calculate D scores
 
@@ -512,7 +512,7 @@ if (file.exists("permutations/data_internal_consistency_permutations.RData")) {
 
 ### Calculate effect sizes
 
-Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 5000 permutations.   
+Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 2000 permutations.   
 
 Bonett transformations 
 

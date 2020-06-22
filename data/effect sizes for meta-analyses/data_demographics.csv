@@ -1,4 +1,66 @@
 unique_id,age,gender,rt_outlier
+ADHD_101_ADHD,NA,NA,FALSE
+ADHD_106_ADHD,NA,NA,FALSE
+ADHD_108_ADHD,NA,NA,FALSE
+ADHD_112_ADHD,NA,NA,FALSE
+ADHD_113_ADHD,NA,NA,FALSE
+ADHD_117_ADHD,NA,NA,FALSE
+ADHD_119_ADHD,NA,NA,FALSE
+ADHD_124_ADHD,NA,NA,FALSE
+ADHD_153_ADHD,NA,NA,FALSE
+ADHD_155_ADHD,NA,NA,FALSE
+ADHD_160_ADHD,NA,NA,FALSE
+ADHD_162_ADHD,NA,NA,FALSE
+ADHD_166_ADHD,NA,NA,FALSE
+ADHD_167_ADHD,NA,NA,FALSE
+ADHD_171_ADHD,NA,NA,FALSE
+ADHD_173_ADHD,NA,NA,FALSE
+ADHD_178_ADHD,NA,NA,FALSE
+ADHD_180_ADHD,NA,NA,FALSE
+ADHD_184_ADHD,NA,NA,FALSE
+ADHD_185_ADHD,NA,NA,FALSE
+ADHD_207_ADHD,NA,NA,FALSE
+ADHD_209_ADHD,NA,NA,FALSE
+ADHD_214_ADHD,NA,NA,FALSE
+ADHD_217_ADHD,NA,NA,FALSE
+ADHD_220_ADHD,NA,NA,FALSE
+ADHD_221_ADHD,NA,NA,FALSE
+ADHD_227_ADHD,NA,NA,FALSE
+ADHD_232_ADHD,NA,NA,FALSE
+ADHD_234_ADHD,NA,NA,FALSE
+ADHD_238_ADHD,NA,NA,FALSE
+ADHD_239_ADHD,NA,NA,FALSE
+ADHD_243_ADHD,NA,NA,FALSE
+ADHD_245_ADHD,NA,NA,FALSE
+ADHD_250_ADHD,NA,NA,FALSE
+ADHD_252_ADHD,NA,NA,FALSE
+ADHD_256_ADHD,NA,NA,FALSE
+ADHD_257_ADHD,NA,NA,FALSE
+ADHD_261_ADHD,NA,NA,FALSE
+ADHD_263_ADHD,NA,NA,FALSE
+ADHD_268_ADHD,NA,NA,FALSE
+ADHD_270_ADHD,NA,NA,FALSE
+ADHD_310_ADHD,NA,NA,FALSE
+ADHD_311_ADHD,NA,NA,FALSE
+ADHD_315_ADHD,NA,NA,FALSE
+ADHD_317_ADHD,NA,NA,FALSE
+ADHD_322_ADHD,NA,NA,FALSE
+ADHD_324_ADHD,NA,NA,FALSE
+ADHD_328_ADHD,NA,NA,FALSE
+ADHD_329_ADHD,NA,NA,FALSE
+ADHD_333_ADHD,NA,NA,FALSE
+ADHD_333b_ADHD,NA,NA,FALSE
+ADHD_335_ADHD,NA,NA,FALSE
+ADHD_335b_ADHD,NA,NA,FALSE
+ADHD_340_ADHD,NA,NA,FALSE
+ADHD_342_ADHD,NA,NA,FALSE
+ADHD_346_ADHD,NA,NA,FALSE
+ADHD_347_ADHD,NA,NA,FALSE
+ADHD_351_ADHD,NA,NA,FALSE
+ADHD_353_ADHD,NA,NA,FALSE
+ADHD_358_ADHD,NA,NA,FALSE
+ADHD_360_ADHD,NA,NA,FALSE
+ADHD_360.1_ADHD,NA,NA,FALSE
 chad bodyimage_9,18,Female,FALSE
 chad bodyimage_101,22,Female,FALSE
 chad bodyimage_109,18,Female,FALSE
@@ -22,6 +84,107 @@ chad bodyimage_41,18,Female,FALSE
 chad bodyimage_43,18,Female,FALSE
 chad bodyimage_45,19,Female,FALSE
 chad bodyimage_5,19,Female,FALSE
+clintontrump_101_clinton_trump,NA,NA,FALSE
+clintontrump_102_clinton_trump,NA,NA,FALSE
+clintontrump_107_clinton_trump,NA,NA,FALSE
+clintontrump_108_clinton_trump,NA,NA,FALSE
+clintontrump_113_clinton_trump,NA,NA,FALSE
+clintontrump_114_clinton_trump,NA,NA,FALSE
+clintontrump_119_clinton_trump,NA,NA,FALSE
+clintontrump_120_clinton_trump,NA,NA,FALSE
+clintontrump_125_clinton_trump,NA,NA,FALSE
+clintontrump_126_clinton_trump,NA,NA,FALSE
+clintontrump_131_clinton_trump,NA,NA,FALSE
+clintontrump_132_clinton_trump,NA,NA,FALSE
+clintontrump_137_clinton_trump,NA,NA,FALSE
+clintontrump_138_clinton_trump,NA,NA,FALSE
+clintontrump_143_clinton_trump,NA,NA,FALSE
+clintontrump_144_clinton_trump,NA,NA,FALSE
+clintontrump_149_clinton_trump,NA,NA,FALSE
+clintontrump_150_clinton_trump,NA,NA,FALSE
+clintontrump_156_clinton_trump,NA,NA,FALSE
+clintontrump_161_clinton_trump,NA,NA,FALSE
+clintontrump_167_clinton_trump,NA,NA,FALSE
+clintontrump_168_clinton_trump,NA,NA,FALSE
+clintontrump_173_clinton_trump,NA,NA,FALSE
+clintontrump_174_clinton_trump,NA,NA,FALSE
+clintontrump_179_clinton_trump,NA,NA,FALSE
+clintontrump_185_clinton_trump,NA,NA,FALSE
+clintontrump_186_clinton_trump,NA,NA,FALSE
+clintontrump_191_clinton_trump,NA,NA,FALSE
+clintontrump_192_clinton_trump,NA,NA,FALSE
+clintontrump_197_clinton_trump,NA,NA,FALSE
+clintontrump_198_clinton_trump,NA,NA,FALSE
+clintontrump_221_clinton_trump,NA,NA,FALSE
+clintontrump_222_clinton_trump,NA,NA,FALSE
+clintontrump_263_clinton_trump,NA,NA,FALSE
+clintontrump_269_clinton_trump,NA,NA,FALSE
+clintontrump_270_clinton_trump,NA,NA,FALSE
+clintontrump_275_clinton_trump,NA,NA,FALSE
+clintontrump_276_clinton_trump,NA,NA,FALSE
+clintontrump_281_clinton_trump,NA,NA,FALSE
+clintontrump_282_clinton_trump,NA,NA,FALSE
+clintontrump_287_clinton_trump,NA,NA,FALSE
+clintontrump_288_clinton_trump,NA,NA,FALSE
+clintontrump_293_clinton_trump,NA,NA,FALSE
+clintontrump_294_clinton_trump,NA,NA,FALSE
+clintontrump_299_clinton_trump,NA,NA,FALSE
+clintontrump_305_clinton_trump,NA,NA,FALSE
+clintontrump_306_clinton_trump,NA,NA,FALSE
+clintontrump_702_clinton_trump,NA,NA,FALSE
+clintontrump_713_clinton_trump,NA,NA,FALSE
+clintontrump_714_clinton_trump,NA,NA,FALSE
+clintontrump_719_clinton_trump,NA,NA,FALSE
+clintontrump_720_clinton_trump,NA,NA,FALSE
+clintontrump_725_clinton_trump,NA,NA,FALSE
+clintontrump_726_clinton_trump,NA,NA,FALSE
+clintontrump_731_clinton_trump,NA,NA,FALSE
+clintontrump_737_clinton_trump,NA,NA,FALSE
+clintontrump_743_clinton_trump,NA,NA,FALSE
+clintontrump_744_clinton_trump,NA,NA,FALSE
+clintontrump_749_clinton_trump,NA,NA,FALSE
+clintontrump_755_clinton_trump,NA,NA,FALSE
+clintontrump_756_clinton_trump,NA,NA,FALSE
+clintontrump_761_clinton_trump,NA,NA,FALSE
+clintontrump_762_clinton_trump,NA,NA,FALSE
+clintontrump_786_clinton_trump,NA,NA,FALSE
+clintontrump_791_clinton_trump,NA,NA,FALSE
+clintontrump_792_clinton_trump,NA,NA,FALSE
+clintontrump_797_clinton_trump,NA,NA,FALSE
+clintontrump_798_clinton_trump,NA,NA,FALSE
+clintontrump_803_clinton_trump,NA,NA,FALSE
+clintontrump_804_clinton_trump,NA,NA,FALSE
+clintontrump_810_clinton_trump,NA,NA,FALSE
+clintontrump_815_clinton_trump,NA,NA,FALSE
+clintontrump_816_clinton_trump,NA,NA,FALSE
+clintontrump_822_clinton_trump,NA,NA,FALSE
+clintontrump_827_clinton_trump,NA,NA,FALSE
+clintontrump_828_clinton_trump,NA,NA,FALSE
+clintontrump_839_clinton_trump,NA,NA,FALSE
+clintontrump_840_clinton_trump,NA,NA,FALSE
+clintontrump_845_clinton_trump,NA,NA,FALSE
+clintontrump_851_clinton_trump,NA,NA,FALSE
+clintontrump_857_clinton_trump,NA,NA,FALSE
+clintontrump_863_clinton_trump,NA,NA,FALSE
+clintontrump_864_clinton_trump,NA,NA,FALSE
+clintontrump_869_clinton_trump,NA,NA,FALSE
+clintontrump_870_clinton_trump,NA,NA,FALSE
+clintontrump_893_clinton_trump,NA,NA,FALSE
+clintontrump_894_clinton_trump,NA,NA,FALSE
+clintontrump_162_clinton_trump,NA,NA,FALSE
+clintontrump_180_clinton_trump,NA,NA,TRUE
+clintontrump_264_clinton_trump,NA,NA,TRUE
+clintontrump_300_clinton_trump,NA,NA,FALSE
+clintontrump_701_clinton_trump,NA,NA,FALSE
+clintontrump_708_clinton_trump,NA,NA,FALSE
+clintontrump_732_clinton_trump,NA,NA,FALSE
+clintontrump_750_clinton_trump,NA,NA,FALSE
+clintontrump_821_clinton_trump,NA,NA,FALSE
+clintontrump_846_clinton_trump,NA,NA,FALSE
+clintontrump_852_clinton_trump,NA,NA,TRUE
+clintontrump_858_clinton_trump,NA,NA,FALSE
+clintontrump_707_clinton_trump,NA,NA,FALSE
+clintontrump_785_clinton_trump,NA,NA,FALSE
 ian death emma_11,19,Female,FALSE
 ian death emma_13,21,Female,FALSE
 ian death emma_15,26,Female,FALSE
@@ -85,9 +248,10 @@ ian death tarah_33,51,Male,FALSE
 ian death tarah_34,20,Female,TRUE
 ian death tarah_37,31,Female,FALSE
 ian death tarah_38,21,Female,FALSE
-ian death tarah_42,19,Female,FALSE
+ian death tarah_42,19,Female,TRUE
 ian death tarah_44,21,Female,FALSE
 ian death tarah_5,21,Male,FALSE
+ian death tarah_6,NA,NA,FALSE
 ian death tarah_7,34,Female,FALSE
 ian death tarah_8,NA,NA,TRUE
 ian death tarah_9,20,Female,FALSE
@@ -119,6 +283,7 @@ chad friendenemy_189,19,Female,FALSE
 chad friendenemy_202,NA,NA,FALSE
 chad friendenemy_212,18,Male,FALSE
 chad friendenemy_219,19,Male,FALSE
+chad friendenemy_224,21,Female,FALSE
 chad friendenemy_226,19,Female,FALSE
 chad friendenemy_303,18,Male,FALSE
 chad friendenemy_305,18,Female,FALSE
@@ -132,10 +297,10 @@ chad friendenemy_331,19,Female,FALSE
 chad friendenemy_338,18,Female,FALSE
 chad friendenemy_340,19,Female,FALSE
 chad friendenemy_345,21,Female,FALSE
-chad friendenemy_347,28,Male,TRUE
+chad friendenemy_347,28,Male,FALSE
 chad friendenemy_352,19,Female,FALSE
 chad friendenemy_354,18,Female,FALSE
-chad friendenemy_359,19,Female,TRUE
+chad friendenemy_359,19,Female,FALSE
 chad friendenemy_361,18,Male,FALSE
 chad friendenemy_366,21,Male,FALSE
 chad friendenemy_368,18,Male,FALSE
@@ -180,7 +345,7 @@ chad friendenemy_339,NA,NA,FALSE
 chad friendenemy_346,NA,NA,FALSE
 chad friendenemy_353,NA,NA,FALSE
 chad friendenemy_360,NA,NA,FALSE
-chad friendenemy_367,NA,NA,TRUE
+chad friendenemy_367,NA,NA,FALSE
 chad friendenemy_374,NA,NA,FALSE
 chad friendenemy_404,NA,NA,FALSE
 chad friendenemy_504,NA,NA,FALSE
@@ -191,11 +356,12 @@ chad friendenemy_611,NA,NA,FALSE
 chad friendenemy_225,NA,NA,FALSE
 chad friendenemy_126,NA,NA,FALSE
 chad friendenemy_205,NA,NA,FALSE
-chad friendenemy_213,NA,NA,TRUE
+chad friendenemy_213,NA,NA,FALSE
 chad gender_10,NA,NA,FALSE
 chad gender_14,NA,NA,FALSE
 chad gender_201,NA,NA,FALSE
 chad gender_207,NA,NA,FALSE
+chad gender_216,NA,NA,FALSE
 chad gender_222,NA,NA,FALSE
 chad gender_102,NA,NA,FALSE
 chad gender_106,NA,NA,FALSE
@@ -232,6 +398,108 @@ chad gender_34,NA,NA,FALSE
 chad gender_42,NA,NA,FALSE
 chad gender_46,NA,NA,FALSE
 chad gender_210,NA,NA,FALSE
+menwomen_103_men_women,NA,NA,FALSE
+menwomen_104_men_women,NA,NA,TRUE
+menwomen_109_men_women,NA,NA,FALSE
+menwomen_110_men_women,NA,NA,FALSE
+menwomen_115_men_women,NA,NA,FALSE
+menwomen_116_men_women,NA,NA,FALSE
+menwomen_121_men_women,NA,NA,FALSE
+menwomen_122_men_women,NA,NA,FALSE
+menwomen_127_men_women,NA,NA,FALSE
+menwomen_128_men_women,NA,NA,FALSE
+menwomen_133_men_women,NA,NA,FALSE
+menwomen_139_men_women,NA,NA,FALSE
+menwomen_140_men_women,NA,NA,FALSE
+menwomen_145_men_women,NA,NA,FALSE
+menwomen_146_men_women,NA,NA,FALSE
+menwomen_151_men_women,NA,NA,FALSE
+menwomen_152_men_women,NA,NA,FALSE
+menwomen_157_men_women,NA,NA,FALSE
+menwomen_158_men_women,NA,NA,FALSE
+menwomen_163_men_women,NA,NA,FALSE
+menwomen_164_men_women,NA,NA,FALSE
+menwomen_169_men_women,NA,NA,FALSE
+menwomen_175_men_women,NA,NA,FALSE
+menwomen_176_men_women,NA,NA,FALSE
+menwomen_182_men_women,NA,NA,FALSE
+menwomen_187_men_women,NA,NA,FALSE
+menwomen_188_men_women,NA,NA,FALSE
+menwomen_193_men_women,NA,NA,TRUE
+menwomen_199_men_women,NA,NA,FALSE
+menwomen_200_men_women,NA,NA,FALSE
+menwomen_223_men_women,NA,NA,FALSE
+menwomen_224_men_women,NA,NA,FALSE
+menwomen_265_men_women,NA,NA,FALSE
+menwomen_266_men_women,NA,NA,FALSE
+menwomen_271_men_women,NA,NA,FALSE
+menwomen_272_men_women,NA,NA,FALSE
+menwomen_277_men_women,NA,NA,FALSE
+menwomen_278_men_women,NA,NA,FALSE
+menwomen_283_men_women,NA,NA,FALSE
+menwomen_284_men_women,NA,NA,FALSE
+menwomen_289_men_women,NA,NA,FALSE
+menwomen_290_men_women,NA,NA,FALSE
+menwomen_295_men_women,NA,NA,FALSE
+menwomen_296_men_women,NA,NA,FALSE
+menwomen_301_men_women,NA,NA,FALSE
+menwomen_302_men_women,NA,NA,FALSE
+menwomen_307_men_women,NA,NA,FALSE
+menwomen_703_men_women,NA,NA,FALSE
+menwomen_704_men_women,NA,NA,FALSE
+menwomen_709_men_women,NA,NA,FALSE
+menwomen_710_men_women,NA,NA,FALSE
+menwomen_715_men_women,NA,NA,FALSE
+menwomen_721_men_women,NA,NA,FALSE
+menwomen_722_men_women,NA,NA,FALSE
+menwomen_727_men_women,NA,NA,FALSE
+menwomen_728_men_women,NA,NA,FALSE
+menwomen_733_men_women,NA,NA,FALSE
+menwomen_734_men_women,NA,NA,FALSE
+menwomen_740redo_men_women,NA,NA,FALSE
+menwomen_745_men_women,NA,NA,FALSE
+menwomen_751_men_women,NA,NA,FALSE
+menwomen_752_men_women,NA,NA,FALSE
+menwomen_757_men_women,NA,NA,FALSE
+menwomen_758_men_women,NA,NA,FALSE
+menwomen_763_men_women,NA,NA,FALSE
+menwomen_764_men_women,NA,NA,FALSE
+menwomen_782_men_women,NA,NA,FALSE
+menwomen_787_men_women,NA,NA,FALSE
+menwomen_788_men_women,NA,NA,FALSE
+menwomen_793_men_women,NA,NA,FALSE
+menwomen_794_men_women,NA,NA,FALSE
+menwomen_799_men_women,NA,NA,FALSE
+menwomen_800_men_women,NA,NA,FALSE
+menwomen_805_men_women,NA,NA,FALSE
+menwomen_806_men_women,NA,NA,FALSE
+menwomen_811_men_women,NA,NA,FALSE
+menwomen_812_men_women,NA,NA,FALSE
+menwomen_818_men_women,NA,NA,FALSE
+menwomen_823_men_women,NA,NA,FALSE
+menwomen_824_men_women,NA,NA,FALSE
+menwomen_836_men_women,NA,NA,TRUE
+menwomen_841_men_women,NA,NA,FALSE
+menwomen_842_men_women,NA,NA,FALSE
+menwomen_853_men_women,NA,NA,FALSE
+menwomen_854_men_women,NA,NA,FALSE
+menwomen_859_men_women,NA,NA,FALSE
+menwomen_860_men_women,NA,NA,TRUE
+menwomen_865_men_women,NA,NA,FALSE
+menwomen_866_men_women,NA,NA,FALSE
+menwomen_871_men_women,NA,NA,FALSE
+menwomen_890_men_women,NA,NA,FALSE
+menwomen_895_men_women,NA,NA,FALSE
+menwomen_896_men_women,NA,NA,FALSE
+menwomen_181_men_women,NA,NA,FALSE
+menwomen_218_men_women,NA,NA,FALSE
+menwomen_716_men_women,NA,NA,FALSE
+menwomen_746_men_women,NA,NA,FALSE
+menwomen_194_men_women,NA,NA,FALSE
+menwomen_739_men_women,NA,NA,FALSE
+menwomen_817_men_women,NA,NA,FALSE
+menwomen_829_men_women,NA,NA,TRUE
+menwomen_848redo_men_women,NA,NA,FALSE
 chad lincolnhitler_102,18,Male,FALSE
 chad lincolnhitler_104,21,Female,FALSE
 chad lincolnhitler_108,19,Male,FALSE
@@ -275,6 +543,7 @@ chad lincolnhitler_209,19,Female,FALSE
 chad lincolnhitler_211,18,Female,FALSE
 chad lincolnhitler_215,19,Female,FALSE
 chad lincolnhitler_216,23,Female,FALSE
+chad lincolnhitler_0,NA,NA,FALSE
 chad lincolnhitler_222,22,Male,FALSE
 chad lincolnhitler_302,18,Female,FALSE
 chad lincolnhitler_304,18,Female,FALSE
@@ -308,7 +577,7 @@ chad lincolnhitler_401,18,Female,FALSE
 chad lincolnhitler_402,18,Female,FALSE
 chad lincolnhitler_404,19,Female,FALSE
 chad lincolnhitler_408,27,Male,FALSE
-chad lincolnhitler_411,18,Male,TRUE
+chad lincolnhitler_411,18,Male,FALSE
 chad lincolnhitler_501,18,Female,FALSE
 chad lincolnhitler_502,18,Male,TRUE
 chad lincolnhitler_504,20,Female,FALSE
@@ -327,6 +596,7 @@ chad lincolnhitler_611,18,Male,FALSE
 chad lincolnhitler_701,19,Female,FALSE
 chad lincolnhitler_702,25,Female,FALSE
 chad lincolnhitler_181,21,Female,FALSE
+chad lincolnhitler_202,18,Male,FALSE
 chad lincolnhitler_223,18,Female,FALSE
 chad lincolnhitler_225,18,Female,FALSE
 chad lincolnhitler_315,19,Female,FALSE
@@ -367,6 +637,63 @@ chad lincolnhitler_605,NA,NA,FALSE
 chad lincolnhitler_612,NA,NA,FALSE
 chad lincolnhitler_101,NA,NA,FALSE
 chad lincolnhitler_218,NA,NA,FALSE
+PTSD_102_PTSD,NA,NA,TRUE
+PTSD_104_PTSD,NA,NA,FALSE
+PTSD_109_PTSD,NA,NA,FALSE
+PTSD_111_PTSD,NA,NA,FALSE
+PTSD_115_PTSD,NA,NA,FALSE
+PTSD_116_PTSD,NA,NA,FALSE
+PTSD_120_PTSD,NA,NA,FALSE
+PTSD_122_PTSD,NA,NA,FALSE
+PTSD_158_PTSD,NA,NA,FALSE
+PTSD_163_PTSD,NA,NA,FALSE
+PTSD_165_PTSD,NA,NA,FALSE
+PTSD_169_PTSD,NA,NA,FALSE
+PTSD_170_PTSD,NA,NA,FALSE
+PTSD_174_PTSD,NA,NA,FALSE
+PTSD_176_PTSD,NA,NA,FALSE
+PTSD_181_PTSD,NA,NA,FALSE
+PTSD_183_PTSD,NA,NA,FALSE
+PTSD_205_PTSD,NA,NA,FALSE
+PTSD_206_PTSD,NA,NA,FALSE
+PTSD_210_PTSD,NA,NA,FALSE
+PTSD_212_PTSD,NA,NA,FALSE
+PTSD_216_PTSD,NA,NA,FALSE
+PTSD_219_PTSD,NA,NA,FALSE
+PTSD_223_PTSD,NA,NA,FALSE
+PTSD_224_PTSD,NA,NA,FALSE
+PTSD_228_PTSD,NA,NA,FALSE
+PTSD_235_PTSD,NA,NA,FALSE
+PTSD_237_PTSD,NA,NA,FALSE
+PTSD_241_PTSD,NA,NA,FALSE
+PTSD_242_PTSD,NA,NA,FALSE
+PTSD_246_PTSD,NA,NA,FALSE
+PTSD_248_PTSD,NA,NA,FALSE
+PTSD_253_PTSD,NA,NA,FALSE
+PTSD_354_PTSD,NA,NA,FALSE
+PTSD_255_PTSD,NA,NA,FALSE
+PTSD_259_PTSD,NA,NA,TRUE
+PTSD_260_PTSD,NA,NA,FALSE
+PTSD_264_PTSD,NA,NA,FALSE
+PTSD_266_PTSD,NA,NA,FALSE
+PTSD_309_PTSD,NA,NA,FALSE
+PTSD_314_PTSD,NA,NA,FALSE
+PTSD_318_PTSD,NA,NA,FALSE
+PTSD_320_PTSD,NA,NA,FALSE
+PTSD_325_PTSD,NA,NA,FALSE
+PTSD_327_PTSD,NA,NA,FALSE
+PTSD_331_PTSD,NA,NA,FALSE
+PTSD_331b_PTSD,NA,NA,FALSE
+PTSD_332_PTSD,NA,NA,FALSE
+PTSD_332b_PTSD,NA,NA,FALSE
+PTSD_336_PTSD,NA,NA,FALSE
+PTSD_336b_PTSD,NA,NA,FALSE
+PTSD_338_PTSD,NA,NA,FALSE
+PTSD_343_PTSD,NA,NA,FALSE
+PTSD_345_PTSD,NA,NA,TRUE
+PTSD_349_PTSD,NA,NA,FALSE
+PTSD_350_PTSD,NA,NA,FALSE
+PTSD_356_PTSD,NA,NA,FALSE
 chad race_11,19,Female,FALSE
 chad race_0,NA,NA,FALSE
 chad race_214,21,Male,FALSE
@@ -486,6 +813,7 @@ ian race katie_8,18,Male,FALSE
 ian race katie_9,23,Female,FALSE
 chad religion_12,18,Female,FALSE
 chad religion_203,18,Male,FALSE
+chad religion_206,19,Male,FALSE
 chad religion_215,20,Male,FALSE
 chad religion_104,18,Female,FALSE
 chad religion_108,60,Female,FALSE
@@ -514,6 +842,160 @@ chad religion_321,18,Male,FALSE
 chad religion_324,22,Male,FALSE
 chad religion_40,20,Female,FALSE
 chad religion_8,19,Female,FALSE
+richpoor_105_rich_poor,NA,NA,FALSE
+richpoor_111_rich_poor,NA,NA,FALSE
+richpoor_112_rich_poor,NA,NA,FALSE
+richpoor_117_rich_poor,NA,NA,FALSE
+richpoor_118_rich_poor,NA,NA,FALSE
+richpoor_123_rich_poor,NA,NA,FALSE
+richpoor_124_rich_poor,NA,NA,FALSE
+richpoor_129_rich_poor,NA,NA,FALSE
+richpoor_130_rich_poor,NA,NA,FALSE
+richpoor_135_rich_poor,NA,NA,FALSE
+richpoor_136_rich_poor,NA,NA,TRUE
+richpoor_141_rich_poor,NA,NA,FALSE
+richpoor_142_rich_poor,NA,NA,FALSE
+richpoor_147_rich_poor,NA,NA,FALSE
+richpoor_148_rich_poor,NA,NA,FALSE
+richpoor_153_rich_poor,NA,NA,FALSE
+richpoor_154_rich_poor,NA,NA,FALSE
+richpoor_159_rich_poor,NA,NA,FALSE
+richpoor_160_rich_poor,NA,NA,FALSE
+richpoor_166_rich_poor,NA,NA,FALSE
+richpoor_177_rich_poor,NA,NA,FALSE
+richpoor_178_rich_poor,NA,NA,FALSE
+richpoor_183_rich_poor,NA,NA,FALSE
+richpoor_185_rich_poor,NA,NA,TRUE
+richpoor_189_rich_poor,NA,NA,FALSE
+richpoor_190_rich_poor,NA,NA,FALSE
+richpoor_195_rich_poor,NA,NA,TRUE
+richpoor_196_rich_poor,NA,NA,FALSE
+richpoor_219_rich_poor,NA,NA,FALSE
+richpoor_220_rich_poor,NA,NA,FALSE
+richpoor_225_rich_poor,NA,NA,FALSE
+richpoor_267_rich_poor,NA,NA,FALSE
+richpoor_273_rich_poor,NA,NA,TRUE
+richpoor_274_rich_poor,NA,NA,FALSE
+richpoor_279_rich_poor,NA,NA,FALSE
+richpoor_280_rich_poor,NA,NA,FALSE
+richpoor_285_rich_poor,NA,NA,FALSE
+richpoor_286_rich_poor,NA,NA,FALSE
+richpoor_292_rich_poor,NA,NA,FALSE
+richpoor_297_rich_poor,NA,NA,FALSE
+richpoor_298_rich_poor,NA,NA,FALSE
+richpoor_303_rich_poor,NA,NA,FALSE
+richpoor_304_rich_poor,NA,NA,FALSE
+richpoor_705_rich_poor,NA,NA,FALSE
+richpoor_706_rich_poor,NA,NA,FALSE
+richpoor_718_rich_poor,NA,NA,FALSE
+richpoor_723_rich_poor,NA,NA,FALSE
+richpoor_724_rich_poor,NA,NA,FALSE
+richpoor_735_rich_poor,NA,NA,FALSE
+richpoor_742_rich_poor,NA,NA,FALSE
+richpoor_747_rich_poor,NA,NA,FALSE
+richpoor_748_rich_poor,NA,NA,FALSE
+richpoor_753_rich_poor,NA,NA,FALSE
+richpoor_754_rich_poor,NA,NA,FALSE
+richpoor_759_rich_poor,NA,NA,FALSE
+richpoor_765_rich_poor,NA,NA,FALSE
+richpoor_783_rich_poor,NA,NA,FALSE
+richpoor_784_rich_poor,NA,NA,FALSE
+richpoor_789_rich_poor,NA,NA,TRUE
+richpoor_790_rich_poor,NA,NA,FALSE
+richpoor_795_rich_poor,NA,NA,FALSE
+richpoor_796_rich_poor,NA,NA,FALSE
+richpoor_801_rich_poor,NA,NA,FALSE
+richpoor_802_rich_poor,NA,NA,FALSE
+richpoor_808_rich_poor,NA,NA,FALSE
+richpoor_813_rich_poor,NA,NA,TRUE
+richpoor_814_rich_poor,NA,NA,FALSE
+richpoor_819_rich_poor,NA,NA,FALSE
+richpoor_820_rich_poor,NA,NA,FALSE
+richpoor_825_rich_poor,NA,NA,FALSE
+richpoor_843_rich_poor,NA,NA,TRUE
+richpoor_849_rich_poor,NA,NA,FALSE
+richpoor_855_rich_poor,NA,NA,FALSE
+richpoor_856_rich_poor,NA,NA,FALSE
+richpoor_862_rich_poor,NA,NA,FALSE
+richpoor_867_rich_poor,NA,NA,FALSE
+richpoor_868_rich_poor,NA,NA,TRUE
+richpoor_891_rich_poor,NA,NA,FALSE
+richpoor_892_rich_poor,NA,NA,FALSE
+richpoor_897_rich_poor,NA,NA,FALSE
+richpoor_106_rich_poor,NA,NA,TRUE
+richpoor_165_rich_poor,NA,NA,TRUE
+richpoor_291_rich_poor,NA,NA,TRUE
+richpoor_729_rich_poor,NA,NA,FALSE
+richpoor_736_rich_poor,NA,NA,FALSE
+richpoor_741_rich_poor,NA,NA,FALSE
+richpoor_760_rich_poor,NA,NA,FALSE
+richpoor_766_rich_poor,NA,NA,FALSE
+richpoor_807_rich_poor,NA,NA,FALSE
+richpoor_837_rich_poor,NA,NA,FALSE
+richpoor_838.redo_rich_poor,NA,NA,TRUE
+richpoor_844_rich_poor,NA,NA,FALSE
+richpoor_861_rich_poor,NA,NA,FALSE
+richpoor_268_rich_poor,NA,NA,FALSE
+richpoor_717_rich_poor,NA,NA,FALSE
+richpoor_730_rich_poor,NA,NA,TRUE
+richpoor_826_rich_poor,NA,NA,TRUE
+richpoor_850_rich_poor,NA,NA,FALSE
+schizophrenia_103_schizophrenia,NA,NA,FALSE
+schizophrenia_105_schizophrenia,NA,NA,FALSE
+schizophrenia_107_schizophrenia,NA,NA,TRUE
+schizophrenia_110_schizophrenia,NA,NA,FALSE
+schizophrenia_114_schizophrenia,NA,NA,TRUE
+schizophrenia_18_schizophrenia,NA,NA,FALSE
+schizophrenia_121_schizophrenia,NA,NA,FALSE
+schizophrenia_123_schizophrenia,NA,NA,FALSE
+schizophrenia_154_schizophrenia,NA,NA,FALSE
+schizophrenia_157_schizophrenia,NA,NA,FALSE
+schizophrenia_159_schizophrenia,NA,NA,FALSE
+schizophrenia_161_schizophrenia,NA,NA,FALSE
+schizophrenia_168_schizophrenia,NA,NA,FALSE
+schizophrenia_172_schizophrenia,NA,NA,FALSE
+schizophrenia_175_schizophrenia,NA,NA,FALSE
+schizophrenia_177_schizophrenia,NA,NA,FALSE
+schizophrenia_124b_schizophrenia,NA,NA,FALSE
+schizophrenia_211_schizophrenia,NA,NA,FALSE
+schizophrenia_213_schizophrenia,NA,NA,FALSE
+schizophrenia_215_schizophrenia,NA,NA,FALSE
+schizophrenia_218_schizophrenia,NA,NA,FALSE
+schizophrenia_222_schizophrenia,NA,NA,FALSE
+schizophrenia_225_schizophrenia,NA,NA,FALSE
+schizophrenia_226_schizophrenia,NA,NA,FALSE
+schizophrenia_233_schizophrenia,NA,NA,FALSE
+schizophrenia_236_schizophrenia,NA,NA,FALSE
+schizophrenia_240_schizophrenia,NA,NA,FALSE
+schizophrenia_244_schizophrenia,NA,NA,FALSE
+schizophrenia_247_schizophrenia,NA,NA,FALSE
+schizophrenia_249_schizophrenia,NA,NA,FALSE
+schizophrenia_251_schizophrenia,NA,NA,FALSE
+schizophrenia_254_schizophrenia,NA,NA,FALSE
+schizophrenia_258_schizophrenia,NA,NA,FALSE
+schizophrenia_262_schizophrenia,NA,NA,FALSE
+schizophrenia_265_schizophrenia,NA,NA,FALSE
+schizophrenia_267_schizophrenia,NA,NA,FALSE
+schizophrenia_269_schizophrenia,NA,NA,FALSE
+schizophrenia_312_schizophrenia,NA,NA,FALSE
+schizophrenia_315b_schizophrenia,NA,NA,FALSE
+schizophrenia_319_schizophrenia,NA,NA,FALSE
+schizophrenia_321_schizophrenia,NA,NA,FALSE
+schizophrenia_323_schizophrenia,NA,NA,FALSE
+schizophrenia_326_schizophrenia,NA,NA,FALSE
+schizophrenia_330_schizophrenia,NA,NA,FALSE
+schizophrenia_334_schizophrenia,NA,NA,FALSE
+schizophrenia_334b_schizophrenia,NA,NA,FALSE
+schizophrenia_337_schizophrenia,NA,NA,FALSE
+schizophrenia_337b_schizophrenia,NA,NA,FALSE
+schizophrenia_339_schizophrenia,NA,NA,FALSE
+schizophrenia_340b_schizophrenia,NA,NA,FALSE
+schizophrenia_344_schizophrenia,NA,NA,FALSE
+schizophrenia_348_schizophrenia,NA,NA,FALSE
+schizophrenia_352_schizophrenia,NA,NA,FALSE
+schizophrenia_355_schizophrenia,NA,NA,FALSE
+schizophrenia_357_schizophrenia,NA,NA,FALSE
+schizophrenia_359_schizophrenia,NA,NA,FALSE
 countries acknowledge 1 siabP01X,NA,NA,FALSE
 countries acknowledge 1 siabP02X,NA,NA,FALSE
 countries acknowledge 1 siabP04,NA,NA,FALSE
@@ -522,18 +1004,18 @@ countries acknowledge 1 siabP06,NA,NA,FALSE
 countries acknowledge 1 siabP07,NA,NA,FALSE
 countries acknowledge 1 siabP10,NA,NA,FALSE
 countries acknowledge 1 siabP11,NA,NA,TRUE
-countries acknowledge 1 siabP12,NA,NA,TRUE
+countries acknowledge 1 siabP12,NA,NA,FALSE
 countries acknowledge 1 siabP13,NA,NA,FALSE
-countries acknowledge 1 siabP14,NA,NA,TRUE
+countries acknowledge 1 siabP14,NA,NA,FALSE
 countries acknowledge 1 siabP15,NA,NA,FALSE
 countries acknowledge 1 siabP16,NA,NA,FALSE
 countries acknowledge 1 siabP17,NA,NA,FALSE
-countries acknowledge 1 siabP18,NA,NA,TRUE
+countries acknowledge 1 siabP18,NA,NA,FALSE
 countries acknowledge 1 siabP19,NA,NA,FALSE
 countries acknowledge 1 siabP20,NA,NA,FALSE
-countries acknowledge 1 siabP21,NA,NA,TRUE
+countries acknowledge 1 siabP21,NA,NA,FALSE
 countries acknowledge 1 siabP22,NA,NA,FALSE
-countries acknowledge 1 siabP23,NA,NA,TRUE
+countries acknowledge 1 siabP23,NA,NA,FALSE
 countries acknowledge 1 siabP24,NA,NA,FALSE
 countries acknowledge 1 siabP26,NA,NA,FALSE
 countries acknowledge 1 siabP27,NA,NA,FALSE
@@ -541,7 +1023,7 @@ countries acknowledge 1 siabP28,NA,NA,FALSE
 countries acknowledge 1 siabP29,NA,NA,FALSE
 countries acknowledge 1 siabP30,NA,NA,FALSE
 countries acknowledge 1 siabP31,NA,NA,FALSE
-countries acknowledge 1 siabP32,NA,NA,TRUE
+countries acknowledge 1 siabP32,NA,NA,FALSE
 countries acknowledge 1 siabP33,NA,NA,FALSE
 countries acknowledge 1 siabP34,NA,NA,FALSE
 countries acknowledge 1 siabP35,NA,NA,FALSE
@@ -549,18 +1031,18 @@ countries acknowledge 1 siabP38,NA,NA,FALSE
 countries acknowledge 1 siabP39,NA,NA,FALSE
 countries acknowledge 1 siabP40,NA,NA,FALSE
 countries acknowledge 1 siabP41,NA,NA,FALSE
-countries acknowledge 1 willP13,NA,NA,TRUE
+countries acknowledge 1 willP13,NA,NA,FALSE
 countries acknowledge 1 willp03,NA,NA,FALSE
 countries acknowledge 1 willp04,NA,NA,FALSE
 countries acknowledge 1 willp05,NA,NA,FALSE
 countries acknowledge 1 willp06,NA,NA,FALSE
 countries acknowledge 1 willp07,NA,NA,FALSE
 countries acknowledge 1 willp09,NA,NA,FALSE
-countries acknowledge 1 willp10,NA,NA,FALSE
-countries acknowledge 1 willp11,NA,NA,TRUE
+countries acknowledge 1 willp10,NA,NA,TRUE
+countries acknowledge 1 willp11,NA,NA,FALSE
 countries acknowledge 1 willp1,NA,NA,FALSE
 countries acknowledge 1 willp14,NA,NA,TRUE
-countries acknowledge 1 willp15,NA,NA,TRUE
+countries acknowledge 1 willp15,NA,NA,FALSE
 countries acknowledge 1 willp16,NA,NA,FALSE
 countries acknowledge 1 willp17,NA,NA,FALSE
 countries acknowledge 1 willp18,NA,NA,FALSE
@@ -570,9 +1052,9 @@ countries acknowledge 1 willp21,NA,NA,FALSE
 countries acknowledge 1 willp2,NA,NA,FALSE
 countries acknowledge 1 willp23,NA,NA,FALSE
 countries acknowledge 1 willp24,NA,NA,TRUE
-countries acknowledge 1 willp25,NA,NA,TRUE
+countries acknowledge 1 willp25,NA,NA,FALSE
 countries acknowledge 1 willp26,NA,NA,FALSE
-countries acknowledge 1 willp27,NA,NA,TRUE
+countries acknowledge 1 willp27,NA,NA,FALSE
 countries care 1 siabP04,NA,NA,FALSE
 countries care 1 siabP05,NA,NA,FALSE
 countries care 1 siabP06,NA,NA,FALSE
@@ -582,13 +1064,13 @@ countries care 1 siabP10,NA,NA,FALSE
 countries care 1 siabP11,NA,NA,TRUE
 countries care 1 siabP12,NA,NA,TRUE
 countries care 1 siabP13,NA,NA,FALSE
-countries care 1 siabP14,NA,NA,TRUE
+countries care 1 siabP14,NA,NA,FALSE
 countries care 1 siabP15,NA,NA,FALSE
 countries care 1 siabP16,NA,NA,FALSE
 countries care 1 siabP17,NA,NA,FALSE
 countries care 1 siabP18,NA,NA,FALSE
 countries care 1 siabP19,NA,NA,FALSE
-countries care 1 siabP20,NA,NA,TRUE
+countries care 1 siabP20,NA,NA,FALSE
 countries care 1 siabP21,NA,NA,TRUE
 countries care 1 siabP23,NA,NA,FALSE
 countries care 1 siabP24,NA,NA,FALSE
@@ -619,18 +1101,21 @@ countries care 1 willp1,NA,NA,FALSE
 countries care 1 willp13,NA,NA,FALSE
 countries care 1 willp16,NA,NA,FALSE
 countries care 1 willp17,NA,NA,FALSE
-countries care 1 willp18,NA,NA,TRUE
+countries care 1 willp18,NA,NA,FALSE
 countries care 1 willp19,NA,NA,FALSE
 countries care 1 willp20,NA,NA,FALSE
 countries care 1 willp21,NA,NA,TRUE
 countries care 1 willp2,NA,NA,FALSE
 countries care 1 willp23,NA,NA,FALSE
-countries care 1 willp25,NA,NA,TRUE
-countries care 1 willp26,NA,NA,TRUE
+countries care 1 willp25,NA,NA,FALSE
+countries care 1 willp26,NA,NA,FALSE
 countries care 1 willp27,NA,NA,FALSE
+countries 2 acknowledge 16,20,Female,FALSE
+countries 2 acknowledge 17,18,Female,FALSE
+countries 2 acknowledge 18,20,Female,FALSE
 countries 2 acknowledge 19,23,Female,FALSE
 countries 2 acknowledge 20,19,Female,FALSE
-countries 2 acknowledge 21,22,Female,FALSE
+countries 2 acknowledge 21,22,Female,TRUE
 countries 2 acknowledge 22,27,Male,FALSE
 countries 2 acknowledge 23,22,Female,FALSE
 countries 2 acknowledge 25,22,Female,FALSE
@@ -657,7 +1142,7 @@ countries 2 acknowledge 11,20,Female,TRUE
 countries 2 acknowledge 12,21,Female,FALSE
 countries 2 acknowledge 13,20,Male,FALSE
 countries 2 acknowledge 14,19,Female,FALSE
-countries 2 acknowledge 15,18,Female,TRUE
+countries 2 acknowledge 15,18,Female,FALSE
 countries 2 acknowledge 1,21,Male,FALSE
 countries 2 care 1,21,Male,FALSE
 countries 2 care 23,22,Female,FALSE
@@ -672,7 +1157,7 @@ countries 2 care 32,21,Male,FALSE
 countries 2 care 33,20,Male,FALSE
 countries 2 care 34,18,Female,FALSE
 countries 2 care 35,21,Female,TRUE
-countries 2 care 36,22,Female,TRUE
+countries 2 care 36,22,Female,FALSE
 countries 2 care 4,20,Female,FALSE
 countries 2 care 5,22,Male,FALSE
 countries 2 care 6,21,Male,FALSE
@@ -687,7 +1172,7 @@ disgust 14,NA,NA,FALSE
 disgust 1,NA,NA,FALSE
 disgust 5,NA,NA,FALSE
 disgust 8,NA,NA,TRUE
-disgust 37,NA,NA,TRUE
+disgust 37,NA,NA,FALSE
 disgust 39,NA,NA,FALSE
 disgust 20,NA,NA,FALSE
 disgust 6,NA,NA,FALSE
@@ -704,7 +1189,7 @@ disgust 19,NA,NA,FALSE
 disgust 21,NA,NA,FALSE
 disgust 101,NA,NA,FALSE
 disgust 34,NA,NA,FALSE
-disgust 35,NA,NA,TRUE
+disgust 35,NA,NA,FALSE
 disgust 23,NA,NA,FALSE
 disgust 12,NA,NA,FALSE
 disgust 22,NA,NA,FALSE
@@ -735,7 +1220,7 @@ disgust_038.1 disgust cont con EA 2,NA,NA,FALSE
 disgust_040.1 disgust cont con EA,NA,NA,FALSE
 disgust_041.1 disgust cont con EA,NA,NA,FALSE
 disgust_042.1 disgust cont con EA,NA,NA,FALSE
-disgust_43.1,NA,NA,TRUE
+disgust_43.1,NA,NA,FALSE
 disgust_044.1 disgst cont con eb,NA,NA,FALSE
 disgust_025 disgust cont con eb,NA,NA,FALSE
 disgust_047.1 disgst incon cont eA,NA,NA,FALSE
@@ -783,6 +1268,207 @@ food hunger 33a,NA,NA,FALSE
 food hunger 3a,NA,NA,FALSE
 food hunger 5a,NA,NA,FALSE
 food hunger 7a,NA,NA,FALSE
+agreeableness_allegrakellum,NA,NA,FALSE
+agreeableness_amyjohnson,NA,NA,FALSE
+agreeableness_anishahawkins,NA,NA,FALSE
+agreeableness_austynridings,NA,NA,FALSE
+agreeableness_deronflood,NA,NA,FALSE
+agreeableness_edmccracken,NA,NA,FALSE
+agreeableness_jenniferkrzanik,NA,NA,FALSE
+agreeableness_jessicaevans,NA,NA,FALSE
+agreeableness_nicolekelly,NA,NA,FALSE
+agreeableness_ryanmay,NA,NA,FALSE
+agreeableness_tapiwasaliji,NA,NA,FALSE
+agreeableness_williamntim,NA,NA,TRUE
+agreeableness_alecjohnson,NA,NA,FALSE
+agreeableness_jordyncourier,NA,NA,FALSE
+agreeableness_pennysmith,NA,NA,FALSE
+agreeableness_alexsanders,NA,NA,FALSE
+agreeableness_ashleethomas,NA,NA,FALSE
+agreeableness_asiafoster,NA,NA,FALSE
+agreeableness_brianlonergan,NA,NA,FALSE
+agreeableness_davidhopkins,NA,NA,FALSE
+agreeableness_dawnhyde,NA,NA,FALSE
+agreeableness_esperansaalatorre,NA,NA,FALSE
+agreeableness_haleypresnell,NA,NA,FALSE
+agreeableness_jillonaflowers,NA,NA,FALSE
+agreeableness_johndejaynes,NA,NA,FALSE
+agreeableness_kaitlynnalvis,NA,NA,FALSE
+agreeableness_khaleaparker,NA,NA,FALSE
+agreeableness_mariahpatz,NA,NA,FALSE
+agreeableness_michellecurtis,NA,NA,FALSE
+agreeableness_kelseyschuler,NA,NA,FALSE
+agreeableness_yaraartis,NA,NA,FALSE
+agreeableness_alexwest,NA,NA,FALSE
+agreeableness_allisongallo,NA,NA,FALSE
+agreeableness_courtneysommer,NA,NA,FALSE
+agreeableness_devonholder,NA,NA,FALSE
+agreeableness_katyhitch,NA,NA,FALSE
+agreeableness_morganpaterson,NA,NA,FALSE
+agreeableness_rudolphalexander,NA,NA,FALSE
+agreeableness_tylerbarr,NA,NA,FALSE
+agreeableness_xzavierkimbrough,NA,NA,FALSE
+conscientiousness_allegrakellum,NA,NA,FALSE
+conscientiousness_amyjohnson,NA,NA,FALSE
+conscientiousness_anishahawkins,NA,NA,FALSE
+conscientiousness_austynridings,NA,NA,FALSE
+conscientiousness_deronflood,NA,NA,FALSE
+conscientiousness_edmccracken,NA,NA,FALSE
+conscientiousness_jenniferkrzanik,NA,NA,FALSE
+conscientiousness_jessicaevans,NA,NA,FALSE
+conscientiousness_nicolekelly,NA,NA,FALSE
+conscientiousness_ryanmay,NA,NA,FALSE
+conscientiousness_tapiwasaliji,NA,NA,FALSE
+conscientiousness_jordyncourier,NA,NA,FALSE
+conscientiousness_pennysmith,NA,NA,FALSE
+conscientiousness_alexsanders,NA,NA,FALSE
+conscientiousness_ashleethomas,NA,NA,FALSE
+conscientiousness_asiafoster,NA,NA,FALSE
+conscientiousness_brianlonergan,NA,NA,FALSE
+conscientiousness_davidhopkins,NA,NA,FALSE
+conscientiousness_dawnhyde,NA,NA,FALSE
+conscientiousness_esperansaalatorre,NA,NA,FALSE
+conscientiousness_haleypresnell,NA,NA,FALSE
+conscientiousness_jillonaflowers,NA,NA,FALSE
+conscientiousness_johndejaynes,NA,NA,FALSE
+conscientiousness_kaitlynnalvis,NA,NA,FALSE
+conscientiousness_khaleaparker,NA,NA,FALSE
+conscientiousness_mariahpatz,NA,NA,FALSE
+conscientiousness_michellecurtis,NA,NA,FALSE
+conscientiousness_kelseyschuler,NA,NA,FALSE
+conscientiousness_yaraartis,NA,NA,FALSE
+conscientiousness_alexwest,NA,NA,FALSE
+conscientiousness_allisongallo,NA,NA,FALSE
+conscientiousness_courtneysommer,NA,NA,FALSE
+conscientiousness_devonholder,NA,NA,FALSE
+conscientiousness_katyhitch,NA,NA,FALSE
+conscientiousness_morganpaterson,NA,NA,FALSE
+conscientiousness_rudolphalexander,NA,NA,FALSE
+conscientiousness_tylerbarr,NA,NA,FALSE
+conscientiousness_xzavierkimbrough,NA,NA,FALSE
+conscientiousness_willaimntim,NA,NA,FALSE
+extraversion_allegrakellum,NA,NA,FALSE
+extraversion_amyjohnson,NA,NA,TRUE
+extraversion_anishahawkins,NA,NA,FALSE
+extraversion_austynridings,NA,NA,FALSE
+extraversion_deronflood,NA,NA,FALSE
+extraversion_edmccracken,NA,NA,FALSE
+extraversion_jenniferkrzanik,NA,NA,FALSE
+extraversion_jessicaevans,NA,NA,FALSE
+extraversion_nicolekelly,NA,NA,FALSE
+extraversion_ryanmay,NA,NA,FALSE
+extraversion_tapiwasaliji,NA,NA,FALSE
+extraversion_williamntim,NA,NA,TRUE
+extraversion_alecjohnson,NA,NA,FALSE
+extraversion_jordyncourier,NA,NA,FALSE
+extraversion_pennysmith,NA,NA,TRUE
+extraversion_alexsanders,NA,NA,FALSE
+extraversion_ashleethomas,NA,NA,FALSE
+extraversion_asiafoster,NA,NA,FALSE
+extraversion_brianlonergan,NA,NA,FALSE
+extraversion_davidhopkins,NA,NA,FALSE
+extraversion_dawnhyde,NA,NA,TRUE
+extraversion_esperansaalatorre,NA,NA,FALSE
+extraversion_haleypresnell,NA,NA,FALSE
+extraversion_jillonaflowers,NA,NA,FALSE
+extraversion_johndejaynes,NA,NA,FALSE
+extraversion_kaitlynnalvis,NA,NA,FALSE
+extraversion_khaleaparker,NA,NA,TRUE
+extraversion_mariahpatz,NA,NA,TRUE
+extraversion_michellecurtis,NA,NA,FALSE
+extraversion_kelseyschuler,NA,NA,FALSE
+extraversion_yaraartis,NA,NA,FALSE
+extraversion_alexwest,NA,NA,FALSE
+extraversion_allisongallo,NA,NA,FALSE
+extraversion_courtneysommer,NA,NA,FALSE
+extraversion_katyhitch,NA,NA,FALSE
+extraversion_morganpaterson,NA,NA,FALSE
+extraversion_tylerbarr,NA,NA,FALSE
+extraversion_xzavierkimbrough,NA,NA,FALSE
+extraversion_corywilliams,NA,NA,FALSE
+extraversion_devinholder,NA,NA,TRUE
+neuroticism_allegrakellum,NA,NA,FALSE
+neuroticism_amyjohnson,NA,NA,FALSE
+neuroticism_anishahawkins,NA,NA,FALSE
+neuroticism_austynridings,NA,NA,FALSE
+neuroticism_deronflood,NA,NA,FALSE
+neuroticism_edmccracken,NA,NA,FALSE
+neuroticism_jenniferkrzanik,NA,NA,FALSE
+neuroticism_jessicaevans,NA,NA,FALSE
+neuroticism_nicolekelly,NA,NA,TRUE
+neuroticism_ryanmay,NA,NA,FALSE
+neuroticism_tapiwasaliji,NA,NA,FALSE
+neuroticism_williamntim,NA,NA,TRUE
+neuroticism_alecjohnson,NA,NA,FALSE
+neuroticism_jordyncourier,NA,NA,FALSE
+neuroticism_pennysmith,NA,NA,TRUE
+neuroticism_alexsanders,NA,NA,FALSE
+neuroticism_ashleethomas,NA,NA,TRUE
+neuroticism_asiafoster,NA,NA,FALSE
+neuroticism_brianlonergan,NA,NA,FALSE
+neuroticism_davidhopkins,NA,NA,FALSE
+neuroticism_dawnhyde,NA,NA,TRUE
+neuroticism_esperansaalatorre,NA,NA,FALSE
+neuroticism_haleypresnell,NA,NA,FALSE
+neuroticism_jillonaflowers,NA,NA,FALSE
+neuroticism_johndejaynes,NA,NA,FALSE
+neuroticism_kaitlynnalvis,NA,NA,FALSE
+neuroticism_khaleaparker,NA,NA,TRUE
+neuroticism_mariahpatz,NA,NA,TRUE
+neuroticism_michellecurtis,NA,NA,FALSE
+neuroticism_kelseyschuler,NA,NA,FALSE
+neuroticism_yaraartis,NA,NA,FALSE
+neuroticism_alexwest,NA,NA,FALSE
+neuroticism_allisongallo,NA,NA,TRUE
+neuroticism_courtneysommer,NA,NA,FALSE
+neuroticism_devonholder,NA,NA,FALSE
+neuroticism_katyhitch,NA,NA,TRUE
+neuroticism_morganpaterson,NA,NA,FALSE
+neuroticism_rudolphalexander,NA,NA,FALSE
+neuroticism_tylerbarr,NA,NA,FALSE
+neuroticism_xzavierkimbrough,NA,NA,FALSE
+neuroticism_corywilliams,NA,NA,FALSE
+openness_allegrakellum,NA,NA,FALSE
+openness_amyjohnson,NA,NA,FALSE
+openness_anishahawkins,NA,NA,FALSE
+openness_austynridings,NA,NA,FALSE
+openness_deronflood,NA,NA,FALSE
+openness_edmccracken,NA,NA,FALSE
+openness_jenniferkrzanik,NA,NA,FALSE
+openness_jessicaevans,NA,NA,FALSE
+openness_nicolekelly,NA,NA,TRUE
+openness_ryanmay,NA,NA,FALSE
+openness_tapiwasaliji,NA,NA,TRUE
+openness_williamntim,NA,NA,TRUE
+openness_alecjohnson,NA,NA,FALSE
+openness_jordyncourier,NA,NA,FALSE
+openness_pennysmith,NA,NA,FALSE
+openness_alexsanders,NA,NA,FALSE
+openness_ashleethomas,NA,NA,TRUE
+openness_asiafoster,NA,NA,FALSE
+openness_brianlonergan,NA,NA,FALSE
+openness_davidhopkins,NA,NA,FALSE
+openness_dawnhyde,NA,NA,FALSE
+openness_esperansaalatorre,NA,NA,FALSE
+openness_haleypresnell,NA,NA,FALSE
+openness_jillonaflowers,NA,NA,FALSE
+openness_johndejaynes,NA,NA,FALSE
+openness_kaitlynnalvis,NA,NA,FALSE
+openness_khaleaparker,NA,NA,TRUE
+openness_mariahpatz,NA,NA,FALSE
+openness_michellecurtis,NA,NA,FALSE
+openness_kelseyschuler,NA,NA,FALSE
+openness_yaraartis,NA,NA,FALSE
+openness_alexwest,NA,NA,FALSE
+openness_allisongallo,NA,NA,FALSE
+openness_courtneysommer,NA,NA,FALSE
+openness_katyhitch,NA,NA,TRUE
+openness_morganpaterson,NA,NA,FALSE
+openness_rudolphalexander,NA,NA,FALSE
+openness_tylerbarr,NA,NA,FALSE
+openness_xzavierkimbrough,NA,NA,FALSE
+openness_corywilliams,NA,NA,FALSE
+openness_devinholder,NA,NA,FALSE
 sexuality_Participant 10a,NA,NA,FALSE
 sexuality_Participant 13a,NA,NA,FALSE
 sexuality_Participant 14a,NA,NA,FALSE
@@ -797,7 +1483,7 @@ sexuality_Participant 26a,NA,NA,FALSE
 sexuality_Participant 30a,NA,NA,FALSE
 sexuality_Participant 33a,NA,NA,FALSE
 sexuality_Participant 34a,NA,NA,FALSE
-sexuality_Participant 37a,NA,NA,FALSE
+sexuality_Participant 37a,NA,NA,TRUE
 sexuality_Participant 38a,NA,NA,FALSE
 sexuality_Participant 41a,NA,NA,FALSE
 sexuality_Participant 5a,NA,NA,FALSE
@@ -949,14 +1635,14 @@ positive_negative_Participant 001,NA,NA,FALSE
 positive_negative_Participant 002.1,NA,NA,FALSE
 positive_negative_Participant 003.1,NA,NA,FALSE
 positive_negative_Participant 004.1,NA,NA,FALSE
-positive_negative_Participant 006.1,NA,NA,FALSE
+positive_negative_Participant 006.1,NA,NA,TRUE
 positive_negative_Participant 007.1,NA,NA,FALSE
 positive_negative_Participant 008.1,NA,NA,FALSE
 positive_negative_Participant 009.1,NA,NA,FALSE
 positive_negative_Participant 010.1,NA,NA,FALSE
 positive_negative_Participant 011.1,NA,NA,FALSE
 positive_negative_Participant 012.1,NA,NA,FALSE
-positive_negative_Participant 029.1,NA,NA,FALSE
+positive_negative_Participant 029.1,NA,NA,TRUE
 positive_negative_Participant 030.1,NA,NA,FALSE
 positive_negative_Participant 13.1,NA,NA,FALSE
 positive_negative_Participant 14.1,NA,NA,FALSE
