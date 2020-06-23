@@ -341,13 +341,16 @@ data_for_plotting_ic <-
 #   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
 #   theme_classic()
 
+library(ggtext) # devtools::install_github("clauswilke/ggtext")
+
+
 p1 <- 
   ggplot(data_for_plotting_ic, aes(alpha, I2, color = IRAP)) +
   geom_point(alpha = 0.5) +
   scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
   theme_classic() + 
-  xlab(bquote("Cronbach's " ~alpha)) +
-  ylab(expression(italic("I")^"2")) +
+  xlab(expression("Internal consistency (" * alpha * ")")) +
+  ylab(expression("Heterogeneity (" * italic("I")^"2" * ")")) +
   theme(legend.position = c(0.2, 0.85), 
         legend.background = element_rect(fill = scales::alpha("white", 0)))
 
@@ -474,8 +477,8 @@ p3 <-
   geom_point(alpha = 0.5) +
   scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
   theme_classic() + 
-  xlab(bquote("Cronbach's " ~alpha)) +
-  ylab(expression(italic("I")^"2")) +
+  xlab(expression("Internal consistency (" * alpha * ")")) +
+  ylab(expression("Heterogeneity (" * italic("I")^"2" * ")")) +
   theme(legend.position = c(0.2, 0.85)) +
   theme(legend.position = "none") 
 
@@ -599,8 +602,8 @@ p2 <-
   geom_point(alpha = 0.8) +
   scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
   theme_classic() + 
-  xlab("Absolute Agreement ICC") +
-  ylab(expression(italic("I")^"2")) +
+  xlab("Test-retest reliability (ICC)") +
+  ylab(expression("Heterogeneity (" * italic("I")^"2" * ")")) +
   theme(legend.position = "none") 
 
 plot_gosh_trt <- 

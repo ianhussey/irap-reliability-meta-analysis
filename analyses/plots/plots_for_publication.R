@@ -75,7 +75,7 @@ text(1.6, 38, bquote(paste(alpha, " [95% CI]")), pos = 2)
 p1 <- recordPlot()
 invisible(dev.off())
 
-pdf("forest_plot_ic_insensitivity.pdf",
+pdf("forest_plot_ic_sensitivity.pdf",
     width = 8, 
     height = 10)
 p1
