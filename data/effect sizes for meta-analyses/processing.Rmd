@@ -527,11 +527,13 @@ data_n_per_domain <- data_cleaned_ic_outliers_removed %>%
 
 data_internal_consistency_permuted_estimates <- data_internal_consistency_permutations %>%
   group_by(domain) %>%
-  dplyr::summarize(r_sb = mean(r_sb, na.rm = TRUE)) %>%
+  dplyr::summarize(alpha = mean(r_sb, na.rm = TRUE),
+                   alpha_ci_lower = quantile(r_sb, 0.025),
+                   alpha_ci_upper = quantile(r_sb, 0.975)) %>%
   left_join(data_n_per_domain, by = "domain") %>%
   mutate(parts = 2) %>%
   escalc(measure = "ABT", 
-         ai = r_sb, 
+         ai = alpha, 
          mi = parts, 
          ni = n,
          data = .)

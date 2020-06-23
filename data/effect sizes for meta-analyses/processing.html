@@ -2575,16 +2575,18 @@ Sexuality (7 day)
 <span id="cb15-5"><a href="#cb15-5"></a></span>
 <span id="cb15-6"><a href="#cb15-6"></a>data_internal_consistency_permuted_estimates &lt;-<span class="st"> </span>data_internal_consistency_permutations <span class="op">%&gt;%</span></span>
 <span id="cb15-7"><a href="#cb15-7"></a><span class="st">  </span><span class="kw">group_by</span>(domain) <span class="op">%&gt;%</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">r_sb =</span> <span class="kw">mean</span>(r_sb, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb15-9"><a href="#cb15-9"></a><span class="st">  </span><span class="kw">left_join</span>(data_n_per_domain, <span class="dt">by =</span> <span class="st">&quot;domain&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb15-10"><a href="#cb15-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parts =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span></span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="st">  </span><span class="kw">escalc</span>(<span class="dt">measure =</span> <span class="st">&quot;ABT&quot;</span>, </span>
-<span id="cb15-12"><a href="#cb15-12"></a>         <span class="dt">ai =</span> r_sb, </span>
-<span id="cb15-13"><a href="#cb15-13"></a>         <span class="dt">mi =</span> parts, </span>
-<span id="cb15-14"><a href="#cb15-14"></a>         <span class="dt">ni =</span> n,</span>
-<span id="cb15-15"><a href="#cb15-15"></a>         <span class="dt">data =</span> .)</span>
-<span id="cb15-16"><a href="#cb15-16"></a></span>
-<span id="cb15-17"><a href="#cb15-17"></a><span class="kw">write_csv</span>(data_internal_consistency_permuted_estimates, <span class="st">&quot;data_internal_consistency_permuted_estimates.csv&quot;</span>)</span></code></pre></div>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">alpha =</span> <span class="kw">mean</span>(r_sb, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb15-9"><a href="#cb15-9"></a>                   <span class="dt">alpha_ci_lower =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.025</span>),</span>
+<span id="cb15-10"><a href="#cb15-10"></a>                   <span class="dt">alpha_ci_upper =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.975</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a><span class="st">  </span><span class="kw">left_join</span>(data_n_per_domain, <span class="dt">by =</span> <span class="st">&quot;domain&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parts =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="st">  </span><span class="kw">escalc</span>(<span class="dt">measure =</span> <span class="st">&quot;ABT&quot;</span>, </span>
+<span id="cb15-14"><a href="#cb15-14"></a>         <span class="dt">ai =</span> alpha, </span>
+<span id="cb15-15"><a href="#cb15-15"></a>         <span class="dt">mi =</span> parts, </span>
+<span id="cb15-16"><a href="#cb15-16"></a>         <span class="dt">ni =</span> n,</span>
+<span id="cb15-17"><a href="#cb15-17"></a>         <span class="dt">data =</span> .)</span>
+<span id="cb15-18"><a href="#cb15-18"></a></span>
+<span id="cb15-19"><a href="#cb15-19"></a><span class="kw">write_csv</span>(data_internal_consistency_permuted_estimates, <span class="st">&quot;data_internal_consistency_permuted_estimates.csv&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 </div>
