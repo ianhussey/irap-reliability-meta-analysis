@@ -1,0 +1,5 @@
+check personality names are removed from unique ids
+
+check ideographic stimuli are removed from data
+
+rename and reorder domains for forest plots - mental illness stigma
