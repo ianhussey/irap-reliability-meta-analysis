@@ -86,10 +86,10 @@ data_demographics <-
   read_csv("../data/effect sizes for meta-analyses/data_demographics.csv")
 
 data_test_retest_icc <- 
-  read_csv("../data/effect sizes for meta-analyses/data_test_retest_icc.csv") 
+  read_csv("../data/effect sizes for meta-analyses/data_test_retest_icc.csv")  
 
 data_internal_consistency_oddeventrials <- 
-  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_oddeventrials.csv") 
+  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_oddeventrials.csv")
 
 data_internal_consistency_firstsecondhalves <- 
   read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_firstsecondhalves.csv") 

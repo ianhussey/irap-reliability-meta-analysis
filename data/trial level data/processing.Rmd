@@ -87,7 +87,7 @@ data_completeness <- data_input %>%
   count(unique_id) %>%
   filter(n %in% c(384*2)) # methodologically plausible number of trials
 
-data_rts_and_summmaries_digust <- data_input %>%
+data_rts_and_summmaries_disgust <- data_input %>%
   semi_join(data_completeness, by = "unique_id") %>%
   filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -156,7 +156,7 @@ data_rts_and_summmaries_evaluative <- data_evalautive_iraps_both_timepoints %>%
 
 data_testretest_cleaned_trial_level <- 
   bind_rows(data_rts_and_summmaries_sexuality, 
-            data_rts_and_summmaries_digust,
+            data_rts_and_summmaries_disgust,
             data_rts_and_summmaries_evaluative) %>%
   # tidy domain
   rename(domain = experiment) %>%
@@ -183,7 +183,7 @@ data_testretest_cleaned_trial_level <-
                                 "ian death emma" = "Death (1)",
                                 "ian death june" = "Death (2)",
                                 "ian death tarah" = "Death (3)",
-                                "disgust" = "Digust",
+                                "disgust" = "Disgust",
                                 "sexuality test retest" = "Sexuality (7 day)",
                                 "countries acknowledge 1" = "Countries (1)",
                                 "countries care 1" = "Countries (2)",
@@ -242,7 +242,7 @@ data_input_evaluative <-
                                 "ian death emma" = "Death (1)",
                                 "ian death june" = "Death (2)",
                                 "ian death tarah" = "Death (3)",
-                                "disgust" = "Digust",
+                                "disgust" = "Disgust",
                                 # "sexuality test retest" = "Sexuality (7 day)",
                                 "sexuality" = "Sexuality",
                                 "countries acknowledge 1" = "Countries (1)",
@@ -302,7 +302,7 @@ data_cleaned_ic_nonevaluative <-
                                 "ian death emma" = "Death (1)",
                                 "ian death june" = "Death (2)",
                                 "ian death tarah" = "Death (3)",
-                                "disgust" = "Digust",
+                                "disgust" = "Disgust",
                                 # "sexuality test retest" = "Sexuality (7 day)",
                                 "sexuality" = "Sexuality",
                                 "countries acknowledge 1" = "Countries (1)",
