@@ -1,0 +1,706 @@
+---
+title: "Data tidying"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+This code is ugly, sorry. The data files for each study were manually processed reshaped in slightly different ways, meaning that slightly different code is needed to tidy each of them. Also, the code to tidy them was written across many years, as my skill improved. So, different methods are employed between datasets to effect the same results, and there is more repetition than there should be. I blame the format of the old IRAP data files for this headache.
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+library(tidyverse)
+
+```
+
+# IRAP 2012 VB6 format files
+
+## Evaluative IRAPs
+
+```{r}
+
+chad_political_attitudes <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad political attitudes 2016.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_"), -rownumber, -block_order) %>%
+  mutate_at(vars(-experiment, -participant, -data_type, 
+                 -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -data_type, 
+                 -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2), as.numeric) %>%
+  mutate_at(vars(experiment, participant, data_type, 
+                 stimuli_category_1, stimuli_category_2, stimuli_attribute_1, stimuli_attribute_2), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  right_join(read_csv("../intermediate/IRAP 2012 VB6 format files/chad political attitudes 2016.csv") %>%
+               mutate(participant = as.factor(participant)) %>%
+               select(participant, block_order) %>%
+               distinct(participant, .keep_all = TRUE), by = "participant") %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = case_when(stimuli_category_1 == "Hillary Clinton" ~ "clinton_trump",
+                                stimuli_category_1 == "man" ~ "men_women",
+                                stimuli_category_1 == "rich people" ~ "rich_poor"),
+         participant = paste(participant, experiment, sep = "_"),
+         timepoint = 1)
+
+chad_mental_illness_stigma <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_"), -block_order, -experiment) %>%
+  mutate_at(vars(-participant, -data_type, 
+                 -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2), as.character) %>%
+  mutate_at(vars(-participant, -data_type, 
+                 -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2), as.numeric) %>%
+  mutate_at(vars(participant, data_type, 
+                 stimuli_category_1, stimuli_category_2, stimuli_attribute_1, stimuli_attribute_2), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  full_join(read_csv("../intermediate/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
+              filter(data_type == "Target 3 Raw Latency") %>%
+              mutate(participant = as.factor(participant),
+                     experiment = case_when(stimuli_attribute_2 == "damaged" ~ "PTSD",
+                                            stimuli_attribute_2 == "defective" ~ "ADHD",
+                                            stimuli_attribute_2 == "dangerous" ~ "schizophrenia")) %>%
+              select(participant, experiment) %>%
+              distinct(participant, .keep_all = TRUE), by = "participant") %>%
+  right_join(read_csv("../intermediate/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
+               mutate(participant = as.factor(participant)) %>%
+               select(participant, block_order) %>%
+               distinct(participant, .keep_all = TRUE), by = "participant") %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(participant = paste(participant, experiment, sep = "_"),
+         timepoint = 1) 
+
+chad_bodyImage_IRAP1 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad body image 1.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 1)
+
+chad_bodyImage_IRAP2 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad body image 2.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 2)
+
+chad_gender_IRAP1 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad gender 1.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 1)
+
+chad_gender_IRAP2 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad gender 2.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 2)
+
+
+chad_lincolnHitlerFriendEnemy_IRAP1 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 1.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = ifelse(str_detect(rule_1, "During the next phase, respond as if LINCOLN is GOOD and HITLER is BAD. Please try to avoid the red X."), experiment, str_replace(experiment, "lincolnhitler", "friendenemy")))
+
+chad_lincolnHitlerFriendEnemy_IRAP2 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 2.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = ifelse(str_detect(rule_1, "During the next phase, respond as if LINCOLN is GOOD and HITLER is BAD. Please try to avoid the red X."), experiment, str_replace(experiment, "lincolnhitler", "friendenemy")))
+
+chad_lincolnHitlerFriendEnemy_IRAP3 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 3.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = ifelse(str_detect(rule_1, "During the next phase, respond as if LINCOLN is GOOD and HITLER is BAD. Please try to avoid the red X."), experiment, str_replace(experiment, "lincolnhitler", "friendenemy")))
+
+data_lincolnhitler_friendenemy_combinations <- 
+  full_join(
+    distinct(select(chad_lincolnHitlerFriendEnemy_IRAP1, participant, experiment), participant, .keep_all = TRUE),
+    distinct(select(chad_lincolnHitlerFriendEnemy_IRAP2, participant, experiment), participant, .keep_all = TRUE),
+    by = "participant"
+  ) %>%
+  full_join(
+    distinct(select(chad_lincolnHitlerFriendEnemy_IRAP3, participant, experiment), participant, .keep_all = TRUE),
+    by = "participant"
+  ) %>%
+  mutate(task_1 = dplyr::recode(experiment.x,
+                                "chad lincolnhitler_IRAP1" = "HITLER",
+                                "chad friendenemy_IRAP1" = "friend"),
+         task_2 = dplyr::recode(experiment.y,
+                                "chad lincolnhitler_2" = "HITLER",
+                                "chad friendenemy_2" = "friend"),
+         task_3 = dplyr::recode(experiment,
+                                "chad lincolnhitler_3" = "HITLER",
+                                "chad friendenemy_3" = "friend")) %>%
+  select(participant, task_1, task_2, task_3) %>%
+  mutate(combination = case_when(
+    task_1 == task_2 & task_1 == task_3 ~ "all three", 
+    task_1 == task_2 ~ "one and two", 
+    task_1 == task_3 ~ "one and three", 
+    task_2 == task_3 ~ "two and three"
+  ))
+
+# chad provided a list of participants who received faking instructions, check that none were included here. the non overlap observed here demonstrates these were already excluded in manual data processing., 
+faking_instructions <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad friendenemy participants who received faking instructions.csv") %>%
+  mutate(faking_instructions = TRUE,
+         participant = as.character(participant_id)) %>%
+  select(-participant_id) %>%
+  full_join(data_lincolnhitler_friendenemy_combinations, by = "participant")
+
+
+
+# logic for assigning IRAPs within-domain timepoints, for test-retest reliability  
+chad_lincolnHitlerFriendEnemy_IRAP1 <- chad_lincolnHitlerFriendEnemy_IRAP1 %>%
+  mutate(timepoint = 1)
+
+chad_lincolnHitlerFriendEnemy_IRAP2 <- chad_lincolnHitlerFriendEnemy_IRAP2 %>%
+  mutate(timepoint = ifelse(participant %in% 
+                              pull(filter(data_lincolnhitler_friendenemy_combinations, 
+                                          combination %in% c("all three", "one and two")), participant),
+                            2, 1))
+
+chad_lincolnHitlerFriendEnemy_IRAP3 <- chad_lincolnHitlerFriendEnemy_IRAP3 %>%
+  mutate(timepoint = ifelse(participant %in% 
+                              pull(filter(data_lincolnhitler_friendenemy_combinations, 
+                                          combination %in% c("one and three", "two and three")), participant),
+                            2, 
+                            ifelse(participant %in% 
+                                     pull(filter(data_lincolnhitler_friendenemy_combinations, 
+                                                 combination %in% c("all three")), participant),
+                                   NA, 1)))
+  
+
+chad_race_IRAP1 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad race 1.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 1)
+
+chad_race_IRAP2 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad race 2.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 2)
+
+chad_religion_IRAP1 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad religion 1.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 1)
+
+chad_religion_IRAP2 <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad religion 2.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type, rule_1), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(experiment = str_remove(experiment, "[12]"),
+         timepoint = 2)
+
+ian_death <- read_csv("../intermediate/IRAP 2012 VB6 format files/ian death.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  # two studies contain pre and post mood manipulation IRAPs. these were marked in the data by appending either "a" (pre) or "b" (post) to the participant code. exclude the post IRAPs.
+  filter(str_detect(participant, "a") | !str_detect(participant, "b")) %>%
+  mutate(participant = str_remove(participant, "a")) %>%
+  mutate(timepoint = 1,
+         rule_1 = "missing")
+
+ian_race <- read_csv("../intermediate/IRAP 2012 VB6 format files/ian race.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_")) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -block_order, -data_type), as.numeric) %>%
+  mutate_at(vars(experiment, participant, block_order, data_type), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) %>%
+  mutate(timepoint = 1,
+         rule_1 = "missing")
+
+# combine
+combined_latency_data_original_shape <- 
+  bind_rows(chad_political_attitudes,
+            chad_mental_illness_stigma,
+            chad_bodyImage_IRAP1,
+            chad_bodyImage_IRAP2,
+            chad_gender_IRAP1,
+            chad_gender_IRAP2,
+            chad_lincolnHitlerFriendEnemy_IRAP1,
+            chad_lincolnHitlerFriendEnemy_IRAP2,
+            chad_lincolnHitlerFriendEnemy_IRAP3,
+            chad_race_IRAP1,
+            chad_race_IRAP2,
+            chad_religion_IRAP1,
+            chad_religion_IRAP2,
+            ian_death,
+            ian_race) %>%
+  mutate(experiment = str_remove(experiment, "IRAP"),
+         experiment = str_remove(experiment, "_1"),
+         experiment = str_remove(experiment, "_2"),
+         experiment = str_remove(experiment, "_3"),
+         experiment = str_remove(experiment, "_")) %>%
+  rownames_to_column(var = "unique_row_id") %>%
+  mutate(unique_id = paste(experiment, participant, sep = "_")) %>%
+  mutate(stimulus_number = str_remove_all(data_type, " Raw Latency"))
+
+
+## convert to long format 
+combined_latency_data <- combined_latency_data_original_shape %>%
+  filter(!is.na(t1_ic_tt1) & !is.na(t1_ic_tt2) & !is.na(t1_ic_tt3) & !is.na(t1_ic_tt4)) %>%
+  pivot_longer(cols = starts_with("t1_") | starts_with("t2_") | starts_with("t3_"),
+               names_to = "type",
+               values_to = "rt") %>%
+  separate(type, into = c("blockpair_number", "block_type", "trial_type")) %>%
+  select(unique_id, experiment, timepoint, participant, 
+         block_order, block_type, trial_type, stimulus_number, rt) %>%
+  mutate(block_type = recode(block_type,
+                             "ic" = "incon",
+                             "c" = "con"))
+
+## get demographics data
+data_demographics <- read_csv("../intermediate/IRAP 2012 VB6 format files/demographics and performance criteria data.csv") %>%
+  select(unique_id, age, gender)
+
+data_evalautive <- left_join(combined_latency_data, data_demographics, by = "unique_id")
+
+```
+
+## Nonevaluative IRAPs
+
+### Multiple domains
+
+```{r}
+
+## process data that was output by/formatted from the VB6 2012+ IRAP
+data_input <- bind_rows(read_csv("../intermediate/IRAP 2012 VB6 format files/ian countries 1.csv"),
+                        #read_csv("../intermediate/IRAP 2012 VB6 format files/ian disgust.csv"),
+                        read_csv("../intermediate/IRAP 2012 VB6 format files/ian faking studies.csv"),
+                        read_csv("../intermediate/IRAP 2012 VB6 format files/ian hunger.csv"),
+                        read_csv("../intermediate/IRAP 2012 VB6 format files/ian shapes and colors study 2.csv"),
+                        read_csv("../intermediate/IRAP 2012 VB6 format files/ian shapes and colors study 3.csv")) %>%
+  mutate(stimulus_number = str_remove_all(trial_and_data_type, " Raw Latency")) %>%
+  # drop blocks 4-6 (present in the disgust IRAP only)
+  select(unique_id, participant, experiment, block_order, stimulus_number, trial_and_data_type, 
+         tt1_block1_con, tt2_block1_con, tt3_block1_con, tt4_block1_con, 
+         tt1_block1_incon, tt2_block1_incon, tt3_block1_incon, tt4_block1_incon, 
+         tt1_block2_con, tt2_block2_con, tt3_block2_con, tt4_block2_con, 
+         tt1_block2_incon, tt2_block2_incon, tt3_block2_incon, tt4_block2_incon, 
+         tt1_block3_con, tt2_block3_con, tt3_block3_con, tt4_block3_con, 
+         tt1_block3_incon, tt2_block3_incon, tt3_block3_incon, tt4_block3_incon)
+
+data_completeness <- data_input %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon")) %>%
+  count(unique_id) %>%
+  filter(n %in% c(288, 384, 480)) # methodologically plausible number of trials
+
+data_nonevaluative <- data_input %>%
+  semi_join(data_completeness, by = "unique_id") %>%
+  filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon")) %>%
+  separate(trial_and_block, into = c("trial_type", "block", "block_type"), sep = "_") %>%
+  select(unique_id, block_type, trial_type, stimulus_number, rt, experiment, participant, block_order) %>%
+  group_by(unique_id) 
+
+```
+
+### Disgust
+
+nb other sexuality data in the faking dataset
+
+```{r}
+
+data_input_disgust <- read_csv("../intermediate/IRAP 2012 VB6 format files/ian disgust.csv") 
+
+data_completeness <- data_input_disgust %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon",
+                                "tt1_block4_con", "tt2_block4_con", "tt3_block4_con", "tt4_block4_con", 
+                                "tt1_block4_incon", "tt2_block4_incon", "tt3_block4_incon", "tt4_block4_incon", 
+                                "tt1_block5_con", "tt2_block5_con", "tt3_block5_con", "tt4_block5_con", 
+                                "tt1_block5_incon", "tt2_block5_incon", "tt3_block5_incon", "tt4_block5_incon", 
+                                "tt1_block6_con", "tt2_block6_con", "tt3_block6_con", "tt4_block6_con", 
+                                "tt1_block6_incon", "tt2_block6_incon", "tt3_block6_incon", "tt4_block6_incon")) %>%
+  count(unique_id) %>%
+  filter(n %in% c(384*2)) # methodologically plausible number of trials
+
+data_disgust <- data_input_disgust %>%
+  semi_join(data_completeness, by = "unique_id") %>%
+  filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon",
+                                "tt1_block4_con", "tt2_block4_con", "tt3_block4_con", "tt4_block4_con", 
+                                "tt1_block4_incon", "tt2_block4_incon", "tt3_block4_incon", "tt4_block4_incon", 
+                                "tt1_block5_con", "tt2_block5_con", "tt3_block5_con", "tt4_block5_con", 
+                                "tt1_block5_incon", "tt2_block5_incon", "tt3_block5_incon", "tt4_block5_incon", 
+                                "tt1_block6_con", "tt2_block6_con", "tt3_block6_con", "tt4_block6_con", 
+                                "tt1_block6_incon", "tt2_block6_incon", "tt3_block6_incon", "tt4_block6_incon")) %>%
+  separate(trial_and_block, into = c("trial_type", "block", "block_type"), sep = "_") %>%
+  mutate(timepoint = ifelse(str_detect(block, "block1") | 
+                              str_detect(block, "block2") | 
+                              str_detect(block, "block3"), 1, 2)) %>%
+  select(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) 
+
+```
+
+### Sexuality
+
+nb other sexuality data in the faking dataset
+
+```{r}
+
+data_input_sexuality <- read_csv("../intermediate/IRAP 2012 VB6 format files/ian sexuality test retest.csv")
+
+data_completeness <- data_input_sexuality %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon")) %>%
+  count(unique_id, timepoint) %>%
+  filter(n %in% c(480)) # methodologically plausible number of trials
+
+data_sexuality <- data_input_sexuality %>%
+  semi_join(data_completeness, by = c("unique_id", "timepoint")) %>%
+  filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
+  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon")) %>%
+  separate(trial_and_block, into = c("trial_type", "block", "block_type"), sep = "_") %>%
+  mutate(test_block = ifelse(str_detect(block, "prac"), FALSE, TRUE)) %>%
+  select(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) 
+
+```
+
+### Personality IRAPs
+
+A late addition from Chad
+
+```{r}
+
+## process data from 2012 IRAP from Chad wave 2
+chad_personality_temp <- read_csv("../intermediate/IRAP 2012 VB6 format files/chad personality.csv") %>%
+  mutate(participant = as.factor(participant)) %>%
+  select(-contains("fp_"), -block_order) %>%
+  mutate_at(vars(-experiment, -participant, -data_type, 
+                 -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2), as.character) %>%
+  mutate_at(vars(-experiment, -participant, -data_type, 
+                 -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2), as.numeric) %>%
+  mutate_at(vars(experiment, participant, data_type, 
+                 stimuli_category_1, stimuli_category_2, stimuli_attribute_1, stimuli_attribute_2), as.character) %>%
+  filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
+  right_join(read_csv("../intermediate/IRAP 2012 VB6 format files/chad personality.csv") %>%
+               mutate(participant = as.factor(participant)) %>%
+               select(participant, block_order) %>%
+               distinct(participant, .keep_all = TRUE), by = "participant") %>%
+  mutate(block_order = dplyr::recode(block_order,
+                                     "The Consistent-First Sequence was Selected" = "Consistent",
+                                     "The Inconsistent-First Sequence was Selected" = "Inconsistent",
+                                     "Consistant" = "Consistent",
+                                     "Inconsistant" = "Inconsistent")) 
+
+# full names were used as participants codes to link data - anonymize
+chad_personality_ids <- chad_personality_temp %>%
+  distinct(participant) %>%
+  rownames_to_column(var = "anonymized_participant")
+
+chad_personality <- chad_personality_temp %>%
+  full_join(chad_personality_ids, by = "participant") %>%
+  select(-participant) %>%
+  rename(participant = anonymized_participant) %>%
+  mutate(timepoint = 1,
+         unique_id = paste(experiment, participant, sep = "_"),
+         stimulus_number = str_remove_all(data_type, " Raw Latency")) %>%
+  pivot_longer(cols = starts_with("t1_") | starts_with("t2_") | starts_with("t3_"),
+               names_to = "type",
+               values_to = "rt") %>%
+  separate(type, into = c("blockpair_number", "block_type", "trial_type")) %>%
+  select(unique_id, experiment, timepoint, participant, 
+         block_order, block_type, trial_type, stimulus_number, rt) %>%
+  mutate(block_type = recode(block_type,
+                             "ic" = "incon",
+                             "c" = "con"))
+
+```
+
+# GO-IRAP format files
+
+```{r}
+
+data_goirap <- 
+  bind_rows(read_csv("../intermediate/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
+              select(unique_id, 
+                     experiment,
+                     gender = participantGender,
+                     age = participantAge, 
+                     block_order = startingRule, 
+                     block_type = currentRule, 
+                     trial_type = trialType, 
+                     rt = timeToCorrectResponse,
+                     accuracy,
+                     isTestBlock),
+            read_csv("../intermediate/GO-IRAP format files/ian countries 2 care.csv") %>%
+              select(unique_id, 
+                     experiment,
+                     gender = participantGender,
+                     age = participantAge, 
+                     block_order = startingRule, 
+                     block_type = currentRule, 
+                     trial_type = trialType, 
+                     rt = timeToCorrectResponse,
+                     accuracy,
+                     isTestBlock),
+            read_csv("../intermediate/GO-IRAP format files/ian shapes and colors study 1.csv") %>%
+              select(unique_id, 
+                     experiment,
+                     gender = participantGender,
+                     age = participantAge, 
+                     block_order = startingRule, 
+                     block_type = currentRule, 
+                     trial_type = trialType, 
+                     rt = timeToCorrectResponse,
+                     accuracy,
+                     isTestBlock)) %>%
+  filter(isTestBlock == 1) %>%
+  select(-isTestBlock) %>%
+  mutate(block_type = dplyr::recode(block_type,
+                                    `1` = "con",
+                                    `2` = "incon"),
+         block_order = dplyr::recode(block_order,
+                                     `1` = "con",
+                                     `2` = "incon"),
+         trial_type = dplyr::recode(trial_type,
+                                    `1` = "tt1",
+                                    `2` = "tt2",
+                                    `3` = "tt3",
+                                    `4` = "tt4"))
+
+```
+
+# Combine
+
+```{r}
+
+data_trial_level_temp <- 
+  bind_rows(data_evalautive,
+            data_nonevaluative,
+            data_disgust,
+            data_sexuality,
+            chad_personality,
+            data_goirap) %>%
+  select(-accuracy) %>%  # available for only a subset of IRAPs
+  # if no timepoint, then timepoint = 1
+  mutate(timepoint = ifelse(is.na(timepoint), 1, timepoint),
+         timepoint = ifelse(timepoint == 1, "baseline", 
+                            ifelse(timepoint == 2, "followup", timepoint)),
+         block_order = ifelse(block_order == "Consistent", "con first",
+                              ifelse(block_order == "Inconsistent", "incon first", block_order))) %>%
+  rename(domain = experiment) %>%
+  mutate(domain = dplyr::recode(domain,
+                                "clintontrump" = "Clinton-Trump",				
+                                "menwomen" = "Gender (2)",				
+                                "richpoor" = "Rich-Poor",
+                                "ADHD" = "ADHD",				
+                                "PTSD" = "PTSD",				
+                                "schizophrenia" = "Schizophrenia",
+                                "agreeableness" = "Personality - Agreeableness",
+                                "conscientiousness" = "Personality - Conscientiousness",
+                                "extraversion" = "Personality - Extraversion",
+                                "neuroticism" = "Personality - Neuroticism",
+                                "openness" = "Personality - Openness",
+                                "chad bodyimage" = "Body image",
+                                "chad friendenemy" = "Friend-Enemy",
+                                "chad gender" = "Gender (1)",
+                                "chad lincolnhitler" = "Lincoln-Hitler",
+                                "chad race"	 = "Race (1)",
+                                "ian race dearbhail" = "Race (2)",
+                                "ian race katie" = "Race (3)",
+                                "chad religion" = "Religion",
+                                "ian death emma" = "Death (1)",
+                                "ian death june" = "Death (2)",
+                                "ian death tarah" = "Death (3)",
+                                "disgust" = "Disgust",
+                                # "sexuality test retest" = "Sexuality (7 day)",
+                                "sexuality" = "Sexuality",
+                                "countries acknowledge 1" = "Countries (1)",
+                                "countries care 1" = "Countries (2)",
+                                "countries 2 acknowledge" = "Countries (3)",
+                                "countries 2 care" = "Countries (4)",
+                                "positive_negative" = "Valenced words",
+                                "food hunger" = "Hunger",
+                                "shapes and colors YN rule" = "Shapes & colors (1)",
+                                "shapes and colors YN correct" = "Shapes & colors (2)",
+                                "shapes and colors TF correct" = "Shapes & colors (3)",
+                                "shapes and colors TF rule" = "Shapes & colors (4)",
+                                "shapes and colors exp 2 full rule" = "Shapes & colors (5)",
+                                "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
+                                "shapes and colors exp 3" = "Shapes & colors (7)")) %>%
+  arrange(as.character(domain)) %>%
+  # calculate mean rt
+  group_by(unique_id, timepoint) %>%
+  mutate(mean_rt = round(mean(rt, na.rm = TRUE), 0)) %>%
+  ungroup() %>%
+  # mark odd vs even trials
+  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "odd", "even")) %>%
+  select(unique_id, 
+         #participant, 
+         age, gender, domain, timepoint, 
+         # stimulus_number
+         block_order, block_type, trial_odd_even, trial_type, rt, mean_rt)
+
+# do exclusions for unique ids with wrong number of trials
+data_correct_n_trials <- data_trial_level_temp %>%
+  count(unique_id, timepoint) %>%
+  # methodologically plausible number of trials
+  filter(n %in% c(144, 192, 240, 288, 384)) 
+
+data_trial_level <- semi_join(data_trial_level_temp, data_correct_n_trials, by = c("unique_id", "timepoint"))
+  
+         
+# write to disk
+write_csv(data_trial_level, "../processed/data_trial_level.csv")
+
+```
+
