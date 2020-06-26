@@ -1670,7 +1670,9 @@ div.tocify {
 
 
 <p>This code is ugly, sorry. The data files for each study were manually processed reshaped in slightly different ways, meaning that slightly different code is needed to tidy each of them. Also, the code to tidy them was written across many years, as my skill improved. So, different methods are employed between datasets to effect the same results, and there is more repetition than there should be. I blame the format of the old IRAP data files for this headache.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(readxl)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(janitor)</span></code></pre></div>
 <div id="irap-2012-vb6-format-files" class="section level1">
 <h1>IRAP 2012 VB6 format files</h1>
 <div id="evaluative-iraps" class="section level2">
@@ -2118,30 +2120,31 @@ div.tocify {
 <div id="sexuality" class="section level3">
 <h3>Sexuality</h3>
 <p>nb other sexuality data in the faking dataset</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>data_input_sexuality &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../intermediate/IRAP 2012 VB6 format files/ian sexuality test retest.csv&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a></span>
-<span id="cb5-3"><a href="#cb5-3"></a>data_completeness &lt;-<span class="st"> </span>data_input_sexuality <span class="op">%&gt;%</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
-<span id="cb5-5"><a href="#cb5-5"></a>                                <span class="st">&quot;tt1_block1_incon&quot;</span>, <span class="st">&quot;tt2_block1_incon&quot;</span>, <span class="st">&quot;tt3_block1_incon&quot;</span>, <span class="st">&quot;tt4_block1_incon&quot;</span>, </span>
-<span id="cb5-6"><a href="#cb5-6"></a>                                <span class="st">&quot;tt1_block2_con&quot;</span>, <span class="st">&quot;tt2_block2_con&quot;</span>, <span class="st">&quot;tt3_block2_con&quot;</span>, <span class="st">&quot;tt4_block2_con&quot;</span>, </span>
-<span id="cb5-7"><a href="#cb5-7"></a>                                <span class="st">&quot;tt1_block2_incon&quot;</span>, <span class="st">&quot;tt2_block2_incon&quot;</span>, <span class="st">&quot;tt3_block2_incon&quot;</span>, <span class="st">&quot;tt4_block2_incon&quot;</span>, </span>
-<span id="cb5-8"><a href="#cb5-8"></a>                                <span class="st">&quot;tt1_block3_con&quot;</span>, <span class="st">&quot;tt2_block3_con&quot;</span>, <span class="st">&quot;tt3_block3_con&quot;</span>, <span class="st">&quot;tt4_block3_con&quot;</span>, </span>
-<span id="cb5-9"><a href="#cb5-9"></a>                                <span class="st">&quot;tt1_block3_incon&quot;</span>, <span class="st">&quot;tt2_block3_incon&quot;</span>, <span class="st">&quot;tt3_block3_incon&quot;</span>, <span class="st">&quot;tt4_block3_incon&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">480</span>)) <span class="co"># methodologically plausible number of trials</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a></span>
-<span id="cb5-13"><a href="#cb5-13"></a>data_sexuality &lt;-<span class="st"> </span>data_input_sexuality <span class="op">%&gt;%</span></span>
-<span id="cb5-14"><a href="#cb5-14"></a><span class="st">  </span><span class="kw">semi_join</span>(data_completeness, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(trial_and_data_type, <span class="st">&quot;Raw Latency&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
-<span id="cb5-17"><a href="#cb5-17"></a>                                <span class="st">&quot;tt1_block1_incon&quot;</span>, <span class="st">&quot;tt2_block1_incon&quot;</span>, <span class="st">&quot;tt3_block1_incon&quot;</span>, <span class="st">&quot;tt4_block1_incon&quot;</span>, </span>
-<span id="cb5-18"><a href="#cb5-18"></a>                                <span class="st">&quot;tt1_block2_con&quot;</span>, <span class="st">&quot;tt2_block2_con&quot;</span>, <span class="st">&quot;tt3_block2_con&quot;</span>, <span class="st">&quot;tt4_block2_con&quot;</span>, </span>
-<span id="cb5-19"><a href="#cb5-19"></a>                                <span class="st">&quot;tt1_block2_incon&quot;</span>, <span class="st">&quot;tt2_block2_incon&quot;</span>, <span class="st">&quot;tt3_block2_incon&quot;</span>, <span class="st">&quot;tt4_block2_incon&quot;</span>, </span>
-<span id="cb5-20"><a href="#cb5-20"></a>                                <span class="st">&quot;tt1_block3_con&quot;</span>, <span class="st">&quot;tt2_block3_con&quot;</span>, <span class="st">&quot;tt3_block3_con&quot;</span>, <span class="st">&quot;tt4_block3_con&quot;</span>, </span>
-<span id="cb5-21"><a href="#cb5-21"></a>                                <span class="st">&quot;tt1_block3_incon&quot;</span>, <span class="st">&quot;tt2_block3_incon&quot;</span>, <span class="st">&quot;tt3_block3_incon&quot;</span>, <span class="st">&quot;tt4_block3_incon&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb5-22"><a href="#cb5-22"></a><span class="st">  </span><span class="kw">separate</span>(trial_and_block, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;trial_type&quot;</span>, <span class="st">&quot;block&quot;</span>, <span class="st">&quot;block_type&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb5-23"><a href="#cb5-23"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">test_block =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(block, <span class="st">&quot;prac&quot;</span>), <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb5-24"><a href="#cb5-24"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) </span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>data_input_sexuality &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../intermediate/IRAP 2012 VB6 format files/ian sexuality test retest.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="st">&quot;Sexuality (1)&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a>data_completeness &lt;-<span class="st"> </span>data_input_sexuality <span class="op">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
+<span id="cb5-6"><a href="#cb5-6"></a>                                <span class="st">&quot;tt1_block1_incon&quot;</span>, <span class="st">&quot;tt2_block1_incon&quot;</span>, <span class="st">&quot;tt3_block1_incon&quot;</span>, <span class="st">&quot;tt4_block1_incon&quot;</span>, </span>
+<span id="cb5-7"><a href="#cb5-7"></a>                                <span class="st">&quot;tt1_block2_con&quot;</span>, <span class="st">&quot;tt2_block2_con&quot;</span>, <span class="st">&quot;tt3_block2_con&quot;</span>, <span class="st">&quot;tt4_block2_con&quot;</span>, </span>
+<span id="cb5-8"><a href="#cb5-8"></a>                                <span class="st">&quot;tt1_block2_incon&quot;</span>, <span class="st">&quot;tt2_block2_incon&quot;</span>, <span class="st">&quot;tt3_block2_incon&quot;</span>, <span class="st">&quot;tt4_block2_incon&quot;</span>, </span>
+<span id="cb5-9"><a href="#cb5-9"></a>                                <span class="st">&quot;tt1_block3_con&quot;</span>, <span class="st">&quot;tt2_block3_con&quot;</span>, <span class="st">&quot;tt3_block3_con&quot;</span>, <span class="st">&quot;tt4_block3_con&quot;</span>, </span>
+<span id="cb5-10"><a href="#cb5-10"></a>                                <span class="st">&quot;tt1_block3_incon&quot;</span>, <span class="st">&quot;tt2_block3_incon&quot;</span>, <span class="st">&quot;tt3_block3_incon&quot;</span>, <span class="st">&quot;tt4_block3_incon&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">480</span>)) <span class="co"># methodologically plausible number of trials</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a></span>
+<span id="cb5-14"><a href="#cb5-14"></a>data_sexuality &lt;-<span class="st"> </span>data_input_sexuality <span class="op">%&gt;%</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="st">  </span><span class="kw">semi_join</span>(data_completeness, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(trial_and_data_type, <span class="st">&quot;Raw Latency&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
+<span id="cb5-18"><a href="#cb5-18"></a>                                <span class="st">&quot;tt1_block1_incon&quot;</span>, <span class="st">&quot;tt2_block1_incon&quot;</span>, <span class="st">&quot;tt3_block1_incon&quot;</span>, <span class="st">&quot;tt4_block1_incon&quot;</span>, </span>
+<span id="cb5-19"><a href="#cb5-19"></a>                                <span class="st">&quot;tt1_block2_con&quot;</span>, <span class="st">&quot;tt2_block2_con&quot;</span>, <span class="st">&quot;tt3_block2_con&quot;</span>, <span class="st">&quot;tt4_block2_con&quot;</span>, </span>
+<span id="cb5-20"><a href="#cb5-20"></a>                                <span class="st">&quot;tt1_block2_incon&quot;</span>, <span class="st">&quot;tt2_block2_incon&quot;</span>, <span class="st">&quot;tt3_block2_incon&quot;</span>, <span class="st">&quot;tt4_block2_incon&quot;</span>, </span>
+<span id="cb5-21"><a href="#cb5-21"></a>                                <span class="st">&quot;tt1_block3_con&quot;</span>, <span class="st">&quot;tt2_block3_con&quot;</span>, <span class="st">&quot;tt3_block3_con&quot;</span>, <span class="st">&quot;tt4_block3_con&quot;</span>, </span>
+<span id="cb5-22"><a href="#cb5-22"></a>                                <span class="st">&quot;tt1_block3_incon&quot;</span>, <span class="st">&quot;tt2_block3_incon&quot;</span>, <span class="st">&quot;tt3_block3_incon&quot;</span>, <span class="st">&quot;tt4_block3_incon&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a><span class="st">  </span><span class="kw">separate</span>(trial_and_block, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;trial_type&quot;</span>, <span class="st">&quot;block&quot;</span>, <span class="st">&quot;block_type&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">test_block =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(block, <span class="st">&quot;prac&quot;</span>), <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="st">  </span><span class="kw">select</span>(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) </span></code></pre></div>
 </div>
 <div id="personality-iraps" class="section level3">
 <h3>Personality IRAPs</h3>
@@ -2255,16 +2258,16 @@ div.tocify {
 <span id="cb8-10"><a href="#cb8-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">timepoint =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(timepoint), <span class="dv">1</span>, timepoint),</span>
 <span id="cb8-11"><a href="#cb8-11"></a>         <span class="dt">timepoint =</span> <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;baseline&quot;</span>, </span>
 <span id="cb8-12"><a href="#cb8-12"></a>                            <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;followup&quot;</span>, timepoint)),</span>
-<span id="cb8-13"><a href="#cb8-13"></a>         <span class="dt">block_order =</span> <span class="kw">ifelse</span>(block_order <span class="op">==</span><span class="st"> &quot;Consistent&quot;</span>, <span class="st">&quot;con first&quot;</span>,</span>
-<span id="cb8-14"><a href="#cb8-14"></a>                              <span class="kw">ifelse</span>(block_order <span class="op">==</span><span class="st"> &quot;Inconsistent&quot;</span>, <span class="st">&quot;incon first&quot;</span>, block_order))) <span class="op">%&gt;%</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a>         <span class="dt">block_order =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(<span class="kw">tolower</span>(block_order), <span class="st">&quot;incon&quot;</span>), <span class="st">&quot;incon&quot;</span>,</span>
+<span id="cb8-14"><a href="#cb8-14"></a>                                         <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(<span class="kw">tolower</span>(block_order), <span class="st">&quot;con&quot;</span>), <span class="st">&quot;con&quot;</span>, <span class="ot">NA</span>))) <span class="op">%&gt;%</span></span>
 <span id="cb8-15"><a href="#cb8-15"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">domain =</span> experiment) <span class="op">%&gt;%</span></span>
 <span id="cb8-16"><a href="#cb8-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(domain,</span>
 <span id="cb8-17"><a href="#cb8-17"></a>                                <span class="st">&quot;clintontrump&quot;</span> =<span class="st"> &quot;Clinton-Trump&quot;</span>,               </span>
 <span id="cb8-18"><a href="#cb8-18"></a>                                <span class="st">&quot;menwomen&quot;</span> =<span class="st"> &quot;Gender (2)&quot;</span>,              </span>
 <span id="cb8-19"><a href="#cb8-19"></a>                                <span class="st">&quot;richpoor&quot;</span> =<span class="st"> &quot;Rich-Poor&quot;</span>,</span>
-<span id="cb8-20"><a href="#cb8-20"></a>                                <span class="st">&quot;ADHD&quot;</span> =<span class="st"> &quot;ADHD&quot;</span>,                </span>
-<span id="cb8-21"><a href="#cb8-21"></a>                                <span class="st">&quot;PTSD&quot;</span> =<span class="st"> &quot;PTSD&quot;</span>,                </span>
-<span id="cb8-22"><a href="#cb8-22"></a>                                <span class="st">&quot;schizophrenia&quot;</span> =<span class="st"> &quot;Schizophrenia&quot;</span>,</span>
+<span id="cb8-20"><a href="#cb8-20"></a>                                <span class="st">&quot;ADHD&quot;</span> =<span class="st"> &quot;Stigma - ADHD&quot;</span>,               </span>
+<span id="cb8-21"><a href="#cb8-21"></a>                                <span class="st">&quot;PTSD&quot;</span> =<span class="st"> &quot;Stigma - PTSD&quot;</span>,               </span>
+<span id="cb8-22"><a href="#cb8-22"></a>                                <span class="st">&quot;schizophrenia&quot;</span> =<span class="st"> &quot;Stigma - Schizophrenia&quot;</span>,</span>
 <span id="cb8-23"><a href="#cb8-23"></a>                                <span class="st">&quot;agreeableness&quot;</span> =<span class="st"> &quot;Personality - Agreeableness&quot;</span>,</span>
 <span id="cb8-24"><a href="#cb8-24"></a>                                <span class="st">&quot;conscientiousness&quot;</span> =<span class="st"> &quot;Personality - Conscientiousness&quot;</span>,</span>
 <span id="cb8-25"><a href="#cb8-25"></a>                                <span class="st">&quot;extraversion&quot;</span> =<span class="st"> &quot;Personality - Extraversion&quot;</span>,</span>
@@ -2282,45 +2285,93 @@ div.tocify {
 <span id="cb8-37"><a href="#cb8-37"></a>                                <span class="st">&quot;ian death june&quot;</span> =<span class="st"> &quot;Death (2)&quot;</span>,</span>
 <span id="cb8-38"><a href="#cb8-38"></a>                                <span class="st">&quot;ian death tarah&quot;</span> =<span class="st"> &quot;Death (3)&quot;</span>,</span>
 <span id="cb8-39"><a href="#cb8-39"></a>                                <span class="st">&quot;disgust&quot;</span> =<span class="st"> &quot;Disgust&quot;</span>,</span>
-<span id="cb8-40"><a href="#cb8-40"></a>                                <span class="co"># &quot;sexuality test retest&quot; = &quot;Sexuality (7 day)&quot;,</span></span>
-<span id="cb8-41"><a href="#cb8-41"></a>                                <span class="st">&quot;sexuality&quot;</span> =<span class="st"> &quot;Sexuality&quot;</span>,</span>
-<span id="cb8-42"><a href="#cb8-42"></a>                                <span class="st">&quot;countries acknowledge 1&quot;</span> =<span class="st"> &quot;Countries (1)&quot;</span>,</span>
-<span id="cb8-43"><a href="#cb8-43"></a>                                <span class="st">&quot;countries care 1&quot;</span> =<span class="st"> &quot;Countries (2)&quot;</span>,</span>
-<span id="cb8-44"><a href="#cb8-44"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> =<span class="st"> &quot;Countries (3)&quot;</span>,</span>
-<span id="cb8-45"><a href="#cb8-45"></a>                                <span class="st">&quot;countries 2 care&quot;</span> =<span class="st"> &quot;Countries (4)&quot;</span>,</span>
-<span id="cb8-46"><a href="#cb8-46"></a>                                <span class="st">&quot;positive_negative&quot;</span> =<span class="st"> &quot;Valenced words&quot;</span>,</span>
-<span id="cb8-47"><a href="#cb8-47"></a>                                <span class="st">&quot;food hunger&quot;</span> =<span class="st"> &quot;Hunger&quot;</span>,</span>
-<span id="cb8-48"><a href="#cb8-48"></a>                                <span class="st">&quot;shapes and colors YN rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (1)&quot;</span>,</span>
-<span id="cb8-49"><a href="#cb8-49"></a>                                <span class="st">&quot;shapes and colors YN correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (2)&quot;</span>,</span>
-<span id="cb8-50"><a href="#cb8-50"></a>                                <span class="st">&quot;shapes and colors TF correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (3)&quot;</span>,</span>
-<span id="cb8-51"><a href="#cb8-51"></a>                                <span class="st">&quot;shapes and colors TF rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (4)&quot;</span>,</span>
-<span id="cb8-52"><a href="#cb8-52"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (5)&quot;</span>,</span>
-<span id="cb8-53"><a href="#cb8-53"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (6)&quot;</span>,</span>
-<span id="cb8-54"><a href="#cb8-54"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (7)&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb8-55"><a href="#cb8-55"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
-<span id="cb8-56"><a href="#cb8-56"></a><span class="st">  </span><span class="co"># calculate mean rt</span></span>
-<span id="cb8-57"><a href="#cb8-57"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb8-58"><a href="#cb8-58"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">round</span>(<span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb8-59"><a href="#cb8-59"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb8-60"><a href="#cb8-60"></a><span class="st">  </span><span class="co"># mark odd vs even trials</span></span>
-<span id="cb8-61"><a href="#cb8-61"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">trial_odd_even =</span> <span class="kw">ifelse</span>(<span class="kw">row_number</span>() <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;odd&quot;</span>, <span class="st">&quot;even&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb8-62"><a href="#cb8-62"></a><span class="st">  </span><span class="kw">select</span>(unique_id, </span>
-<span id="cb8-63"><a href="#cb8-63"></a>         <span class="co">#participant, </span></span>
-<span id="cb8-64"><a href="#cb8-64"></a>         age, gender, domain, timepoint, </span>
-<span id="cb8-65"><a href="#cb8-65"></a>         <span class="co"># stimulus_number</span></span>
-<span id="cb8-66"><a href="#cb8-66"></a>         block_order, block_type, trial_odd_even, trial_type, rt, mean_rt)</span>
-<span id="cb8-67"><a href="#cb8-67"></a></span>
-<span id="cb8-68"><a href="#cb8-68"></a><span class="co"># do exclusions for unique ids with wrong number of trials</span></span>
-<span id="cb8-69"><a href="#cb8-69"></a>data_correct_n_trials &lt;-<span class="st"> </span>data_trial_level_temp <span class="op">%&gt;%</span></span>
-<span id="cb8-70"><a href="#cb8-70"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb8-71"><a href="#cb8-71"></a><span class="st">  </span><span class="co"># methodologically plausible number of trials</span></span>
-<span id="cb8-72"><a href="#cb8-72"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>, <span class="dv">192</span>, <span class="dv">240</span>, <span class="dv">288</span>, <span class="dv">384</span>)) </span>
-<span id="cb8-73"><a href="#cb8-73"></a></span>
-<span id="cb8-74"><a href="#cb8-74"></a>data_trial_level &lt;-<span class="st"> </span><span class="kw">semi_join</span>(data_trial_level_temp, data_correct_n_trials, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>))</span>
-<span id="cb8-75"><a href="#cb8-75"></a>  </span>
-<span id="cb8-76"><a href="#cb8-76"></a>         </span>
-<span id="cb8-77"><a href="#cb8-77"></a><span class="co"># write to disk</span></span>
-<span id="cb8-78"><a href="#cb8-78"></a><span class="kw">write_csv</span>(data_trial_level, <span class="st">&quot;../processed/data_trial_level.csv&quot;</span>)</span></code></pre></div>
+<span id="cb8-40"><a href="#cb8-40"></a>                                <span class="co"># sexuality IRAPs were identical, just collected in different studies, so group.</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a>                                <span class="st">&quot;Sexuality (1)&quot;</span> =<span class="st"> &quot;Sexuality&quot;</span>,</span>
+<span id="cb8-42"><a href="#cb8-42"></a>                                <span class="st">&quot;Sexuality (2)&quot;</span> =<span class="st"> &quot;Sexuality&quot;</span>,</span>
+<span id="cb8-43"><a href="#cb8-43"></a>                                <span class="st">&quot;countries acknowledge 1&quot;</span> =<span class="st"> &quot;Countries (1)&quot;</span>,</span>
+<span id="cb8-44"><a href="#cb8-44"></a>                                <span class="st">&quot;countries care 1&quot;</span> =<span class="st"> &quot;Countries (2)&quot;</span>,</span>
+<span id="cb8-45"><a href="#cb8-45"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> =<span class="st"> &quot;Countries (3)&quot;</span>,</span>
+<span id="cb8-46"><a href="#cb8-46"></a>                                <span class="st">&quot;countries 2 care&quot;</span> =<span class="st"> &quot;Countries (4)&quot;</span>,</span>
+<span id="cb8-47"><a href="#cb8-47"></a>                                <span class="st">&quot;positive_negative&quot;</span> =<span class="st"> &quot;Valenced words&quot;</span>,</span>
+<span id="cb8-48"><a href="#cb8-48"></a>                                <span class="st">&quot;food hunger&quot;</span> =<span class="st"> &quot;Hunger&quot;</span>,</span>
+<span id="cb8-49"><a href="#cb8-49"></a>                                <span class="st">&quot;shapes and colors YN rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (1)&quot;</span>,</span>
+<span id="cb8-50"><a href="#cb8-50"></a>                                <span class="st">&quot;shapes and colors YN correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (2)&quot;</span>,</span>
+<span id="cb8-51"><a href="#cb8-51"></a>                                <span class="st">&quot;shapes and colors TF correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (3)&quot;</span>,</span>
+<span id="cb8-52"><a href="#cb8-52"></a>                                <span class="st">&quot;shapes and colors TF rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (4)&quot;</span>,</span>
+<span id="cb8-53"><a href="#cb8-53"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (5)&quot;</span>,</span>
+<span id="cb8-54"><a href="#cb8-54"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (6)&quot;</span>,</span>
+<span id="cb8-55"><a href="#cb8-55"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (7)&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">as.character</span>(domain)) <span class="op">%&gt;%</span></span>
+<span id="cb8-57"><a href="#cb8-57"></a><span class="st">  </span><span class="co"># calculate mean rt</span></span>
+<span id="cb8-58"><a href="#cb8-58"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb8-59"><a href="#cb8-59"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mean_rt =</span> <span class="kw">round</span>(<span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb8-60"><a href="#cb8-60"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb8-61"><a href="#cb8-61"></a><span class="st">  </span><span class="co"># mark odd vs even trials</span></span>
+<span id="cb8-62"><a href="#cb8-62"></a><span class="st">  </span><span class="kw">group_by</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb8-63"><a href="#cb8-63"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">row_id =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb8-64"><a href="#cb8-64"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb8-65"><a href="#cb8-65"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">trial_odd_even =</span> <span class="kw">ifelse</span>(row_id <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;odd&quot;</span>, <span class="st">&quot;even&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb8-66"><a href="#cb8-66"></a><span class="st">  </span><span class="kw">select</span>(unique_id, </span>
+<span id="cb8-67"><a href="#cb8-67"></a>         <span class="co">#participant, </span></span>
+<span id="cb8-68"><a href="#cb8-68"></a>         age, gender, domain, timepoint, </span>
+<span id="cb8-69"><a href="#cb8-69"></a>         <span class="co"># stimulus_number</span></span>
+<span id="cb8-70"><a href="#cb8-70"></a>         block_order, block_type, trial_odd_even, trial_type, rt, mean_rt)</span>
+<span id="cb8-71"><a href="#cb8-71"></a></span>
+<span id="cb8-72"><a href="#cb8-72"></a><span class="co"># do exclusions for unique ids with wrong number of trials</span></span>
+<span id="cb8-73"><a href="#cb8-73"></a>data_correct_n_trials &lt;-<span class="st"> </span>data_trial_level_temp <span class="op">%&gt;%</span></span>
+<span id="cb8-74"><a href="#cb8-74"></a><span class="st">  </span><span class="kw">count</span>(unique_id, timepoint) <span class="op">%&gt;%</span></span>
+<span id="cb8-75"><a href="#cb8-75"></a><span class="st">  </span><span class="co"># methodologically plausible number of trials</span></span>
+<span id="cb8-76"><a href="#cb8-76"></a><span class="st">  </span><span class="kw">filter</span>(n <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">144</span>, <span class="dv">192</span>, <span class="dv">240</span>, <span class="dv">288</span>, <span class="dv">384</span>)) </span>
+<span id="cb8-77"><a href="#cb8-77"></a></span>
+<span id="cb8-78"><a href="#cb8-78"></a>data_trial_level_temp2 &lt;-<span class="st"> </span><span class="kw">semi_join</span>(data_trial_level_temp, data_correct_n_trials, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>))</span>
+<span id="cb8-79"><a href="#cb8-79"></a></span>
+<span id="cb8-80"><a href="#cb8-80"></a><span class="co"># task parameters</span></span>
+<span id="cb8-81"><a href="#cb8-81"></a>data_task_parameters &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;../../../measures/word stimuli and task parameters.xlsx&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb8-82"><a href="#cb8-82"></a><span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span></span>
+<span id="cb8-83"><a href="#cb8-83"></a><span class="st">  </span><span class="kw">select</span>(domain, response_option_locations)</span>
+<span id="cb8-84"><a href="#cb8-84"></a></span>
+<span id="cb8-85"><a href="#cb8-85"></a>data_trial_level &lt;-<span class="st"> </span>data_trial_level_temp2 <span class="op">%&gt;%</span></span>
+<span id="cb8-86"><a href="#cb8-86"></a><span class="st">  </span><span class="kw">left_join</span>(data_task_parameters, <span class="dt">by =</span> <span class="st">&quot;domain&quot;</span>)</span>
+<span id="cb8-87"><a href="#cb8-87"></a></span>
+<span id="cb8-88"><a href="#cb8-88"></a><span class="co"># write to disk</span></span>
+<span id="cb8-89"><a href="#cb8-89"></a><span class="kw">write_csv</span>(data_trial_level, <span class="st">&quot;../processed/data_trial_level.csv&quot;</span>)</span></code></pre></div>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session info</h1>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.0.0 (2020-04-24)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_IE.UTF-8/en_IE.UTF-8/en_IE.UTF-8/C/en_IE.UTF-8/en_IE.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] janitor_2.0.1   readxl_1.3.1    forcats_0.5.0   stringr_1.4.0  
+##  [5] dplyr_0.8.5     purrr_0.3.4     readr_1.3.1     tidyr_1.0.3    
+##  [9] tibble_3.0.1    ggplot2_3.3.0   tidyverse_1.3.0
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_1.0.0 xfun_0.13        haven_2.2.0      lattice_0.20-41 
+##  [5] snakecase_0.11.0 colorspace_1.4-1 vctrs_0.2.4      generics_0.0.2  
+##  [9] htmltools_0.4.0  yaml_2.2.1       rlang_0.4.6      pillar_1.4.4    
+## [13] glue_1.4.0       withr_2.2.0      DBI_1.1.0        dbplyr_1.4.3    
+## [17] modelr_0.1.7     lifecycle_0.2.0  munsell_0.5.0    gtable_0.3.0    
+## [21] cellranger_1.1.0 rvest_0.3.5      evaluate_0.14    knitr_1.28      
+## [25] fansi_0.4.1      broom_0.5.6      Rcpp_1.0.4.6     scales_1.1.1    
+## [29] backports_1.1.6  jsonlite_1.6.1   fs_1.4.1         hms_0.5.3       
+## [33] digest_0.6.25    stringi_1.4.6    grid_4.0.0       cli_2.0.2       
+## [37] tools_4.0.0      magrittr_1.5     crayon_1.3.4     pkgconfig_2.0.3 
+## [41] ellipsis_0.3.0   xml2_1.3.2       reprex_0.3.0     lubridate_1.7.8 
+## [45] assertthat_0.2.1 rmarkdown_2.1    httr_1.4.1       rstudioapi_0.11 
+## [49] R6_2.4.1         nlme_3.1-147     compiler_4.0.0</code></pre>
 </div>
 
 

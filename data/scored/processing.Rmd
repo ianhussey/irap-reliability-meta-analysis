@@ -1,0 +1,171 @@
+---
+title: "Process data from rts to D scores and A scores"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+Scored data isn't used directly in our analyses, but is likely to have high reuse potential as D scored data is what is typically analyzed.
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+# set seed for computational reproducibility
+set.seed(42)
+
+# dependencies
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, round, digits = n_digits)
+}
+
+# using Ruscio's own code
+ruscios_A_function <- function(x, y) {
+    nx <- length(x)
+    ny <- length(y)
+    rx <- sum(rank(c(x, y))[1:nx])
+    A = (rx / nx - (nx + 1) / 2) / ny
+    return(A)
+}
+
+ruscios_A <- function(data, variable = "rt", group = "block_type", value1 = "incon", value2 = "con") {
+  # Ensure data is a data frame (e.g., not a tbl_data)
+  data <- as.data.frame(data)
+  # Select the observations for group 1
+  x <- data[data[[group]] == value1, variable]
+  # Select the observations for group 2
+  y <- data[data[[group]] == value2, variable]
+  A.obs <- ruscios_A_function(x, y)
+  return(as.numeric(A.obs))
+}
+
+# table format in output
+options(knitr.table.format = "html") 
+
+```
+
+# Outlier detection 
+
+Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
+
+```{r}
+
+# all
+data_all <- read.csv("../trial level/processed/data_trial_level.csv") 
+
+# outliers
+data_outliers <- data_all %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  select(unique_id, domain, mean_rt) %>%
+  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
+         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
+  # exclude median +- 2MAD
+  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
+                            mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+  filter(rt_outlier == FALSE) %>%
+  select(unique_id, rt_outlier) %>%
+  full_join(data_all, by = "unique_id") %>%
+  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
+
+```
+
+# Calculate scores
+
+Not employed for the test-retest analyses but may be useful for others to reuse.
+
+## D scores
+
+```{r}
+
+data_D_scores_overall <- data_outliers %>%
+  filter(rt <= 10000) %>%
+  group_by(unique_id, timepoint) %>%
+  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+            sd = mean(rt, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(D = (mean_incon - mean_con)/sd) %>%
+  select(unique_id, timepoint, D_overall = D) 
+
+data_D_scores_trial_type <- data_outliers %>%
+  filter(rt <= 10000) %>%
+  group_by(unique_id, timepoint, trial_type) %>%
+  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+            sd = mean(rt, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(D = (mean_incon - mean_con)/sd) %>%
+  select(unique_id, timepoint, trial_type, D) %>%
+  spread(trial_type, D) %>%
+  rename(D_tt1 = tt1,
+         D_tt2 = tt2,
+         D_tt3 = tt3,
+         D_tt4 = tt4) 
+
+```
+
+## A scores
+
+```{r}
+
+data_A_scores_overall <- data_outliers %>%
+  group_by(unique_id, timepoint) %>%
+  do(A_overall = ruscios_A(data = .)) %>%
+  ungroup() %>%
+  mutate(A_overall = as.numeric(A_overall)) 
+
+data_A_scores_trial_type <- data_outliers %>%
+  group_by(unique_id, timepoint, trial_type) %>%
+  do(A = ruscios_A(data = .)) %>%
+  ungroup() %>%
+  mutate(A = as.numeric(A)) %>%
+  spread(trial_type, A) %>%
+  rename(A_tt1 = tt1,
+         A_tt2 = tt2,
+         A_tt3 = tt3,
+         A_tt4 = tt4) 
+
+```
+
+## Combine
+
+```{r}
+
+data_scored <- data_D_scores_overall %>%
+  full_join(data_D_scores_trial_type, by = c("unique_id", "timepoint")) %>%
+  full_join(data_A_scores_overall, by = c("unique_id", "timepoint")) %>%
+  full_join(data_A_scores_trial_type, by = c("unique_id", "timepoint")) %>%
+  left_join(select(distinct(data_outliers, unique_id, .keep_all = TRUE), 
+                   unique_id, domain, age, gender, block_order, rt_outlier), by = "unique_id") %>%
+  select(unique_id, domain, timepoint, age, gender, 
+         block_order, rt_outlier,
+         D_overall, D_tt1, D_tt2, D_tt3, D_tt4,
+         A_overall, A_tt1, A_tt2, A_tt3, A_tt4)
+
+write_csv(data_scored, "data_scored.csv")
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
+
+

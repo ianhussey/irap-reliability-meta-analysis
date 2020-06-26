@@ -28,6 +28,8 @@ library(kableExtra)
 library(psych)
 library(ggExtra)
 library(scales) 
+#library(ggtext) # devtools::install_github("clauswilke/ggtext")
+
 
 # function to round all numeric vars in a data frame
 round_df <- function(df, n_digits = 3) {
@@ -56,14 +58,6 @@ apa_p_value <- function(p){
 }
 
 add_heterogeneity_metrics_to_forest <- function(fit) {
-  ## more detailed
-  # bquote(paste("RE Model (Q(df = ", .(formatC(fit$k - 1)), ") = ", 
-  #              .(formatC(round(fit$QE, 2))), 
-  #              ", p ", .(formatC(apa_p_value(fit$QEp))),
-  #              ", ", tau^2, " = ", .(formatC(round(fit$tau2, 1))), 
-  #              ", ", I^2, " = ", .(formatC(round(fit$I2, 1))),
-  #              "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
-  ## less detailed
   bquote(paste("RE Model (", tau^2, " = ", .(formatC(round(fit$tau2, 1))), 
                ", ", I^2, " = ", .(formatC(round(fit$I2, 1))),
                "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
@@ -85,17 +79,23 @@ dir.create("plots")
 data_demographics <- 
   read_csv("../data/effect sizes for meta-analyses/data_demographics.csv")
 
-data_test_retest_icc <- 
-  read_csv("../data/effect sizes for meta-analyses/data_test_retest_icc.csv")  
+data_D_scores_internal_consistency_oddeventrials <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_oddeventrials.csv")
 
-data_internal_consistency_oddeventrials <- 
-  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_oddeventrials.csv")
+data_D_scores_internal_consistency_firstsecondhalves <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_firstsecondhalves.csv") 
 
-data_internal_consistency_firstsecondhalves <- 
-  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_firstsecondhalves.csv") 
+data_D_scores_internal_consistency_permuted_estimates <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates.csv")
 
-data_internal_consistency_permuted_estimates <- 
-  read_csv("../data/effect sizes for meta-analyses/data_internal_consistency_permuted_estimates.csv") 
+data_A_scores_internal_consistency_permuted_estimates <- 
+  read_csv("../data/effect sizes for meta-analyses/data_A_scores_internal_consistency_permuted_estimates.csv")
+
+data_D_scores_internal_consistency_permuted_estimates_by_block_order <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates_by_block_order.csv") 
+
+data_D_scores_test_retest_icc <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc.csv") 
 
 ```
 
@@ -116,12 +116,12 @@ data_demographics %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 
-data_test_retest_icc %>%
+data_D_scores_test_retest_icc %>%
   summarize(total_trt_n = sum(n)) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
-data_internal_consistency_permuted_estimates %>%
+data_D_scores_internal_consistency_permuted_estimates %>%
   summarize(total_ic_n = sum(n)) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
@@ -148,7 +148,7 @@ Bonett transformations
 ```{r fig.height=8, fig.width=8}
 
 # fit random Effects model 
-fit_oddeven <-  data_internal_consistency_oddeventrials %>%
+fit_oddeven <-  data_D_scores_internal_consistency_oddeventrials %>%
   rma(yi   = yi, 
       vi   = vi, 
       data = .,
@@ -201,7 +201,7 @@ Bonett transformations
 ```{r fig.height=8, fig.width=8}
 
 # fit random Effects model 
-fit_firstsecond <- data_internal_consistency_firstsecondhalves %>%
+fit_firstsecond <- data_D_scores_internal_consistency_firstsecondhalves %>%
   rma(yi   = yi, 
       vi   = vi, 
       data = .,
@@ -256,7 +256,8 @@ Bonett transformations
 ```{r fig.height=8, fig.width=8}
 
 # fit random Effects model 
-fit_internal_consistency_permuted_estimates <- data_internal_consistency_permuted_estimates %>%
+fit_internal_consistency_permuted_estimates <- 
+  data_D_scores_internal_consistency_permuted_estimates %>%
   rma(yi   = yi, 
       vi   = vi, 
       data = .,
@@ -341,9 +342,6 @@ data_for_plotting_ic <-
 #   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
 #   theme_classic()
 
-library(ggtext) # devtools::install_github("clauswilke/ggtext")
-
-
 p1 <- 
   ggplot(data_for_plotting_ic, aes(alpha, I2, color = IRAP)) +
   geom_point(alpha = 0.5) +
@@ -389,7 +387,8 @@ excluding Sexuality IRAP as an outlier
 ```{r fig.height=8, fig.width=8}
 
 # fit random Effects model 
-fit_internal_consistency_permuted_estimates_sensitivity <- data_internal_consistency_permuted_estimates %>%
+fit_internal_consistency_permuted_estimates_sensitivity <- 
+  data_D_scores_internal_consistency_permuted_estimates %>%
   filter(!str_detect(domain, "Sexuality")) %>%
   rma(yi   = yi, 
       vi   = vi, 
@@ -519,7 +518,7 @@ Absolute agreement therefore also takes within-participant changes into account 
 ```{r fig.height=6, fig.width=8}
 
 # fit random Effects model 
-fit_test_retest_icc <- data_test_retest_icc %>%
+fit_test_retest_icc <- data_D_scores_test_retest_icc %>%
   rma(yi   = ICC, 
       sei  = se, 
       data = .,
@@ -667,9 +666,11 @@ medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_t
 
 Given this meta estimate of reliability, assuming that the internal consistency of an external variable is perfect (1.0), the maximum correlation between the IRAP and that external variable (i.e., when true correlation is 1.0) is `r max_cor`. For a true correlation of medium size (r = .5), the observed correlation would be `r medium_cor`.
 
-# Possbile improvements via lengthening the task
+# Potential ways to improve reliability 
 
-## Internal Consistency
+## Lengthening the task
+
+### Internal Consistency
 
 The [Spearman-Brown prediction formula](https://en.wikipedia.org/wiki/Spearman%E2%80%93Brown_prediction_formula#Forecasting_test_length) can be rearranged to make prediction about how the length of the test would need to change to meet a goal reliability:
 
@@ -694,8 +695,7 @@ ic_length_increase_.90 <- round((goal_ic*(1 - current_ic)) / (current_ic*(1 - go
 
 Using $a$ = `r round(transf.iabt(predictions_permutations_sensitivity$pred), 2)`, the IRAP would have to be `r ic_length_increase_.70` times longer for it to have an internal consistency of >=.70, `r ic_length_increase_.80` times longer for it to have an internal consistency of >=.80, or `r ic_length_increase_.90` times longer for it to have an internal consistency of >=.90.
 
-
-## Test-retest
+### Test-retest
 
 The [Spearman-Brown prediction formula](https://en.wikipedia.org/wiki/Spearman%E2%80%93Brown_prediction_formula#Forecasting_test_length) can be rearranged to make prediction about how the length of the test would need to change to meet a goal reliability:
 
@@ -719,5 +719,116 @@ trt_length_increase_.70 <- round((goal_test_retest*(1 - current_test_retest)) / 
 ```
 
 Using the absolute agreement estimate of `r round(transf.ztor(predictions_test_retest_icc$pred), 2)`, the IRAP would have to be `r trt_length_increase_.70` times longer for it to have a test-retest of >=.70, `r trt_length_increase_.80` times longer for it to have a test-retest of >=.80, or `r trt_length_increase_.90` times longer for it to have a test-retest of >=.90.
+
+## Alternative scoring algorithm: A scores
+
+Internal consistency using permutation approach, changing D scoring to A scoring. Compare results of meta analysis against permuted IC **sensitivity** meta above for apples-to-apples comparison.
+
+```{r fig.height=8, fig.width=8}
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates_sensitivity_A_scores <- 
+  data_A_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain)
+
+# make predictions 
+predictions_permutations_sensitivity_A_scores <-
+  predict(fit_internal_consistency_permuted_estimates_sensitivity_A_scores, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity_A_scores,
+                xlab = bquote(paste("Cronbach's ", alpha)),
+                addcred = TRUE,
+                refline = FALSE,
+                transf = transf.iabt,
+                xlim = c(-1.4, 1.6),
+                at = c(0, 0.25, 0.5, 0.75, 1),
+                mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity_A_scores))
+text(-1.4, 38, "Study", pos = 4)
+text(1.6, 38, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_sensitivity_A_scores$k, 
+         ", alpha = ",  round(transf.iabt(predictions_permutations_sensitivity_A_scores$pred), 2), 
+         ", 95% CI [", round(transf.iabt(predictions_permutations_sensitivity_A_scores$ci.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations_sensitivity_A_scores$ci.ub), 2), "]", 
+         ", 95% CR [", round(transf.iabt(predictions_permutations_sensitivity_A_scores$cr.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations_sensitivity_A_scores$cr.ub), 2), "]") 
+
+meta_heterogeneity <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates_sensitivity_A_scores$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$QE, 2), 
+         ", p ", ifelse(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$QEp, 4)))),
+         ", tau^2 = ", round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$tau2, 2), 
+         ", I^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$I2, 2),
+         "%, H^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$H2, 2))
+
+# save to disk for making pdf plot
+write_rds(fit_internal_consistency_permuted_estimates_sensitivity_A_scores, "models/fit_internal_consistency_permuted_estimates_sensitivity_A_scores.rds")
+
+```
+
+Meta effect: `r meta_effect`.
+
+Heterogeneity: `r meta_heterogeneity`.
+
+## Use only either fixed or moving response options
+
+Internal consistency using permutation approach, moderator meta analysis between response option locations between domains.
+
+```{r fig.height=8, fig.width=8}
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates_sensitivity_response_option_locations <- 
+  data_D_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality") &
+           !is.na(response_option_locations)) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      mods = ~response_option_locations,
+      data = .,
+      slab = paste(domain, response_option_locations))
+
+fit_internal_consistency_permuted_estimates_sensitivity_response_option_locations
+
+transf.iabt(c(0.8352, 0.8352-0.2163))
+
+```
+
+## Use only one block order
+
+Internal consistency using permutation approach, multilevel moderator meta analysis between block orders for the domains that have both.
+
+```{r fig.height=8, fig.width=8}
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates_by_block_order <- 
+  data_D_scores_internal_consistency_permuted_estimates_by_block_order %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      mods = ~block_order,
+      data = .,
+      slab = paste(domain, block_order))
+
+fit_internal_consistency_permuted_estimates_by_block_order
+
+transf.iabt(c(0.5618, 0.5618+0.1483))
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
 
 

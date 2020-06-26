@@ -21,6 +21,8 @@ knitr::opts_chunk$set(message = FALSE,
 ```{r}
 
 library(tidyverse)
+library(readxl)
+library(janitor)
 
 ```
 
@@ -487,7 +489,8 @@ nb other sexuality data in the faking dataset
 
 ```{r}
 
-data_input_sexuality <- read_csv("../intermediate/IRAP 2012 VB6 format files/ian sexuality test retest.csv")
+data_input_sexuality <- read_csv("../intermediate/IRAP 2012 VB6 format files/ian sexuality test retest.csv") %>%
+  mutate(experiment = "Sexuality (1)")
 
 data_completeness <- data_input_sexuality %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -635,16 +638,16 @@ data_trial_level_temp <-
   mutate(timepoint = ifelse(is.na(timepoint), 1, timepoint),
          timepoint = ifelse(timepoint == 1, "baseline", 
                             ifelse(timepoint == 2, "followup", timepoint)),
-         block_order = ifelse(block_order == "Consistent", "con first",
-                              ifelse(block_order == "Inconsistent", "incon first", block_order))) %>%
+         block_order = ifelse(str_detect(tolower(block_order), "incon"), "incon",
+                                         ifelse(str_detect(tolower(block_order), "con"), "con", NA))) %>%
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
                                 "clintontrump" = "Clinton-Trump",				
                                 "menwomen" = "Gender (2)",				
                                 "richpoor" = "Rich-Poor",
-                                "ADHD" = "ADHD",				
-                                "PTSD" = "PTSD",				
-                                "schizophrenia" = "Schizophrenia",
+                                "ADHD" = "Stigma - ADHD",				
+                                "PTSD" = "Stigma - PTSD",				
+                                "schizophrenia" = "Stigma - Schizophrenia",
                                 "agreeableness" = "Personality - Agreeableness",
                                 "conscientiousness" = "Personality - Conscientiousness",
                                 "extraversion" = "Personality - Extraversion",
@@ -662,8 +665,9 @@ data_trial_level_temp <-
                                 "ian death june" = "Death (2)",
                                 "ian death tarah" = "Death (3)",
                                 "disgust" = "Disgust",
-                                # "sexuality test retest" = "Sexuality (7 day)",
-                                "sexuality" = "Sexuality",
+                                # sexuality IRAPs were identical, just collected in different studies, so group.
+                                "Sexuality (1)" = "Sexuality",
+                                "Sexuality (2)" = "Sexuality",
                                 "countries acknowledge 1" = "Countries (1)",
                                 "countries care 1" = "Countries (2)",
                                 "countries 2 acknowledge" = "Countries (3)",
@@ -683,7 +687,10 @@ data_trial_level_temp <-
   mutate(mean_rt = round(mean(rt, na.rm = TRUE), 0)) %>%
   ungroup() %>%
   # mark odd vs even trials
-  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "odd", "even")) %>%
+  group_by(unique_id, timepoint) %>%
+  mutate(row_id = row_number()) %>%
+  ungroup() %>%
+  mutate(trial_odd_even = ifelse(row_id %% 2 == 1, "odd", "even")) %>%
   select(unique_id, 
          #participant, 
          age, gender, domain, timepoint, 
@@ -696,11 +703,26 @@ data_correct_n_trials <- data_trial_level_temp %>%
   # methodologically plausible number of trials
   filter(n %in% c(144, 192, 240, 288, 384)) 
 
-data_trial_level <- semi_join(data_trial_level_temp, data_correct_n_trials, by = c("unique_id", "timepoint"))
-  
-         
+data_trial_level_temp2 <- semi_join(data_trial_level_temp, data_correct_n_trials, by = c("unique_id", "timepoint"))
+
+# task parameters
+data_task_parameters <- read_excel("../../../measures/word stimuli and task parameters.xlsx") %>%
+  clean_names() %>%
+  select(domain, response_option_locations)
+
+data_trial_level <- data_trial_level_temp2 %>%
+  left_join(data_task_parameters, by = "domain")
+
 # write to disk
 write_csv(data_trial_level, "../processed/data_trial_level.csv")
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
 
 ```
 
