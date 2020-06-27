@@ -10,6 +10,8 @@ block order is currently missing for positive_negative, disgust, Sexuality (2), 
 
 change permutation iterations to 1000
 
+remove hunger from all data, processing, and analyses
+
 
 
 ## analyses
@@ -31,3 +33,5 @@ get materials from chad
 ## manuscript
 
 update manuscript to discuss negative effects and within domain variation due to task parameters
+
+modify inclusion/exclusion criteria to say that trial level data and task parameters for what was done in the experiment must both be available, to exclude food irap
