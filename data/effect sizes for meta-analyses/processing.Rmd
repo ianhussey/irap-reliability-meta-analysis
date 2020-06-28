@@ -59,11 +59,11 @@ add_heterogeneity_metrics_to_forest <- function(fit) {
 
 # using Ruscio's own code
 ruscios_A_function <- function(x, y) {
-    nx <- length(x)
-    ny <- length(y)
-    rx <- sum(rank(c(x, y))[1:nx])
-    A = (rx / nx - (nx + 1) / 2) / ny
-    return(A)
+  nx <- length(x)
+  ny <- length(y)
+  rx <- sum(rank(c(x, y))[1:nx])
+  A = (rx / nx - (nx + 1) / 2) / ny
+  return(A)
 }
 
 ruscios_A <- function(data, variable = "rt", group = "block_type", value1 = "incon", value2 = "con") {
@@ -84,7 +84,7 @@ calculate_icc <- function(data) {
   fit <- data %>%
     select(baseline, followup) %>%
     ICC(lmer = TRUE)
-
+  
   results <- fit$results %>%
     filter(type == "ICC2") %>%
     select(type, ICC, ICC_ci_lower = "lower bound", ICC_ci_upper = "upper bound") %>%
@@ -118,7 +118,7 @@ data_outliers <- data_all %>%
          mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
   # exclude median +- 2MAD
   mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
-                            mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
   filter(rt_outlier == FALSE) %>%
   select(unique_id, rt_outlier) %>%
   full_join(data_all, by = "unique_id") %>%
@@ -415,7 +415,7 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations.RD
       mutate(r_sb = spearman_brown_correction(r_pearson)) %>%
       # add iteration
       mutate(iteration = i)
-             #orderedness = subset_orderedness)
+    #orderedness = subset_orderedness)
     
     data_internal_consistency_list[[i]] <- data_internal_consistency
     
@@ -540,7 +540,7 @@ if (file.exists("permutations/data_A_scores_internal_consistency_permutations.RD
   load("permutations/data_A_scores_internal_consistency_permutations.RData")
   
 } else {
-
+  
   # find domain for each id - to be joined into df further below
   data_domain_for_each_id <- data_ic %>%
     distinct(unique_id, .keep_all = TRUE) %>%
@@ -598,7 +598,7 @@ if (file.exists("permutations/data_A_scores_internal_consistency_permutations.RD
       mutate(r_sb = spearman_brown_correction(r_pearson)) %>%
       # add iteration
       mutate(iteration = i)
-             #orderedness = subset_orderedness)
+    #orderedness = subset_orderedness)
     
     data_internal_consistency_list[[i]] <- data_internal_consistency
     
@@ -664,7 +664,7 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations_by
   load("permutations/data_D_scores_internal_consistency_permutations_by_block_order.RData")
   
 } else {
-
+  
   # filter domains that have both block_types
   data_ic_subset <- data_ic %>%
     filter(domain %in% (data_ic %>%
@@ -745,7 +745,7 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations_by
       mutate(r_sb = spearman_brown_correction(r_pearson)) %>%
       # add iteration
       mutate(iteration = i)
-             #orderedness = subset_orderedness)
+    #orderedness = subset_orderedness)
     
     data_internal_consistency_list[[i]] <- data_internal_consistency
     

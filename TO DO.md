@@ -1,32 +1,34 @@
 ## data processing
 
-check personality names are removed from unique ids
+response option location & trials per block is missing for many domains; after excel file is completed update data processing
 
-check ideographic stimuli are removed from data
-
-response option locations is missing for many domains; after excel file is completed update data processing
-
-block order is currently missing for positive_negative, disgust, Sexuality (2), Sexuality (1)
+pull test length into permutated non sensitivity analysis: trials per block * blockpairs * 2
 
 change permutation iterations to 1000
-
-remove hunger from all data, processing, and analyses
 
 
 
 ## analyses
 
+remove hunger from analyses
+
 add moderator metas
+
+- including one for test length
 
 
 
 ## measures
 
-tidy measures folder
-
 finalize stimuli and parameters files
 
-get materials from chad
+- Shapes & colors (1)	shapesandcolors YN rule
+- Shapes & colors (2)	shapesandcolors YN correct
+- Shapes & colors (3)	shapesandcolors TF correct 
+- Shapes & colors (4)	shapesandcolors TF rule 
+- Shapes & colors (5)	shapes and colors exp 2 full rule
+- Shapes & colors (6)	shapes and colors exp 2 minimal rule 
+- Shapes & colors (7)	shapes and colors exp 3
 
 
 
@@ -34,4 +36,8 @@ get materials from chad
 
 update manuscript to discuss negative effects and within domain variation due to task parameters
 
-modify inclusion/exclusion criteria to say that trial level data and task parameters for what was done in the experiment must both be available, to exclude food irap
+modify inclusion/exclusion criteria to say that trial level data and task parameters for what was done in the experiment must both be available, to exclude food irap; and that they must use known stimuli and exclude interventions
+
+note that inclusions criterion of complete data means no participants who failed practice blocks
+
+note that block_order is permanently missing for Disgust (1) & Sexuality (1)
