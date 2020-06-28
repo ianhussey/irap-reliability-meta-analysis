@@ -1890,7 +1890,7 @@ div.tocify {
 <span id="cb2-211"><a href="#cb2-211"></a><span class="st">                                     </span><span class="kw">pull</span>(<span class="kw">filter</span>(data_lincolnhitler_friendenemy_combinations, </span>
 <span id="cb2-212"><a href="#cb2-212"></a>                                                 combination <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;all three&quot;</span>)), participant),</span>
 <span id="cb2-213"><a href="#cb2-213"></a>                                   <span class="ot">NA</span>, <span class="dv">1</span>)))</span>
-<span id="cb2-214"><a href="#cb2-214"></a>  </span>
+<span id="cb2-214"><a href="#cb2-214"></a></span>
 <span id="cb2-215"><a href="#cb2-215"></a></span>
 <span id="cb2-216"><a href="#cb2-216"></a>chad_race_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad race t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-217"><a href="#cb2-217"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
@@ -2194,52 +2194,87 @@ div.tocify {
 <div id="go-irap-format-files" class="section level1">
 <h1>GO-IRAP format files</h1>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>data_goirap &lt;-<span class="st"> </span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian countries 2 acknowledge.csv&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
-<span id="cb7-4"><a href="#cb7-4"></a>                     experiment,</span>
-<span id="cb7-5"><a href="#cb7-5"></a>                     <span class="dt">gender =</span> participantGender,</span>
-<span id="cb7-6"><a href="#cb7-6"></a>                     <span class="dt">age =</span> participantAge, </span>
-<span id="cb7-7"><a href="#cb7-7"></a>                     <span class="dt">block_order =</span> startingRule, </span>
-<span id="cb7-8"><a href="#cb7-8"></a>                     <span class="dt">block_type =</span> currentRule, </span>
-<span id="cb7-9"><a href="#cb7-9"></a>                     <span class="dt">trial_type =</span> trialType, </span>
-<span id="cb7-10"><a href="#cb7-10"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
-<span id="cb7-11"><a href="#cb7-11"></a>                     accuracy,</span>
-<span id="cb7-12"><a href="#cb7-12"></a>                     isTestBlock),</span>
-<span id="cb7-13"><a href="#cb7-13"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian countries 2 care.csv&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
-<span id="cb7-15"><a href="#cb7-15"></a>                     experiment,</span>
-<span id="cb7-16"><a href="#cb7-16"></a>                     <span class="dt">gender =</span> participantGender,</span>
-<span id="cb7-17"><a href="#cb7-17"></a>                     <span class="dt">age =</span> participantAge, </span>
-<span id="cb7-18"><a href="#cb7-18"></a>                     <span class="dt">block_order =</span> startingRule, </span>
-<span id="cb7-19"><a href="#cb7-19"></a>                     <span class="dt">block_type =</span> currentRule, </span>
-<span id="cb7-20"><a href="#cb7-20"></a>                     <span class="dt">trial_type =</span> trialType, </span>
-<span id="cb7-21"><a href="#cb7-21"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
-<span id="cb7-22"><a href="#cb7-22"></a>                     accuracy,</span>
-<span id="cb7-23"><a href="#cb7-23"></a>                     isTestBlock),</span>
-<span id="cb7-24"><a href="#cb7-24"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors study 1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb7-25"><a href="#cb7-25"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
-<span id="cb7-26"><a href="#cb7-26"></a>                     experiment,</span>
-<span id="cb7-27"><a href="#cb7-27"></a>                     <span class="dt">gender =</span> participantGender,</span>
-<span id="cb7-28"><a href="#cb7-28"></a>                     <span class="dt">age =</span> participantAge, </span>
-<span id="cb7-29"><a href="#cb7-29"></a>                     <span class="dt">block_order =</span> startingRule, </span>
-<span id="cb7-30"><a href="#cb7-30"></a>                     <span class="dt">block_type =</span> currentRule, </span>
-<span id="cb7-31"><a href="#cb7-31"></a>                     <span class="dt">trial_type =</span> trialType, </span>
-<span id="cb7-32"><a href="#cb7-32"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
-<span id="cb7-33"><a href="#cb7-33"></a>                     accuracy,</span>
-<span id="cb7-34"><a href="#cb7-34"></a>                     isTestBlock)) <span class="op">%&gt;%</span></span>
-<span id="cb7-35"><a href="#cb7-35"></a><span class="st">  </span><span class="kw">filter</span>(isTestBlock <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></span>
-<span id="cb7-36"><a href="#cb7-36"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>isTestBlock) <span class="op">%&gt;%</span></span>
-<span id="cb7-37"><a href="#cb7-37"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">block_type =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(block_type,</span>
-<span id="cb7-38"><a href="#cb7-38"></a>                                    <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &quot;con&quot;</span>,</span>
-<span id="cb7-39"><a href="#cb7-39"></a>                                    <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> &quot;incon&quot;</span>),</span>
-<span id="cb7-40"><a href="#cb7-40"></a>         <span class="dt">block_order =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(block_order,</span>
-<span id="cb7-41"><a href="#cb7-41"></a>                                     <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &quot;con&quot;</span>,</span>
-<span id="cb7-42"><a href="#cb7-42"></a>                                     <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> &quot;incon&quot;</span>),</span>
-<span id="cb7-43"><a href="#cb7-43"></a>         <span class="dt">trial_type =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(trial_type,</span>
-<span id="cb7-44"><a href="#cb7-44"></a>                                    <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &quot;tt1&quot;</span>,</span>
-<span id="cb7-45"><a href="#cb7-45"></a>                                    <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> &quot;tt2&quot;</span>,</span>
-<span id="cb7-46"><a href="#cb7-46"></a>                                    <span class="st">`</span><span class="dt">3</span><span class="st">`</span> =<span class="st"> &quot;tt3&quot;</span>,</span>
-<span id="cb7-47"><a href="#cb7-47"></a>                                    <span class="st">`</span><span class="dt">4</span><span class="st">`</span> =<span class="st"> &quot;tt4&quot;</span>))</span></code></pre></div>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">bind_rows</span>(</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="co"># read_csv(&quot;../raw/GO-IRAP format files/ian countries 2 acknowledge.csv&quot;) %&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="co">#           select(unique_id, </span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="co">#                  experiment,</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="co">#                  gender = participantGender,</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="co">#                  age = participantAge, </span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="co">#                  block_order = startingRule, </span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="co">#                  block_type = currentRule, </span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>    <span class="co">#                  trial_type = trialType, </span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>    <span class="co">#                  rt = timeToCorrectResponse,</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>    <span class="co">#                  accuracy,</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>    <span class="co">#                  isTestBlock),</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="co">#         read_csv(&quot;../raw/GO-IRAP format files/ian countries 2 care.csv&quot;) %&gt;%</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a>    <span class="co">#           select(unique_id, </span></span>
+<span id="cb7-16"><a href="#cb7-16"></a>    <span class="co">#                  experiment,</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>    <span class="co">#                  gender = participantGender,</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>    <span class="co">#                  age = participantAge, </span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>    <span class="co">#                  block_order = startingRule, </span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>    <span class="co">#                  block_type = currentRule, </span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>    <span class="co">#                  trial_type = trialType, </span></span>
+<span id="cb7-22"><a href="#cb7-22"></a>    <span class="co">#                  rt = timeToCorrectResponse,</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a>    <span class="co">#                  accuracy,</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a>    <span class="co">#                  isTestBlock),</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
+<span id="cb7-27"><a href="#cb7-27"></a>                     experiment,</span>
+<span id="cb7-28"><a href="#cb7-28"></a>                     <span class="dt">gender =</span> participantGender,</span>
+<span id="cb7-29"><a href="#cb7-29"></a>                     <span class="dt">age =</span> participantAge, </span>
+<span id="cb7-30"><a href="#cb7-30"></a>                     <span class="dt">block_order =</span> startingRule, </span>
+<span id="cb7-31"><a href="#cb7-31"></a>                     <span class="dt">block_type =</span> currentRule, </span>
+<span id="cb7-32"><a href="#cb7-32"></a>                     <span class="dt">trial_type =</span> trialType, </span>
+<span id="cb7-33"><a href="#cb7-33"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
+<span id="cb7-34"><a href="#cb7-34"></a>                     accuracy,</span>
+<span id="cb7-35"><a href="#cb7-35"></a>                     isTestBlock),</span>
+<span id="cb7-36"><a href="#cb7-36"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
+<span id="cb7-38"><a href="#cb7-38"></a>                     experiment,</span>
+<span id="cb7-39"><a href="#cb7-39"></a>                     <span class="dt">gender =</span> participantGender,</span>
+<span id="cb7-40"><a href="#cb7-40"></a>                     <span class="dt">age =</span> participantAge, </span>
+<span id="cb7-41"><a href="#cb7-41"></a>                     <span class="dt">block_order =</span> startingRule, </span>
+<span id="cb7-42"><a href="#cb7-42"></a>                     <span class="dt">block_type =</span> currentRule, </span>
+<span id="cb7-43"><a href="#cb7-43"></a>                     <span class="dt">trial_type =</span> trialType, </span>
+<span id="cb7-44"><a href="#cb7-44"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
+<span id="cb7-45"><a href="#cb7-45"></a>                     accuracy,</span>
+<span id="cb7-46"><a href="#cb7-46"></a>                     isTestBlock),</span>
+<span id="cb7-47"><a href="#cb7-47"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-48"><a href="#cb7-48"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
+<span id="cb7-49"><a href="#cb7-49"></a>                     experiment,</span>
+<span id="cb7-50"><a href="#cb7-50"></a>                     <span class="dt">gender =</span> participantGender,</span>
+<span id="cb7-51"><a href="#cb7-51"></a>                     <span class="dt">age =</span> participantAge, </span>
+<span id="cb7-52"><a href="#cb7-52"></a>                     <span class="dt">block_order =</span> startingRule, </span>
+<span id="cb7-53"><a href="#cb7-53"></a>                     <span class="dt">block_type =</span> currentRule, </span>
+<span id="cb7-54"><a href="#cb7-54"></a>                     <span class="dt">trial_type =</span> trialType, </span>
+<span id="cb7-55"><a href="#cb7-55"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
+<span id="cb7-56"><a href="#cb7-56"></a>                     accuracy,</span>
+<span id="cb7-57"><a href="#cb7-57"></a>                     isTestBlock),</span>
+<span id="cb7-58"><a href="#cb7-58"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-59"><a href="#cb7-59"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
+<span id="cb7-60"><a href="#cb7-60"></a>                     experiment,</span>
+<span id="cb7-61"><a href="#cb7-61"></a>                     <span class="dt">gender =</span> participantGender,</span>
+<span id="cb7-62"><a href="#cb7-62"></a>                     <span class="dt">age =</span> participantAge, </span>
+<span id="cb7-63"><a href="#cb7-63"></a>                     <span class="dt">block_order =</span> startingRule, </span>
+<span id="cb7-64"><a href="#cb7-64"></a>                     <span class="dt">block_type =</span> currentRule, </span>
+<span id="cb7-65"><a href="#cb7-65"></a>                     <span class="dt">trial_type =</span> trialType, </span>
+<span id="cb7-66"><a href="#cb7-66"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
+<span id="cb7-67"><a href="#cb7-67"></a>                     accuracy,</span>
+<span id="cb7-68"><a href="#cb7-68"></a>                     isTestBlock),</span>
+<span id="cb7-69"><a href="#cb7-69"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb7-70"><a href="#cb7-70"></a><span class="st">  </span><span class="kw">filter</span>(isTestBlock <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-71"><a href="#cb7-71"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>isTestBlock) <span class="op">%&gt;%</span></span>
+<span id="cb7-72"><a href="#cb7-72"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">block_type =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(block_type,</span>
+<span id="cb7-73"><a href="#cb7-73"></a>                                    <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &quot;con&quot;</span>,</span>
+<span id="cb7-74"><a href="#cb7-74"></a>                                    <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> &quot;incon&quot;</span>),</span>
+<span id="cb7-75"><a href="#cb7-75"></a>         <span class="dt">block_order =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(block_order,</span>
+<span id="cb7-76"><a href="#cb7-76"></a>                                     <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &quot;con&quot;</span>,</span>
+<span id="cb7-77"><a href="#cb7-77"></a>                                     <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> &quot;incon&quot;</span>),</span>
+<span id="cb7-78"><a href="#cb7-78"></a>         <span class="dt">trial_type =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(trial_type,</span>
+<span id="cb7-79"><a href="#cb7-79"></a>                                    <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &quot;tt1&quot;</span>,</span>
+<span id="cb7-80"><a href="#cb7-80"></a>                                    <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> &quot;tt2&quot;</span>,</span>
+<span id="cb7-81"><a href="#cb7-81"></a>                                    <span class="st">`</span><span class="dt">3</span><span class="st">`</span> =<span class="st"> &quot;tt3&quot;</span>,</span>
+<span id="cb7-82"><a href="#cb7-82"></a>                                    <span class="st">`</span><span class="dt">4</span><span class="st">`</span> =<span class="st"> &quot;tt4&quot;</span>))</span></code></pre></div>
 </div>
 <div id="combine" class="section level1">
 <h1>Combine</h1>
@@ -2256,7 +2291,7 @@ div.tocify {
 <span id="cb8-11"><a href="#cb8-11"></a>         <span class="dt">timepoint =</span> <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;baseline&quot;</span>, </span>
 <span id="cb8-12"><a href="#cb8-12"></a>                            <span class="kw">ifelse</span>(timepoint <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, <span class="st">&quot;followup&quot;</span>, timepoint)),</span>
 <span id="cb8-13"><a href="#cb8-13"></a>         <span class="dt">block_order =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(<span class="kw">tolower</span>(block_order), <span class="st">&quot;incon&quot;</span>), <span class="st">&quot;incon&quot;</span>,</span>
-<span id="cb8-14"><a href="#cb8-14"></a>                                         <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(<span class="kw">tolower</span>(block_order), <span class="st">&quot;con&quot;</span>), <span class="st">&quot;con&quot;</span>, <span class="ot">NA</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>                              <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(<span class="kw">tolower</span>(block_order), <span class="st">&quot;con&quot;</span>), <span class="st">&quot;con&quot;</span>, <span class="ot">NA</span>))) <span class="op">%&gt;%</span></span>
 <span id="cb8-15"><a href="#cb8-15"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">domain =</span> experiment) <span class="op">%&gt;%</span></span>
 <span id="cb8-16"><a href="#cb8-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">domain =</span> dplyr<span class="op">::</span><span class="kw">recode</span>(domain,</span>
 <span id="cb8-17"><a href="#cb8-17"></a>                                <span class="st">&quot;clintontrump&quot;</span> =<span class="st"> &quot;Clinton-Trump&quot;</span>,               </span>
@@ -2289,10 +2324,10 @@ div.tocify {
 <span id="cb8-44"><a href="#cb8-44"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> =<span class="st"> &quot;Countries (3)&quot;</span>,</span>
 <span id="cb8-45"><a href="#cb8-45"></a>                                <span class="st">&quot;countries 2 care&quot;</span> =<span class="st"> &quot;Countries (4)&quot;</span>,</span>
 <span id="cb8-46"><a href="#cb8-46"></a>                                <span class="st">&quot;valenced words&quot;</span> =<span class="st"> &quot;Valenced words&quot;</span>,</span>
-<span id="cb8-47"><a href="#cb8-47"></a>                                <span class="st">&quot;shapes and colors YN rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (1)&quot;</span>,</span>
-<span id="cb8-48"><a href="#cb8-48"></a>                                <span class="st">&quot;shapes and colors YN correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (2)&quot;</span>,</span>
-<span id="cb8-49"><a href="#cb8-49"></a>                                <span class="st">&quot;shapes and colors TF correct&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (3)&quot;</span>,</span>
-<span id="cb8-50"><a href="#cb8-50"></a>                                <span class="st">&quot;shapes and colors TF rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (4)&quot;</span>,</span>
+<span id="cb8-47"><a href="#cb8-47"></a>                                <span class="st">&quot;shapes and colors 1 yesno fullrule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (1)&quot;</span>,</span>
+<span id="cb8-48"><a href="#cb8-48"></a>                                <span class="st">&quot;shapes and colors 2 yesno respondcorrectly&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (2)&quot;</span>,</span>
+<span id="cb8-49"><a href="#cb8-49"></a>                                <span class="st">&quot;shapes and colors 3 truefalse respondcorrectly&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (3)&quot;</span>,</span>
+<span id="cb8-50"><a href="#cb8-50"></a>                                <span class="st">&quot;shapes and colors 4 truefalse fullrule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (4)&quot;</span>,</span>
 <span id="cb8-51"><a href="#cb8-51"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (5)&quot;</span>,</span>
 <span id="cb8-52"><a href="#cb8-52"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (6)&quot;</span>,</span>
 <span id="cb8-53"><a href="#cb8-53"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> =<span class="st"> &quot;Shapes &amp; colors (7)&quot;</span>)) <span class="op">%&gt;%</span></span>
@@ -2330,7 +2365,7 @@ div.tocify {
 <span id="cb8-85"><a href="#cb8-85"></a><span class="co"># task parameters</span></span>
 <span id="cb8-86"><a href="#cb8-86"></a>data_task_parameters &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;../../../measures/word stimuli and task parameters.xlsx&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb8-87"><a href="#cb8-87"></a><span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span></span>
-<span id="cb8-88"><a href="#cb8-88"></a><span class="st">  </span><span class="kw">select</span>(domain, response_option_locations)</span>
+<span id="cb8-88"><a href="#cb8-88"></a><span class="st">  </span><span class="kw">select</span>(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)</span>
 <span id="cb8-89"><a href="#cb8-89"></a></span>
 <span id="cb8-90"><a href="#cb8-90"></a>data_trial_level &lt;-<span class="st"> </span>data_trial_level_temp2 <span class="op">%&gt;%</span></span>
 <span id="cb8-91"><a href="#cb8-91"></a><span class="st">  </span><span class="kw">left_join</span>(data_task_parameters, <span class="dt">by =</span> <span class="st">&quot;domain&quot;</span>)</span>

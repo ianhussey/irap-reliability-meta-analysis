@@ -245,7 +245,7 @@ chad_lincolnHitlerFriendEnemy_IRAP3 <- chad_lincolnHitlerFriendEnemy_IRAP3 %>%
                                      pull(filter(data_lincolnhitler_friendenemy_combinations, 
                                                  combination %in% c("all three")), participant),
                                    NA, 1)))
-  
+
 
 chad_race_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad race t1.csv") %>%
   mutate(participant = as.factor(participant)) %>%
@@ -568,7 +568,30 @@ chad_personality <- chad_personality_temp %>%
 ```{r}
 
 data_goirap <- 
-  bind_rows(read_csv("../raw/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
+  bind_rows(
+    # read_csv("../raw/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
+    #           select(unique_id, 
+    #                  experiment,
+    #                  gender = participantGender,
+    #                  age = participantAge, 
+    #                  block_order = startingRule, 
+    #                  block_type = currentRule, 
+    #                  trial_type = trialType, 
+    #                  rt = timeToCorrectResponse,
+    #                  accuracy,
+    #                  isTestBlock),
+    #         read_csv("../raw/GO-IRAP format files/ian countries 2 care.csv") %>%
+    #           select(unique_id, 
+    #                  experiment,
+    #                  gender = participantGender,
+    #                  age = participantAge, 
+    #                  block_order = startingRule, 
+    #                  block_type = currentRule, 
+    #                  trial_type = trialType, 
+    #                  rt = timeToCorrectResponse,
+    #                  accuracy,
+    #                  isTestBlock),
+            read_csv("../raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv") %>%
               select(unique_id, 
                      experiment,
                      gender = participantGender,
@@ -579,7 +602,7 @@ data_goirap <-
                      rt = timeToCorrectResponse,
                      accuracy,
                      isTestBlock),
-            read_csv("../raw/GO-IRAP format files/ian countries 2 care.csv") %>%
+            read_csv("../raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv") %>%
               select(unique_id, 
                      experiment,
                      gender = participantGender,
@@ -590,7 +613,7 @@ data_goirap <-
                      rt = timeToCorrectResponse,
                      accuracy,
                      isTestBlock),
-            read_csv("../raw/GO-IRAP format files/ian shapes and colors study 1.csv") %>%
+            read_csv("../raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv") %>%
               select(unique_id, 
                      experiment,
                      gender = participantGender,
@@ -600,7 +623,19 @@ data_goirap <-
                      trial_type = trialType, 
                      rt = timeToCorrectResponse,
                      accuracy,
-                     isTestBlock)) %>%
+                     isTestBlock),
+            read_csv("../raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv") %>%
+              select(unique_id, 
+                     experiment,
+                     gender = participantGender,
+                     age = participantAge, 
+                     block_order = startingRule, 
+                     block_type = currentRule, 
+                     trial_type = trialType, 
+                     rt = timeToCorrectResponse,
+                     accuracy,
+                     isTestBlock),
+  ) %>%
   filter(isTestBlock == 1) %>%
   select(-isTestBlock) %>%
   mutate(block_type = dplyr::recode(block_type,
@@ -634,7 +669,7 @@ data_trial_level_temp <-
          timepoint = ifelse(timepoint == 1, "baseline", 
                             ifelse(timepoint == 2, "followup", timepoint)),
          block_order = ifelse(str_detect(tolower(block_order), "incon"), "incon",
-                                         ifelse(str_detect(tolower(block_order), "con"), "con", NA))) %>%
+                              ifelse(str_detect(tolower(block_order), "con"), "con", NA))) %>%
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
                                 "clintontrump" = "Clinton-Trump",				
@@ -667,10 +702,10 @@ data_trial_level_temp <-
                                 "countries 2 acknowledge" = "Countries (3)",
                                 "countries 2 care" = "Countries (4)",
                                 "valenced words" = "Valenced words",
-                                "shapes and colors YN rule" = "Shapes & colors (1)",
-                                "shapes and colors YN correct" = "Shapes & colors (2)",
-                                "shapes and colors TF correct" = "Shapes & colors (3)",
-                                "shapes and colors TF rule" = "Shapes & colors (4)",
+                                "shapes and colors 1 yesno fullrule" = "Shapes & colors (1)",
+                                "shapes and colors 2 yesno respondcorrectly" = "Shapes & colors (2)",
+                                "shapes and colors 3 truefalse respondcorrectly" = "Shapes & colors (3)",
+                                "shapes and colors 4 truefalse fullrule" = "Shapes & colors (4)",
                                 "shapes and colors exp 2 full rule" = "Shapes & colors (5)",
                                 "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
                                 "shapes and colors exp 3" = "Shapes & colors (7)")) %>%
@@ -708,7 +743,7 @@ data_trial_level_temp2 <- semi_join(data_trial_level_temp, data_correct_n_trials
 # task parameters
 data_task_parameters <- read_excel("../../../measures/word stimuli and task parameters.xlsx") %>%
   clean_names() %>%
-  select(domain, response_option_locations)
+  select(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)
 
 data_trial_level <- data_trial_level_temp2 %>%
   left_join(data_task_parameters, by = "domain")
@@ -725,4 +760,5 @@ write_csv(data_trial_level, "../processed/data_trial_level.csv")
 sessionInfo()
 
 ```
+
 

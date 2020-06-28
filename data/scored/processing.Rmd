@@ -150,7 +150,9 @@ data_scored <- data_D_scores_overall %>%
   full_join(data_A_scores_overall, by = c("unique_id", "timepoint")) %>%
   full_join(data_A_scores_trial_type, by = c("unique_id", "timepoint")) %>%
   left_join(select(distinct(data_outliers, unique_id, .keep_all = TRUE), 
-                   unique_id, domain, age, gender, block_order, rt_outlier), by = "unique_id") %>%
+                   unique_id, domain, age, gender, block_order, rt_outlier,
+                   trials_per_block, number_of_pairs_of_test_blocks, 
+                   response_option_locations), by = "unique_id") %>%
   select(unique_id, domain, timepoint, age, gender, 
          block_order, rt_outlier,
          D_overall, D_tt1, D_tt2, D_tt3, D_tt4,

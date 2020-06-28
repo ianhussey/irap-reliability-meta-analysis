@@ -1781,13 +1781,15 @@ div.tocify {
 <span id="cb5-3"><a href="#cb5-3"></a><span class="st">  </span><span class="kw">full_join</span>(data_A_scores_overall, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="st">  </span><span class="kw">full_join</span>(data_A_scores_trial_type, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb5-5"><a href="#cb5-5"></a><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">select</span>(<span class="kw">distinct</span>(data_outliers, unique_id, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>), </span>
-<span id="cb5-6"><a href="#cb5-6"></a>                   unique_id, domain, age, gender, block_order, rt_outlier), <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="st">  </span><span class="kw">select</span>(unique_id, domain, timepoint, age, gender, </span>
-<span id="cb5-8"><a href="#cb5-8"></a>         block_order, rt_outlier,</span>
-<span id="cb5-9"><a href="#cb5-9"></a>         D_overall, D_tt1, D_tt2, D_tt3, D_tt4,</span>
-<span id="cb5-10"><a href="#cb5-10"></a>         A_overall, A_tt1, A_tt2, A_tt3, A_tt4)</span>
-<span id="cb5-11"><a href="#cb5-11"></a></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="kw">write_csv</span>(data_scored, <span class="st">&quot;data_scored.csv&quot;</span>)</span></code></pre></div>
+<span id="cb5-6"><a href="#cb5-6"></a>                   unique_id, domain, age, gender, block_order, rt_outlier,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>                   trials_per_block, number_of_pairs_of_test_blocks, </span>
+<span id="cb5-8"><a href="#cb5-8"></a>                   response_option_locations), <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="st">  </span><span class="kw">select</span>(unique_id, domain, timepoint, age, gender, </span>
+<span id="cb5-10"><a href="#cb5-10"></a>         block_order, rt_outlier,</span>
+<span id="cb5-11"><a href="#cb5-11"></a>         D_overall, D_tt1, D_tt2, D_tt3, D_tt4,</span>
+<span id="cb5-12"><a href="#cb5-12"></a>         A_overall, A_tt1, A_tt2, A_tt3, A_tt4)</span>
+<span id="cb5-13"><a href="#cb5-13"></a></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="kw">write_csv</span>(data_scored, <span class="st">&quot;data_scored.csv&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="session-info" class="section level1">
