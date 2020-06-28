@@ -32,7 +32,7 @@ library(janitor)
 
 ```{r}
 
-chad_political_attitudes <- read_csv("../raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv") %>%
+chad_political_attitudes <- read_csv("raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_"), -rownumber, -block_order) %>%
   mutate_at(vars(-experiment, -participant, -data_type, 
@@ -42,7 +42,7 @@ chad_political_attitudes <- read_csv("../raw/IRAP 2012 VB6 format files/chad pol
   mutate_at(vars(experiment, participant, data_type, 
                  stimuli_category_1, stimuli_category_2, stimuli_attribute_1, stimuli_attribute_2), as.character) %>%
   filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
-  right_join(read_csv("../raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv") %>%
+  right_join(read_csv("raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv") %>%
                mutate(participant = as.factor(participant)) %>%
                select(participant, block_order) %>%
                distinct(participant, .keep_all = TRUE), by = "participant") %>%
@@ -57,7 +57,7 @@ chad_political_attitudes <- read_csv("../raw/IRAP 2012 VB6 format files/chad pol
          participant = paste(participant, experiment, sep = "_"),
          timepoint = 1)
 
-chad_mental_illness_stigma <- read_csv("../raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
+chad_mental_illness_stigma <- read_csv("raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_"), -block_order, -experiment) %>%
   mutate_at(vars(-participant, -data_type, 
@@ -67,7 +67,7 @@ chad_mental_illness_stigma <- read_csv("../raw/IRAP 2012 VB6 format files/chad m
   mutate_at(vars(participant, data_type, 
                  stimuli_category_1, stimuli_category_2, stimuli_attribute_1, stimuli_attribute_2), as.character) %>%
   filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
-  full_join(read_csv("../raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
+  full_join(read_csv("raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
               filter(data_type == "Target 3 Raw Latency") %>%
               mutate(participant = as.factor(participant),
                      experiment = case_when(stimuli_attribute_2 == "damaged" ~ "PTSD",
@@ -75,7 +75,7 @@ chad_mental_illness_stigma <- read_csv("../raw/IRAP 2012 VB6 format files/chad m
                                             stimuli_attribute_2 == "dangerous" ~ "schizophrenia")) %>%
               select(participant, experiment) %>%
               distinct(participant, .keep_all = TRUE), by = "participant") %>%
-  right_join(read_csv("../raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
+  right_join(read_csv("raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
                mutate(participant = as.factor(participant)) %>%
                select(participant, block_order) %>%
                distinct(participant, .keep_all = TRUE), by = "participant") %>%
@@ -87,7 +87,7 @@ chad_mental_illness_stigma <- read_csv("../raw/IRAP 2012 VB6 format files/chad m
   mutate(participant = paste(participant, experiment, sep = "_"),
          timepoint = 1) 
 
-chad_bodyImage_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad body image t1.csv") %>%
+chad_bodyImage_IRAP1 <- read_csv("raw/IRAP 2012 VB6 format files/chad body image t1.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -102,7 +102,7 @@ chad_bodyImage_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad body im
   mutate(experiment = str_remove(experiment, "[12]"),
          timepoint = 1)
 
-chad_bodyImage_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad body image t2.csv") %>%
+chad_bodyImage_IRAP2 <- read_csv("raw/IRAP 2012 VB6 format files/chad body image t2.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -117,7 +117,7 @@ chad_bodyImage_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad body im
   mutate(experiment = str_remove(experiment, "[12]"),
          timepoint = 2)
 
-chad_gender_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad gender t1.csv") %>%
+chad_gender_IRAP1 <- read_csv("raw/IRAP 2012 VB6 format files/chad gender t1.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -132,7 +132,7 @@ chad_gender_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad gender t1.
   mutate(experiment = str_remove(experiment, "[12]"),
          timepoint = 1)
 
-chad_gender_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad gender t2.csv") %>%
+chad_gender_IRAP2 <- read_csv("raw/IRAP 2012 VB6 format files/chad gender t2.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -148,7 +148,7 @@ chad_gender_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad gender t2.
          timepoint = 2)
 
 
-chad_lincolnHitlerFriendEnemy_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 1.csv") %>%
+chad_lincolnHitlerFriendEnemy_IRAP1 <- read_csv("raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 1.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -162,7 +162,7 @@ chad_lincolnHitlerFriendEnemy_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format fil
                                      "Inconsistant" = "Inconsistent")) %>%
   mutate(experiment = ifelse(str_detect(rule_1, "During the next phase, respond as if LINCOLN is GOOD and HITLER is BAD. Please try to avoid the red X."), experiment, str_replace(experiment, "lincolnhitler", "friendenemy")))
 
-chad_lincolnHitlerFriendEnemy_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 2.csv") %>%
+chad_lincolnHitlerFriendEnemy_IRAP2 <- read_csv("raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 2.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -176,7 +176,7 @@ chad_lincolnHitlerFriendEnemy_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format fil
                                      "Inconsistant" = "Inconsistent")) %>%
   mutate(experiment = ifelse(str_detect(rule_1, "During the next phase, respond as if LINCOLN is GOOD and HITLER is BAD. Please try to avoid the red X."), experiment, str_replace(experiment, "lincolnhitler", "friendenemy")))
 
-chad_lincolnHitlerFriendEnemy_IRAP3 <- read_csv("../raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 3.csv") %>%
+chad_lincolnHitlerFriendEnemy_IRAP3 <- read_csv("raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 3.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -218,7 +218,7 @@ data_lincolnhitler_friendenemy_combinations <-
   ))
 
 # chad provided a list of participants who received faking instructions, check that none were included here. the non overlap observed here demonstrates these were already excluded in manual data processing., 
-faking_instructions <- read_csv("../raw/IRAP 2012 VB6 format files/chad friendenemy participants who received faking instructions.csv") %>%
+faking_instructions <- read_csv("raw/IRAP 2012 VB6 format files/chad friendenemy participants who received faking instructions.csv") %>%
   mutate(faking_instructions = TRUE,
          participant = as.character(participant_id)) %>%
   select(-participant_id) %>%
@@ -247,7 +247,7 @@ chad_lincolnHitlerFriendEnemy_IRAP3 <- chad_lincolnHitlerFriendEnemy_IRAP3 %>%
                                    NA, 1)))
 
 
-chad_race_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad race t1.csv") %>%
+chad_race_IRAP1 <- read_csv("raw/IRAP 2012 VB6 format files/chad race t1.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -262,7 +262,7 @@ chad_race_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad race t1.csv"
   mutate(experiment = str_remove(experiment, "[12]"),
          timepoint = 1)
 
-chad_race_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad race t2.csv") %>%
+chad_race_IRAP2 <- read_csv("raw/IRAP 2012 VB6 format files/chad race t2.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -277,7 +277,7 @@ chad_race_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad race t2.csv"
   mutate(experiment = str_remove(experiment, "[12]"),
          timepoint = 2)
 
-chad_religion_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad religion t1.csv") %>%
+chad_religion_IRAP1 <- read_csv("raw/IRAP 2012 VB6 format files/chad religion t1.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -292,7 +292,7 @@ chad_religion_IRAP1 <- read_csv("../raw/IRAP 2012 VB6 format files/chad religion
   mutate(experiment = str_remove(experiment, "[12]"),
          timepoint = 1)
 
-chad_religion_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad religion t2.csv") %>%
+chad_religion_IRAP2 <- read_csv("raw/IRAP 2012 VB6 format files/chad religion t2.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type, -rule_1), as.character) %>%
@@ -307,7 +307,7 @@ chad_religion_IRAP2 <- read_csv("../raw/IRAP 2012 VB6 format files/chad religion
   mutate(experiment = str_remove(experiment, "[12]"),
          timepoint = 2)
 
-ian_death <- read_csv("../raw/IRAP 2012 VB6 format files/ian death.csv") %>%
+ian_death <- read_csv("raw/IRAP 2012 VB6 format files/ian death.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type), as.character) %>%
@@ -325,7 +325,7 @@ ian_death <- read_csv("../raw/IRAP 2012 VB6 format files/ian death.csv") %>%
   mutate(timepoint = 1,
          rule_1 = "missing")
 
-ian_race <- read_csv("../raw/IRAP 2012 VB6 format files/ian race 2.csv") %>%
+ian_race <- read_csv("raw/IRAP 2012 VB6 format files/ian race 2.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_")) %>%
   mutate_at(vars(-experiment, -participant, -block_order, -data_type), as.character) %>%
@@ -381,7 +381,7 @@ combined_latency_data <- combined_latency_data_original_shape %>%
                              "c" = "con"))
 
 ## get demographics data
-data_demographics <- read_csv("../raw/IRAP 2012 VB6 format files/demographics and performance criteria data.csv") %>%
+data_demographics <- read_csv("raw/IRAP 2012 VB6 format files/demographics and performance criteria data.csv") %>%
   select(unique_id, age, gender)
 
 data_evalautive <- left_join(combined_latency_data, data_demographics, by = "unique_id")
@@ -395,12 +395,12 @@ data_evalautive <- left_join(combined_latency_data, data_demographics, by = "uni
 ```{r}
 
 ## process data that was output by/formatted from the VB6 2012+ IRAP
-data_input <- bind_rows(read_csv("../raw/IRAP 2012 VB6 format files/ian countries 1.csv"),
-                        read_csv("../raw/IRAP 2012 VB6 format files/ian disgust 2.csv"),
-                        read_csv("../raw/IRAP 2012 VB6 format files/ian sexuality 2.csv"),
-                        read_csv("../raw/IRAP 2012 VB6 format files/ian valenced words.csv"),
-                        read_csv("../raw/IRAP 2012 VB6 format files/ian shapes and colors study 2.csv"),
-                        read_csv("../raw/IRAP 2012 VB6 format files/ian shapes and colors study 3.csv")) %>%
+data_input <- bind_rows(read_csv("raw/IRAP 2012 VB6 format files/ian countries 1.csv"),
+                        read_csv("raw/IRAP 2012 VB6 format files/ian disgust 2.csv"),
+                        read_csv("raw/IRAP 2012 VB6 format files/ian sexuality 2.csv"),
+                        read_csv("raw/IRAP 2012 VB6 format files/ian valenced words.csv"),
+                        read_csv("raw/IRAP 2012 VB6 format files/ian shapes and colors study 2.csv"),
+                        read_csv("raw/IRAP 2012 VB6 format files/ian shapes and colors study 3.csv")) %>%
   mutate(stimulus_number = str_remove_all(trial_and_data_type, " Raw Latency")) %>%
   select(unique_id, participant, experiment, block_order, stimulus_number, trial_and_data_type, 
          tt1_block1_con, tt2_block1_con, tt3_block1_con, tt4_block1_con, 
@@ -438,7 +438,7 @@ data_nonevaluative <- data_input %>%
 
 ```{r}
 
-data_input_disgust <- read_csv("../raw/IRAP 2012 VB6 format files/ian disgust 1.csv") 
+data_input_disgust <- read_csv("raw/IRAP 2012 VB6 format files/ian disgust 1.csv") 
 
 data_completeness <- data_input_disgust %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -484,7 +484,7 @@ data_disgust_1 <- data_input_disgust %>%
 
 ```{r}
 
-data_input_sexuality <- read_csv("../raw/IRAP 2012 VB6 format files/ian sexuality 1.csv") 
+data_input_sexuality <- read_csv("raw/IRAP 2012 VB6 format files/ian sexuality 1.csv") 
 
 data_completeness <- data_input_sexuality %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -519,7 +519,7 @@ A late addition from Chad
 ```{r}
 
 ## process data from 2012 IRAP from Chad wave 2
-chad_personality_temp <- read_csv("../raw/IRAP 2012 VB6 format files/chad personality.csv") %>%
+chad_personality_temp <- read_csv("raw/IRAP 2012 VB6 format files/chad personality.csv") %>%
   mutate(participant = as.factor(participant)) %>%
   select(-contains("fp_"), -block_order) %>%
   mutate_at(vars(-experiment, -participant, -data_type, 
@@ -529,7 +529,7 @@ chad_personality_temp <- read_csv("../raw/IRAP 2012 VB6 format files/chad person
   mutate_at(vars(experiment, participant, data_type, 
                  stimuli_category_1, stimuli_category_2, stimuli_attribute_1, stimuli_attribute_2), as.character) %>%
   filter(grepl("Target", data_type) & grepl("Latency", data_type) & t1_c_tt1 != 0) %>%
-  right_join(read_csv("../raw/IRAP 2012 VB6 format files/chad personality.csv") %>%
+  right_join(read_csv("raw/IRAP 2012 VB6 format files/chad personality.csv") %>%
                mutate(participant = as.factor(participant)) %>%
                select(participant, block_order) %>%
                distinct(participant, .keep_all = TRUE), by = "participant") %>%
@@ -569,7 +569,7 @@ chad_personality <- chad_personality_temp %>%
 
 data_goirap <- 
   bind_rows(
-    # read_csv("../raw/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
+    # read_csv("raw/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
     #           select(unique_id, 
     #                  experiment,
     #                  gender = participantGender,
@@ -580,7 +580,7 @@ data_goirap <-
     #                  rt = timeToCorrectResponse,
     #                  accuracy,
     #                  isTestBlock),
-    #         read_csv("../raw/GO-IRAP format files/ian countries 2 care.csv") %>%
+    #         read_csv("raw/GO-IRAP format files/ian countries 2 care.csv") %>%
     #           select(unique_id, 
     #                  experiment,
     #                  gender = participantGender,
@@ -591,7 +591,7 @@ data_goirap <-
     #                  rt = timeToCorrectResponse,
     #                  accuracy,
     #                  isTestBlock),
-            read_csv("../raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv") %>%
+            read_csv("raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv") %>%
               select(unique_id, 
                      experiment,
                      gender = participantGender,
@@ -602,7 +602,7 @@ data_goirap <-
                      rt = timeToCorrectResponse,
                      accuracy,
                      isTestBlock),
-            read_csv("../raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv") %>%
+            read_csv("raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv") %>%
               select(unique_id, 
                      experiment,
                      gender = participantGender,
@@ -613,7 +613,7 @@ data_goirap <-
                      rt = timeToCorrectResponse,
                      accuracy,
                      isTestBlock),
-            read_csv("../raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv") %>%
+            read_csv("raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv") %>%
               select(unique_id, 
                      experiment,
                      gender = participantGender,
@@ -624,7 +624,7 @@ data_goirap <-
                      rt = timeToCorrectResponse,
                      accuracy,
                      isTestBlock),
-            read_csv("../raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv") %>%
+            read_csv("raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv") %>%
               select(unique_id, 
                      experiment,
                      gender = participantGender,

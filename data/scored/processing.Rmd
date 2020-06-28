@@ -65,7 +65,7 @@ Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
 ```{r}
 
 # all
-data_all <- read.csv("../trial level/processed/data_trial_level.csv") 
+data_all <- read.csv("../trial level/data_trial_level.csv") 
 
 # outliers
 data_outliers <- data_all %>%

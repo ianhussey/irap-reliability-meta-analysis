@@ -31,7 +31,7 @@ library(readxl)
 library(janitor)
 
 # n iterations in permutation resampling procedures
-n_iterations <- 10  # change to 1000 after testing !!!
+n_iterations <- 1000
 
 # function to round all numeric vars in a data frame
 round_df <- function(df, n_digits = 3) {
@@ -108,7 +108,7 @@ Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
 ```{r}
 
 # all
-data_all <- read.csv("../trial level/processed/data_trial_level.csv") 
+data_all <- read_csv("../trial level/data_trial_level.csv") 
 
 # exclusions
 data_outliers <- data_all %>%
@@ -454,7 +454,11 @@ data_n_per_domain <- data_ic %>%
   select(domain, n)
 
 data_response_option_locations <- data_ic %>%
-  distinct(domain, response_option_locations)
+  distinct(domain, 
+           response_option_locations, 
+           trials_per_block, 
+           number_of_pairs_of_test_blocks, 
+           response_option_locations)
 
 data_D_scores_internal_consistency_permuted_estimates <- data_D_scores_internal_consistency_permutations %>%
   group_by(domain) %>%
