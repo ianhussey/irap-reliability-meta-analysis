@@ -168,8 +168,8 @@ metafor::forest(fit_oddeven,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_oddeven))
-text(-1.4, 39, "Study", pos = 4)
-text(1.6, 39, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 37, "Study", pos = 4)
+text(1.6, 37, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -221,8 +221,8 @@ metafor::forest(fit_firstsecond,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond))
-text(-1.4, 39, "Study", pos = 4)
-text(1.6, 39, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 37, "Study", pos = 4)
+text(1.6, 37, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -277,8 +277,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates))
-text(-1.4, 39, "Study", pos = 4)
-text(1.6, 39, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 37, "Study", pos = 4)
+text(1.6, 37, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -314,7 +314,7 @@ Sexuality IRAP seems to be an outlier
 if(!file.exists("models/fit_gosh_ic.rds")){
   
   fit_gosh_ic <- gosh(fit_internal_consistency_permuted_estimates, 
-                      subsets = 5000,
+                      subsets = 10000,
                       parallel = "multicore",  # change to "snow" on windows
                       ncpus = 4)
   
@@ -329,17 +329,13 @@ if(!file.exists("models/fit_gosh_ic.rds")){
 data_for_plotting_ic <- 
   bind_cols(as.tibble(fit_gosh_ic$incl) %>%
               # the study to be separated is here listed by order (counting down from top of forest plot)
-              select(include = "18"),  
+              select(include1 = "23",
+                     include2 = "24"),  
             as.tibble(fit_gosh_ic$res)) %>%
-  mutate(IRAP = ifelse(include, "Sexuality", "All other domains"),
+  mutate(IRAP = ifelse(include1 | include2, "Sexuality", "All other domains"),
          alpha = transf.iabt(estimate)) %>%
   # randomize rows to improve plotting
   sample_frac(size = 1)
-
-# ggplot(data_for_plotting_ic, aes(alpha, I2)) +
-#   geom_point(alpha = 0.4) +
-#   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
-#   theme_classic()
 
 p1 <- 
   ggplot(data_for_plotting_ic, aes(alpha, I2, color = IRAP)) +
@@ -381,7 +377,7 @@ data_for_plotting_ic %>%
 
 ### Sensitivity analysis
 
-excluding Sexuality IRAP as an outlier
+excluding Sexuality IRAPs as outliers
 
 ```{r fig.height=8, fig.width=8}
 
@@ -409,8 +405,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
-text(-1.4, 38, "Study", pos = 4)
-text(1.6, 38, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 35, "Study", pos = 4)
+text(1.6, 35, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -439,14 +435,12 @@ Heterogeneity: `r meta_heterogeneity`.
 
 #### GOSH
 
-Sexuality IRAP seems to be an outlier
-
 ```{r fig.height=5, fig.width=5}
 
 if(!file.exists("models/fit_gosh_ic_sensitivity.rds")){
   
   fit_gosh_ic_sensitivity <- gosh(fit_internal_consistency_permuted_estimates_sensitivity, 
-                                  subsets = 5000,
+                                  subsets = 10000,
                                   parallel = "multicore",  # change to "snow" on windows
                                   ncpus = 4)
   
@@ -464,11 +458,6 @@ data_for_plotting_ic_sensitivity <-
          alpha = transf.iabt(estimate)) %>%
   # randomize rows to improve plotting
   sample_frac(size = 1)
-
-# ggplot(data_for_plotting_ic_sensitivity, aes(alpha, I2)) +
-#   geom_point(alpha = 0.4) +
-#   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
-#   theme_classic()
 
 p3 <- 
   ggplot(data_for_plotting_ic_sensitivity, aes(alpha, I2, color = Type)) +
@@ -590,11 +579,6 @@ data_for_plotting_trt <-
   # randomize rows to improve plotting
   sample_frac(size = 1)
 
-# ggplot(data_for_plotting_ic, aes(alpha, I2)) +
-#   geom_point(alpha = 0.4) +
-#   scale_color_viridis_d(begin = 0.3, end = 0.7, direction = -1) +
-#   theme_classic()
-
 p2 <- 
   ggplot(data_for_plotting_trt, aes(ICC, I2, color = Type)) +
   geom_point(alpha = 0.8) +
@@ -669,6 +653,8 @@ Given this meta estimate of reliability, assuming that the internal consistency 
 
 ## Lengthening the task
 
+Although there was some variation in test lengths, this was in a very small range of domains that also appeared to be particularly stable ones. It's not meaningful to do moderation meta analysis on the existing data.
+
 ### Internal Consistency
 
 The [Spearman-Brown prediction formula](https://en.wikipedia.org/wiki/Spearman%E2%80%93Brown_prediction_formula#Forecasting_test_length) can be rearranged to make prediction about how the length of the test would need to change to meet a goal reliability:
@@ -721,104 +707,93 @@ Using the absolute agreement estimate of `r round(transf.ztor(predictions_test_r
 
 ## Alternative scoring algorithm: A scores
 
-Internal consistency using permutation approach, changing D scoring to A scoring. Compare results of meta analysis against permuted IC **sensitivity** meta above for apples-to-apples comparison.
+Internal consistency using permutation approach sensitivity analysis, comparing D scoring and A scoring. Multilevel moderator meta analyses, acknowledging non-independence between scores produced for each domain, and moderator by scoring type.
 
 ```{r fig.height=8, fig.width=8}
 
-# fit random Effects model 
-fit_internal_consistency_permuted_estimates_sensitivity_A_scores <- 
-  data_A_scores_internal_consistency_permuted_estimates %>%
-  filter(!str_detect(domain, "Sexuality")) %>%
-  rma(yi   = yi, 
-      vi   = vi, 
-      data = .,
-      slab = domain)
+fit_internal_consistency_D_vs_A_scores <- 
+  bind_rows(data_A_scores_internal_consistency_permuted_estimates %>%
+              filter(!str_detect(domain, "Sexuality")) %>%
+              mutate(scoring = "A"),
+            data_D_scores_internal_consistency_permuted_estimates %>%
+              filter(!str_detect(domain, "Sexuality")) %>%
+              mutate(scoring = "D")) %>%
+  mutate(scoring = fct_relevel(scoring, "D", "A")) %>%
+  rma.mv(yi     = yi, 
+         V      = vi, 
+         random = ~ 1 | domain,
+         mods   = ~ scoring,
+         data   = .,
+         slab   = domain)
 
-# make predictions 
-predictions_permutations_sensitivity_A_scores <-
-  predict(fit_internal_consistency_permuted_estimates_sensitivity_A_scores, digits = 5) %>%
-  as.data.frame() %>%
-  round_df(2)
+fit_internal_consistency_D_vs_A_scores
 
-# plot
-metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity_A_scores,
-                xlab = bquote(paste("Cronbach's ", alpha)),
-                addcred = TRUE,
-                refline = FALSE,
-                transf = transf.iabt,
-                xlim = c(-1.4, 1.6),
-                at = c(0, 0.25, 0.5, 0.75, 1),
-                mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity_A_scores))
-text(-1.4, 38, "Study", pos = 4)
-text(1.6, 38, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
-
-# summarize results
-meta_effect <- 
-  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_sensitivity_A_scores$k, 
-         ", alpha = ",  round(transf.iabt(predictions_permutations_sensitivity_A_scores$pred), 2), 
-         ", 95% CI [", round(transf.iabt(predictions_permutations_sensitivity_A_scores$ci.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations_sensitivity_A_scores$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_permutations_sensitivity_A_scores$cr.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations_sensitivity_A_scores$cr.ub), 2), "]") 
-
-meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates_sensitivity_A_scores$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$QE, 2), 
-         ", p ", ifelse(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$QEp, 4)))),
-         ", tau^2 = ", round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$tau2, 2), 
-         ", I^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$I2, 2),
-         "%, H^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity_A_scores$H2, 2))
-
-# save to disk for making pdf plot
-write_rds(fit_internal_consistency_permuted_estimates_sensitivity_A_scores, "models/fit_internal_consistency_permuted_estimates_sensitivity_A_scores.rds")
-
-```
-
-Meta effect: `r meta_effect`.
-
-Heterogeneity: `r meta_heterogeneity`.
-
-## Use only either fixed or moving response options
-
-Internal consistency using permutation approach, moderator meta analysis between response option locations between domains.
-
-```{r fig.height=8, fig.width=8}
-
-# fit random Effects model 
-fit_internal_consistency_permuted_estimates_sensitivity_response_option_locations <- 
-  data_D_scores_internal_consistency_permuted_estimates %>%
-  filter(!str_detect(domain, "Sexuality") &
-           !is.na(response_option_locations)) %>%
-  rma(yi   = yi, 
-      vi   = vi, 
-      mods = ~response_option_locations,
-      data = .,
-      slab = paste(domain, response_option_locations))
-
-fit_internal_consistency_permuted_estimates_sensitivity_response_option_locations
-
-transf.iabt(c(0.8352, 0.8352-0.2163))
+tibble(response_options = c("static", "moving"),
+       alpha = c(0.7453, 0.7453+0.0500),
+       ci_lower = c(0.6201, 0.7453-0.1007),
+       ci_upper = c(0.8705, 0.7453+0.2007)) %>%
+  mutate_if(is.numeric, transf.iabt) %>%
+  mutate_if(is.numeric, round, digits = 2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
 ## Use only one block order
 
-Internal consistency using permutation approach, multilevel moderator meta analysis between block orders for the domains that have both.
+Internal consistency using permutation approach sensitivity analysis, multilevel moderator meta analysis between block orders for the domains that have both.
 
 ```{r fig.height=8, fig.width=8}
 
-# fit random Effects model 
-fit_internal_consistency_permuted_estimates_by_block_order <- 
+fit_internal_consistency_block_order <- 
   data_D_scores_internal_consistency_permuted_estimates_by_block_order %>%
   filter(!str_detect(domain, "Sexuality")) %>%
+  rma.mv(yi     = yi, 
+         V      = vi, 
+         mods   = ~ block_order,
+         random = ~ 1 | domain,
+         data   = .,
+         slab   = paste(domain, block_order))
+
+fit_internal_consistency_block_order
+
+tibble(block_order = c("con first", "incon first"),
+       alpha = c(0.6101, 0.6101+0.0379),
+       ci_lower = c(0.4018, 0.6101-0.2717),
+       ci_upper = c(0.8184,  0.6101+0.3475)) %>%
+  mutate_if(is.numeric, transf.iabt) %>%
+  mutate_if(is.numeric, round, digits = 2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  
+```
+
+## Use only either fixed or moving response options
+
+Internal consistency using permutation approach sensitivity analysis, moderator meta analysis between response option locations between domains.
+
+```{r fig.height=8, fig.width=8}
+
+fit_internal_consistency_response_option_locations <- 
+  data_D_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality") &
+           !is.na(response_option_locations)) %>%
   rma(yi   = yi, 
       vi   = vi, 
-      mods = ~block_order,
+      mods = ~ response_option_locations,
       data = .,
-      slab = paste(domain, block_order))
+      slab = paste(domain, response_option_locations))
 
-fit_internal_consistency_permuted_estimates_by_block_order
+fit_internal_consistency_response_option_locations
 
-transf.iabt(c(0.5618, 0.5618+0.1483))
+tibble(response_options = c("static", "moving"),
+       alpha = c(0.9483, 0.9483-0.2959),
+       ci_lower = c(0.7254, 0.9483-0.5500),
+       ci_upper = c(1.1713, 0.9483-0.0418)) %>%
+  mutate_if(is.numeric, transf.iabt) %>%
+  mutate_if(is.numeric, round, digits = 2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
@@ -829,5 +804,4 @@ transf.iabt(c(0.5618, 0.5618+0.1483))
 sessionInfo()
 
 ```
-
 

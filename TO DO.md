@@ -1,23 +1,3 @@
-## data processing
-
-
-
-## analyses
-
-add moderator metas
-
-- including one for test length
-
-- trials_per_block * number_of_pairs_of_test_blocks * 2
-
-- response_option_locations
-
-  
-
-## measures
-
-
-
 ## manuscript
 
 update manuscript to discuss negative effects and within domain variation due to task parameters

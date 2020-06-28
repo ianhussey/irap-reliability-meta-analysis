@@ -1677,7 +1677,7 @@ div.tocify {
 <h1>IRAP 2012 VB6 format files</h1>
 <div id="evaluative-iraps" class="section level2">
 <h2>Evaluative IRAPs</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>chad_political_attitudes &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>chad_political_attitudes &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>), <span class="op">-</span>rownumber, <span class="op">-</span>block_order) <span class="op">%&gt;%</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>data_type, </span>
@@ -1687,7 +1687,7 @@ div.tocify {
 <span id="cb2-8"><a href="#cb2-8"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(experiment, participant, data_type, </span>
 <span id="cb2-9"><a href="#cb2-9"></a>                 stimuli_category_<span class="dv">1</span>, stimuli_category_<span class="dv">2</span>, stimuli_attribute_<span class="dv">1</span>, stimuli_attribute_<span class="dv">2</span>), as.character) <span class="op">%&gt;%</span></span>
 <span id="cb2-10"><a href="#cb2-10"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;Target&quot;</span>, data_type) <span class="op">&amp;</span><span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;Latency&quot;</span>, data_type) <span class="op">&amp;</span><span class="st"> </span>t1_c_tt1 <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="st">  </span><span class="kw">right_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="st">  </span><span class="kw">right_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad political attitudes 2016.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-12"><a href="#cb2-12"></a><span class="st">               </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-13"><a href="#cb2-13"></a><span class="st">               </span><span class="kw">select</span>(participant, block_order) <span class="op">%&gt;%</span></span>
 <span id="cb2-14"><a href="#cb2-14"></a><span class="st">               </span><span class="kw">distinct</span>(participant, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>), <span class="dt">by =</span> <span class="st">&quot;participant&quot;</span>) <span class="op">%&gt;%</span></span>
@@ -1702,7 +1702,7 @@ div.tocify {
 <span id="cb2-23"><a href="#cb2-23"></a>         <span class="dt">participant =</span> <span class="kw">paste</span>(participant, experiment, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>),</span>
 <span id="cb2-24"><a href="#cb2-24"></a>         <span class="dt">timepoint =</span> <span class="dv">1</span>)</span>
 <span id="cb2-25"><a href="#cb2-25"></a></span>
-<span id="cb2-26"><a href="#cb2-26"></a>chad_mental_illness_stigma &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a>chad_mental_illness_stigma &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-27"><a href="#cb2-27"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-28"><a href="#cb2-28"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>), <span class="op">-</span>block_order, <span class="op">-</span>experiment) <span class="op">%&gt;%</span></span>
 <span id="cb2-29"><a href="#cb2-29"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>participant, <span class="op">-</span>data_type, </span>
@@ -1712,7 +1712,7 @@ div.tocify {
 <span id="cb2-33"><a href="#cb2-33"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(participant, data_type, </span>
 <span id="cb2-34"><a href="#cb2-34"></a>                 stimuli_category_<span class="dv">1</span>, stimuli_category_<span class="dv">2</span>, stimuli_attribute_<span class="dv">1</span>, stimuli_attribute_<span class="dv">2</span>), as.character) <span class="op">%&gt;%</span></span>
 <span id="cb2-35"><a href="#cb2-35"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;Target&quot;</span>, data_type) <span class="op">&amp;</span><span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;Latency&quot;</span>, data_type) <span class="op">&amp;</span><span class="st"> </span>t1_c_tt1 <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></span>
-<span id="cb2-36"><a href="#cb2-36"></a><span class="st">  </span><span class="kw">full_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a><span class="st">  </span><span class="kw">full_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-37"><a href="#cb2-37"></a><span class="st">              </span><span class="kw">filter</span>(data_type <span class="op">==</span><span class="st"> &quot;Target 3 Raw Latency&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-38"><a href="#cb2-38"></a><span class="st">              </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant),</span>
 <span id="cb2-39"><a href="#cb2-39"></a>                     <span class="dt">experiment =</span> <span class="kw">case_when</span>(stimuli_attribute_<span class="dv">2</span> <span class="op">==</span><span class="st"> &quot;damaged&quot;</span> <span class="op">~</span><span class="st"> &quot;PTSD&quot;</span>,</span>
@@ -1720,7 +1720,7 @@ div.tocify {
 <span id="cb2-41"><a href="#cb2-41"></a>                                            stimuli_attribute_<span class="dv">2</span> <span class="op">==</span><span class="st"> &quot;dangerous&quot;</span> <span class="op">~</span><span class="st"> &quot;schizophrenia&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-42"><a href="#cb2-42"></a><span class="st">              </span><span class="kw">select</span>(participant, experiment) <span class="op">%&gt;%</span></span>
 <span id="cb2-43"><a href="#cb2-43"></a><span class="st">              </span><span class="kw">distinct</span>(participant, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>), <span class="dt">by =</span> <span class="st">&quot;participant&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb2-44"><a href="#cb2-44"></a><span class="st">  </span><span class="kw">right_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-44"><a href="#cb2-44"></a><span class="st">  </span><span class="kw">right_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-45"><a href="#cb2-45"></a><span class="st">               </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-46"><a href="#cb2-46"></a><span class="st">               </span><span class="kw">select</span>(participant, block_order) <span class="op">%&gt;%</span></span>
 <span id="cb2-47"><a href="#cb2-47"></a><span class="st">               </span><span class="kw">distinct</span>(participant, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>), <span class="dt">by =</span> <span class="st">&quot;participant&quot;</span>) <span class="op">%&gt;%</span></span>
@@ -1732,7 +1732,7 @@ div.tocify {
 <span id="cb2-53"><a href="#cb2-53"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">paste</span>(participant, experiment, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>),</span>
 <span id="cb2-54"><a href="#cb2-54"></a>         <span class="dt">timepoint =</span> <span class="dv">1</span>) </span>
 <span id="cb2-55"><a href="#cb2-55"></a></span>
-<span id="cb2-56"><a href="#cb2-56"></a>chad_bodyImage_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad body image t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-56"><a href="#cb2-56"></a>chad_bodyImage_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad body image t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-57"><a href="#cb2-57"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-58"><a href="#cb2-58"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-59"><a href="#cb2-59"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1747,7 +1747,7 @@ div.tocify {
 <span id="cb2-68"><a href="#cb2-68"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">str_remove</span>(experiment, <span class="st">&quot;[12]&quot;</span>),</span>
 <span id="cb2-69"><a href="#cb2-69"></a>         <span class="dt">timepoint =</span> <span class="dv">1</span>)</span>
 <span id="cb2-70"><a href="#cb2-70"></a></span>
-<span id="cb2-71"><a href="#cb2-71"></a>chad_bodyImage_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad body image t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-71"><a href="#cb2-71"></a>chad_bodyImage_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad body image t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-72"><a href="#cb2-72"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-73"><a href="#cb2-73"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-74"><a href="#cb2-74"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1762,7 +1762,7 @@ div.tocify {
 <span id="cb2-83"><a href="#cb2-83"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">str_remove</span>(experiment, <span class="st">&quot;[12]&quot;</span>),</span>
 <span id="cb2-84"><a href="#cb2-84"></a>         <span class="dt">timepoint =</span> <span class="dv">2</span>)</span>
 <span id="cb2-85"><a href="#cb2-85"></a></span>
-<span id="cb2-86"><a href="#cb2-86"></a>chad_gender_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad gender t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-86"><a href="#cb2-86"></a>chad_gender_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad gender t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-87"><a href="#cb2-87"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-88"><a href="#cb2-88"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-89"><a href="#cb2-89"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1777,7 +1777,7 @@ div.tocify {
 <span id="cb2-98"><a href="#cb2-98"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">str_remove</span>(experiment, <span class="st">&quot;[12]&quot;</span>),</span>
 <span id="cb2-99"><a href="#cb2-99"></a>         <span class="dt">timepoint =</span> <span class="dv">1</span>)</span>
 <span id="cb2-100"><a href="#cb2-100"></a></span>
-<span id="cb2-101"><a href="#cb2-101"></a>chad_gender_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad gender t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-101"><a href="#cb2-101"></a>chad_gender_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad gender t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-102"><a href="#cb2-102"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-103"><a href="#cb2-103"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-104"><a href="#cb2-104"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1793,7 +1793,7 @@ div.tocify {
 <span id="cb2-114"><a href="#cb2-114"></a>         <span class="dt">timepoint =</span> <span class="dv">2</span>)</span>
 <span id="cb2-115"><a href="#cb2-115"></a></span>
 <span id="cb2-116"><a href="#cb2-116"></a></span>
-<span id="cb2-117"><a href="#cb2-117"></a>chad_lincolnHitlerFriendEnemy_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-117"><a href="#cb2-117"></a>chad_lincolnHitlerFriendEnemy_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-118"><a href="#cb2-118"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-119"><a href="#cb2-119"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-120"><a href="#cb2-120"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1807,7 +1807,7 @@ div.tocify {
 <span id="cb2-128"><a href="#cb2-128"></a>                                     <span class="st">&quot;Inconsistant&quot;</span> =<span class="st"> &quot;Inconsistent&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-129"><a href="#cb2-129"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(rule_<span class="dv">1</span>, <span class="st">&quot;During the next phase, respond as if LINCOLN is GOOD and HITLER is BAD. Please try to avoid the red X.&quot;</span>), experiment, <span class="kw">str_replace</span>(experiment, <span class="st">&quot;lincolnhitler&quot;</span>, <span class="st">&quot;friendenemy&quot;</span>)))</span>
 <span id="cb2-130"><a href="#cb2-130"></a></span>
-<span id="cb2-131"><a href="#cb2-131"></a>chad_lincolnHitlerFriendEnemy_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-131"><a href="#cb2-131"></a>chad_lincolnHitlerFriendEnemy_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-132"><a href="#cb2-132"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-133"><a href="#cb2-133"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-134"><a href="#cb2-134"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1821,7 +1821,7 @@ div.tocify {
 <span id="cb2-142"><a href="#cb2-142"></a>                                     <span class="st">&quot;Inconsistant&quot;</span> =<span class="st"> &quot;Inconsistent&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-143"><a href="#cb2-143"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(rule_<span class="dv">1</span>, <span class="st">&quot;During the next phase, respond as if LINCOLN is GOOD and HITLER is BAD. Please try to avoid the red X.&quot;</span>), experiment, <span class="kw">str_replace</span>(experiment, <span class="st">&quot;lincolnhitler&quot;</span>, <span class="st">&quot;friendenemy&quot;</span>)))</span>
 <span id="cb2-144"><a href="#cb2-144"></a></span>
-<span id="cb2-145"><a href="#cb2-145"></a>chad_lincolnHitlerFriendEnemy_IRAP3 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 3.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-145"><a href="#cb2-145"></a>chad_lincolnHitlerFriendEnemy_IRAP3 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad lincolnHitler FriendEnemy 3.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-146"><a href="#cb2-146"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-147"><a href="#cb2-147"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-148"><a href="#cb2-148"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1863,7 +1863,7 @@ div.tocify {
 <span id="cb2-184"><a href="#cb2-184"></a>  ))</span>
 <span id="cb2-185"><a href="#cb2-185"></a></span>
 <span id="cb2-186"><a href="#cb2-186"></a><span class="co"># chad provided a list of participants who received faking instructions, check that none were included here. the non overlap observed here demonstrates these were already excluded in manual data processing., </span></span>
-<span id="cb2-187"><a href="#cb2-187"></a>faking_instructions &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad friendenemy participants who received faking instructions.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-187"><a href="#cb2-187"></a>faking_instructions &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad friendenemy participants who received faking instructions.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-188"><a href="#cb2-188"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">faking_instructions =</span> <span class="ot">TRUE</span>,</span>
 <span id="cb2-189"><a href="#cb2-189"></a>         <span class="dt">participant =</span> <span class="kw">as.character</span>(participant_id)) <span class="op">%&gt;%</span></span>
 <span id="cb2-190"><a href="#cb2-190"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>participant_id) <span class="op">%&gt;%</span></span>
@@ -1892,7 +1892,7 @@ div.tocify {
 <span id="cb2-213"><a href="#cb2-213"></a>                                   <span class="ot">NA</span>, <span class="dv">1</span>)))</span>
 <span id="cb2-214"><a href="#cb2-214"></a></span>
 <span id="cb2-215"><a href="#cb2-215"></a></span>
-<span id="cb2-216"><a href="#cb2-216"></a>chad_race_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad race t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-216"><a href="#cb2-216"></a>chad_race_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad race t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-217"><a href="#cb2-217"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-218"><a href="#cb2-218"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-219"><a href="#cb2-219"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1907,7 +1907,7 @@ div.tocify {
 <span id="cb2-228"><a href="#cb2-228"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">str_remove</span>(experiment, <span class="st">&quot;[12]&quot;</span>),</span>
 <span id="cb2-229"><a href="#cb2-229"></a>         <span class="dt">timepoint =</span> <span class="dv">1</span>)</span>
 <span id="cb2-230"><a href="#cb2-230"></a></span>
-<span id="cb2-231"><a href="#cb2-231"></a>chad_race_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad race t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-231"><a href="#cb2-231"></a>chad_race_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad race t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-232"><a href="#cb2-232"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-233"><a href="#cb2-233"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-234"><a href="#cb2-234"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1922,7 +1922,7 @@ div.tocify {
 <span id="cb2-243"><a href="#cb2-243"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">str_remove</span>(experiment, <span class="st">&quot;[12]&quot;</span>),</span>
 <span id="cb2-244"><a href="#cb2-244"></a>         <span class="dt">timepoint =</span> <span class="dv">2</span>)</span>
 <span id="cb2-245"><a href="#cb2-245"></a></span>
-<span id="cb2-246"><a href="#cb2-246"></a>chad_religion_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad religion t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-246"><a href="#cb2-246"></a>chad_religion_IRAP1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad religion t1.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-247"><a href="#cb2-247"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-248"><a href="#cb2-248"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-249"><a href="#cb2-249"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1937,7 +1937,7 @@ div.tocify {
 <span id="cb2-258"><a href="#cb2-258"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">str_remove</span>(experiment, <span class="st">&quot;[12]&quot;</span>),</span>
 <span id="cb2-259"><a href="#cb2-259"></a>         <span class="dt">timepoint =</span> <span class="dv">1</span>)</span>
 <span id="cb2-260"><a href="#cb2-260"></a></span>
-<span id="cb2-261"><a href="#cb2-261"></a>chad_religion_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad religion t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-261"><a href="#cb2-261"></a>chad_religion_IRAP2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad religion t2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-262"><a href="#cb2-262"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-263"><a href="#cb2-263"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-264"><a href="#cb2-264"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type, <span class="op">-</span>rule_<span class="dv">1</span>), as.character) <span class="op">%&gt;%</span></span>
@@ -1952,7 +1952,7 @@ div.tocify {
 <span id="cb2-273"><a href="#cb2-273"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">experiment =</span> <span class="kw">str_remove</span>(experiment, <span class="st">&quot;[12]&quot;</span>),</span>
 <span id="cb2-274"><a href="#cb2-274"></a>         <span class="dt">timepoint =</span> <span class="dv">2</span>)</span>
 <span id="cb2-275"><a href="#cb2-275"></a></span>
-<span id="cb2-276"><a href="#cb2-276"></a>ian_death &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian death.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-276"><a href="#cb2-276"></a>ian_death &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian death.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-277"><a href="#cb2-277"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-278"><a href="#cb2-278"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-279"><a href="#cb2-279"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type), as.character) <span class="op">%&gt;%</span></span>
@@ -1970,7 +1970,7 @@ div.tocify {
 <span id="cb2-291"><a href="#cb2-291"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">timepoint =</span> <span class="dv">1</span>,</span>
 <span id="cb2-292"><a href="#cb2-292"></a>         <span class="dt">rule_1 =</span> <span class="st">&quot;missing&quot;</span>)</span>
 <span id="cb2-293"><a href="#cb2-293"></a></span>
-<span id="cb2-294"><a href="#cb2-294"></a>ian_race &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian race 2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-294"><a href="#cb2-294"></a>ian_race &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian race 2.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-295"><a href="#cb2-295"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb2-296"><a href="#cb2-296"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-297"><a href="#cb2-297"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>block_order, <span class="op">-</span>data_type), as.character) <span class="op">%&gt;%</span></span>
@@ -2026,7 +2026,7 @@ div.tocify {
 <span id="cb2-347"><a href="#cb2-347"></a>                             <span class="st">&quot;c&quot;</span> =<span class="st"> &quot;con&quot;</span>))</span>
 <span id="cb2-348"><a href="#cb2-348"></a></span>
 <span id="cb2-349"><a href="#cb2-349"></a><span class="co">## get demographics data</span></span>
-<span id="cb2-350"><a href="#cb2-350"></a>data_demographics &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/demographics and performance criteria data.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb2-350"><a href="#cb2-350"></a>data_demographics &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/demographics and performance criteria data.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-351"><a href="#cb2-351"></a><span class="st">  </span><span class="kw">select</span>(unique_id, age, gender)</span>
 <span id="cb2-352"><a href="#cb2-352"></a></span>
 <span id="cb2-353"><a href="#cb2-353"></a>data_evalautive &lt;-<span class="st"> </span><span class="kw">left_join</span>(combined_latency_data, data_demographics, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>)</span></code></pre></div>
@@ -2036,12 +2036,12 @@ div.tocify {
 <div id="multiple-domains" class="section level3">
 <h3>Multiple domains</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">## process data that was output by/formatted from the VB6 2012+ IRAP</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>data_input &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian countries 1.csv&quot;</span>),</span>
-<span id="cb3-3"><a href="#cb3-3"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian disgust 2.csv&quot;</span>),</span>
-<span id="cb3-4"><a href="#cb3-4"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian sexuality 2.csv&quot;</span>),</span>
-<span id="cb3-5"><a href="#cb3-5"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian valenced words.csv&quot;</span>),</span>
-<span id="cb3-6"><a href="#cb3-6"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian shapes and colors study 2.csv&quot;</span>),</span>
-<span id="cb3-7"><a href="#cb3-7"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian shapes and colors study 3.csv&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>data_input &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian countries 1.csv&quot;</span>),</span>
+<span id="cb3-3"><a href="#cb3-3"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian disgust 2.csv&quot;</span>),</span>
+<span id="cb3-4"><a href="#cb3-4"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian sexuality 2.csv&quot;</span>),</span>
+<span id="cb3-5"><a href="#cb3-5"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian valenced words.csv&quot;</span>),</span>
+<span id="cb3-6"><a href="#cb3-6"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian shapes and colors study 2.csv&quot;</span>),</span>
+<span id="cb3-7"><a href="#cb3-7"></a>                        <span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian shapes and colors study 3.csv&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb3-8"><a href="#cb3-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">stimulus_number =</span> <span class="kw">str_remove_all</span>(trial_and_data_type, <span class="st">&quot; Raw Latency&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb3-9"><a href="#cb3-9"></a><span class="st">  </span><span class="kw">select</span>(unique_id, participant, experiment, block_order, stimulus_number, trial_and_data_type, </span>
 <span id="cb3-10"><a href="#cb3-10"></a>         tt1_block1_con, tt2_block1_con, tt3_block1_con, tt4_block1_con, </span>
@@ -2075,7 +2075,7 @@ div.tocify {
 </div>
 <div id="disgust-1" class="section level3">
 <h3>Disgust 1</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_input_disgust &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian disgust 1.csv&quot;</span>) </span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>data_input_disgust &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian disgust 1.csv&quot;</span>) </span>
 <span id="cb4-2"><a href="#cb4-2"></a></span>
 <span id="cb4-3"><a href="#cb4-3"></a>data_completeness &lt;-<span class="st"> </span>data_input_disgust <span class="op">%&gt;%</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
@@ -2117,7 +2117,7 @@ div.tocify {
 </div>
 <div id="sexuality-1" class="section level3">
 <h3>Sexuality 1</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>data_input_sexuality &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/ian sexuality 1.csv&quot;</span>) </span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>data_input_sexuality &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/ian sexuality 1.csv&quot;</span>) </span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
 <span id="cb5-3"><a href="#cb5-3"></a>data_completeness &lt;-<span class="st"> </span>data_input_sexuality <span class="op">%&gt;%</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="st">  </span><span class="kw">gather</span>(trial_and_block, rt, <span class="kw">c</span>(<span class="st">&quot;tt1_block1_con&quot;</span>, <span class="st">&quot;tt2_block1_con&quot;</span>, <span class="st">&quot;tt3_block1_con&quot;</span>, <span class="st">&quot;tt4_block1_con&quot;</span>, </span>
@@ -2147,7 +2147,7 @@ div.tocify {
 <h3>Personality IRAPs</h3>
 <p>A late addition from Chad</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## process data from 2012 IRAP from Chad wave 2</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>chad_personality_temp &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad personality.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>chad_personality_temp &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad personality.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;fp_&quot;</span>), <span class="op">-</span>block_order) <span class="op">%&gt;%</span></span>
 <span id="cb6-5"><a href="#cb6-5"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>experiment, <span class="op">-</span>participant, <span class="op">-</span>data_type, </span>
@@ -2157,7 +2157,7 @@ div.tocify {
 <span id="cb6-9"><a href="#cb6-9"></a><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(experiment, participant, data_type, </span>
 <span id="cb6-10"><a href="#cb6-10"></a>                 stimuli_category_<span class="dv">1</span>, stimuli_category_<span class="dv">2</span>, stimuli_attribute_<span class="dv">1</span>, stimuli_attribute_<span class="dv">2</span>), as.character) <span class="op">%&gt;%</span></span>
 <span id="cb6-11"><a href="#cb6-11"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;Target&quot;</span>, data_type) <span class="op">&amp;</span><span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;Latency&quot;</span>, data_type) <span class="op">&amp;</span><span class="st"> </span>t1_c_tt1 <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="st">  </span><span class="kw">right_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;../raw/IRAP 2012 VB6 format files/chad personality.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="st">  </span><span class="kw">right_join</span>(<span class="kw">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad personality.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb6-13"><a href="#cb6-13"></a><span class="st">               </span><span class="kw">mutate</span>(<span class="dt">participant =</span> <span class="kw">as.factor</span>(participant)) <span class="op">%&gt;%</span></span>
 <span id="cb6-14"><a href="#cb6-14"></a><span class="st">               </span><span class="kw">select</span>(participant, block_order) <span class="op">%&gt;%</span></span>
 <span id="cb6-15"><a href="#cb6-15"></a><span class="st">               </span><span class="kw">distinct</span>(participant, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>), <span class="dt">by =</span> <span class="st">&quot;participant&quot;</span>) <span class="op">%&gt;%</span></span>
@@ -2195,7 +2195,7 @@ div.tocify {
 <h1>GO-IRAP format files</h1>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>data_goirap &lt;-<span class="st"> </span></span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">bind_rows</span>(</span>
-<span id="cb7-3"><a href="#cb7-3"></a>    <span class="co"># read_csv(&quot;../raw/GO-IRAP format files/ian countries 2 acknowledge.csv&quot;) %&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="co"># read_csv(&quot;raw/GO-IRAP format files/ian countries 2 acknowledge.csv&quot;) %&gt;%</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a>    <span class="co">#           select(unique_id, </span></span>
 <span id="cb7-5"><a href="#cb7-5"></a>    <span class="co">#                  experiment,</span></span>
 <span id="cb7-6"><a href="#cb7-6"></a>    <span class="co">#                  gender = participantGender,</span></span>
@@ -2206,7 +2206,7 @@ div.tocify {
 <span id="cb7-11"><a href="#cb7-11"></a>    <span class="co">#                  rt = timeToCorrectResponse,</span></span>
 <span id="cb7-12"><a href="#cb7-12"></a>    <span class="co">#                  accuracy,</span></span>
 <span id="cb7-13"><a href="#cb7-13"></a>    <span class="co">#                  isTestBlock),</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a>    <span class="co">#         read_csv(&quot;../raw/GO-IRAP format files/ian countries 2 care.csv&quot;) %&gt;%</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="co">#         read_csv(&quot;raw/GO-IRAP format files/ian countries 2 care.csv&quot;) %&gt;%</span></span>
 <span id="cb7-15"><a href="#cb7-15"></a>    <span class="co">#           select(unique_id, </span></span>
 <span id="cb7-16"><a href="#cb7-16"></a>    <span class="co">#                  experiment,</span></span>
 <span id="cb7-17"><a href="#cb7-17"></a>    <span class="co">#                  gender = participantGender,</span></span>
@@ -2217,7 +2217,7 @@ div.tocify {
 <span id="cb7-22"><a href="#cb7-22"></a>    <span class="co">#                  rt = timeToCorrectResponse,</span></span>
 <span id="cb7-23"><a href="#cb7-23"></a>    <span class="co">#                  accuracy,</span></span>
 <span id="cb7-24"><a href="#cb7-24"></a>    <span class="co">#                  isTestBlock),</span></span>
-<span id="cb7-25"><a href="#cb7-25"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb7-26"><a href="#cb7-26"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
 <span id="cb7-27"><a href="#cb7-27"></a>                     experiment,</span>
 <span id="cb7-28"><a href="#cb7-28"></a>                     <span class="dt">gender =</span> participantGender,</span>
@@ -2228,7 +2228,7 @@ div.tocify {
 <span id="cb7-33"><a href="#cb7-33"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
 <span id="cb7-34"><a href="#cb7-34"></a>                     accuracy,</span>
 <span id="cb7-35"><a href="#cb7-35"></a>                     isTestBlock),</span>
-<span id="cb7-36"><a href="#cb7-36"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-36"><a href="#cb7-36"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb7-37"><a href="#cb7-37"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
 <span id="cb7-38"><a href="#cb7-38"></a>                     experiment,</span>
 <span id="cb7-39"><a href="#cb7-39"></a>                     <span class="dt">gender =</span> participantGender,</span>
@@ -2239,7 +2239,7 @@ div.tocify {
 <span id="cb7-44"><a href="#cb7-44"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
 <span id="cb7-45"><a href="#cb7-45"></a>                     accuracy,</span>
 <span id="cb7-46"><a href="#cb7-46"></a>                     isTestBlock),</span>
-<span id="cb7-47"><a href="#cb7-47"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-47"><a href="#cb7-47"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb7-48"><a href="#cb7-48"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
 <span id="cb7-49"><a href="#cb7-49"></a>                     experiment,</span>
 <span id="cb7-50"><a href="#cb7-50"></a>                     <span class="dt">gender =</span> participantGender,</span>
@@ -2250,7 +2250,7 @@ div.tocify {
 <span id="cb7-55"><a href="#cb7-55"></a>                     <span class="dt">rt =</span> timeToCorrectResponse,</span>
 <span id="cb7-56"><a href="#cb7-56"></a>                     accuracy,</span>
 <span id="cb7-57"><a href="#cb7-57"></a>                     isTestBlock),</span>
-<span id="cb7-58"><a href="#cb7-58"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;../raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-58"><a href="#cb7-58"></a>            <span class="kw">read_csv</span>(<span class="st">&quot;raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb7-59"><a href="#cb7-59"></a><span class="st">              </span><span class="kw">select</span>(unique_id, </span>
 <span id="cb7-60"><a href="#cb7-60"></a>                     experiment,</span>
 <span id="cb7-61"><a href="#cb7-61"></a>                     <span class="dt">gender =</span> participantGender,</span>
@@ -2363,7 +2363,7 @@ div.tocify {
 <span id="cb8-83"><a href="#cb8-83"></a>data_trial_level_temp2 &lt;-<span class="st"> </span><span class="kw">semi_join</span>(data_trial_level_temp, data_correct_n_trials, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>))</span>
 <span id="cb8-84"><a href="#cb8-84"></a></span>
 <span id="cb8-85"><a href="#cb8-85"></a><span class="co"># task parameters</span></span>
-<span id="cb8-86"><a href="#cb8-86"></a>data_task_parameters &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;../../../measures/word stimuli and task parameters.xlsx&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb8-86"><a href="#cb8-86"></a>data_task_parameters &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;../../measures/word stimuli and task parameters.xlsx&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb8-87"><a href="#cb8-87"></a><span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span></span>
 <span id="cb8-88"><a href="#cb8-88"></a><span class="st">  </span><span class="kw">select</span>(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)</span>
 <span id="cb8-89"><a href="#cb8-89"></a></span>
@@ -2371,7 +2371,7 @@ div.tocify {
 <span id="cb8-91"><a href="#cb8-91"></a><span class="st">  </span><span class="kw">left_join</span>(data_task_parameters, <span class="dt">by =</span> <span class="st">&quot;domain&quot;</span>)</span>
 <span id="cb8-92"><a href="#cb8-92"></a></span>
 <span id="cb8-93"><a href="#cb8-93"></a><span class="co"># write to disk</span></span>
-<span id="cb8-94"><a href="#cb8-94"></a><span class="kw">write_csv</span>(data_trial_level, <span class="st">&quot;../processed/data_trial_level.csv&quot;</span>)</span></code></pre></div>
+<span id="cb8-94"><a href="#cb8-94"></a><span class="kw">write_csv</span>(data_trial_level, <span class="st">&quot;data_trial_level.csv&quot;</span>)</span></code></pre></div>
 </div>
 <div id="session-info" class="section level1">
 <h1>Session info</h1>

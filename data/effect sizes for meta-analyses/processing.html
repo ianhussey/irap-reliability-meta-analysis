@@ -1762,7 +1762,7 @@ div.tocify {
 <h1>Get data and exclude outliers</h1>
 <p>Exclude outliers on the basis of median mean_rt +/- 2MAD by domain</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># all</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>data_all &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../trial level/processed/data_trial_level.csv&quot;</span>) </span>
+<span id="cb2-2"><a href="#cb2-2"></a>data_all &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../trial level/data_trial_level.csv&quot;</span>) </span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="co"># exclusions</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a>data_outliers &lt;-<span class="st"> </span>data_all <span class="op">%&gt;%</span></span>
@@ -2644,170 +2644,168 @@ n_trt_after_exlucions
 <span id="cb19-79"><a href="#cb19-79"></a>       <span class="dt">file =</span> <span class="st">&quot;permutations/data_A_scores_internal_consistency_permutations.RData&quot;</span>)</span>
 <span id="cb19-80"><a href="#cb19-80"></a>  </span>
 <span id="cb19-81"><a href="#cb19-81"></a>}</span></code></pre></div>
-<pre><code>## ================================================================================</code></pre>
 </div>
 <div id="calculate-effect-sizes-4" class="section level3">
 <h3>Calculate effect sizes</h3>
 <p>Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 2000 permutations.</p>
 <p>Bonett transformations</p>
 <p>NB forest plot above includes empirical CIs across the permutation resamples using the percentile method, whereas the forest plot below estimates CIs based on the variance calculated from the Fischer’s r-to-z and N.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>data_n_per_domain &lt;-<span class="st"> </span>data_ic <span class="op">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3"></a><span class="st">  </span><span class="kw">count</span>(domain) <span class="op">%&gt;%</span></span>
-<span id="cb21-4"><a href="#cb21-4"></a><span class="st">  </span><span class="kw">select</span>(domain, n)</span>
-<span id="cb21-5"><a href="#cb21-5"></a></span>
-<span id="cb21-6"><a href="#cb21-6"></a>data_A_scores_internal_consistency_permuted_estimates &lt;-<span class="st"> </span>data_A_scores_internal_consistency_permutations <span class="op">%&gt;%</span></span>
-<span id="cb21-7"><a href="#cb21-7"></a><span class="st">  </span><span class="kw">group_by</span>(domain) <span class="op">%&gt;%</span></span>
-<span id="cb21-8"><a href="#cb21-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">alpha =</span> <span class="kw">mean</span>(r_sb, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb21-9"><a href="#cb21-9"></a>                   <span class="dt">alpha_ci_lower =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.025</span>),</span>
-<span id="cb21-10"><a href="#cb21-10"></a>                   <span class="dt">alpha_ci_upper =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.975</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb21-11"><a href="#cb21-11"></a><span class="st">  </span><span class="kw">left_join</span>(data_n_per_domain, <span class="dt">by =</span> <span class="st">&quot;domain&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb21-12"><a href="#cb21-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parts =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span></span>
-<span id="cb21-13"><a href="#cb21-13"></a><span class="st">  </span><span class="kw">escalc</span>(<span class="dt">measure =</span> <span class="st">&quot;ABT&quot;</span>, </span>
-<span id="cb21-14"><a href="#cb21-14"></a>         <span class="dt">ai =</span> alpha, </span>
-<span id="cb21-15"><a href="#cb21-15"></a>         <span class="dt">mi =</span> parts, </span>
-<span id="cb21-16"><a href="#cb21-16"></a>         <span class="dt">ni =</span> n,</span>
-<span id="cb21-17"><a href="#cb21-17"></a>         <span class="dt">data =</span> .)</span>
-<span id="cb21-18"><a href="#cb21-18"></a></span>
-<span id="cb21-19"><a href="#cb21-19"></a><span class="kw">write_csv</span>(data_A_scores_internal_consistency_permuted_estimates,</span>
-<span id="cb21-20"><a href="#cb21-20"></a>          <span class="st">&quot;data_A_scores_internal_consistency_permuted_estimates.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>data_n_per_domain &lt;-<span class="st"> </span>data_ic <span class="op">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="kw">count</span>(domain) <span class="op">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span><span class="kw">select</span>(domain, n)</span>
+<span id="cb20-5"><a href="#cb20-5"></a></span>
+<span id="cb20-6"><a href="#cb20-6"></a>data_A_scores_internal_consistency_permuted_estimates &lt;-<span class="st"> </span>data_A_scores_internal_consistency_permutations <span class="op">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7"></a><span class="st">  </span><span class="kw">group_by</span>(domain) <span class="op">%&gt;%</span></span>
+<span id="cb20-8"><a href="#cb20-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">alpha =</span> <span class="kw">mean</span>(r_sb, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb20-9"><a href="#cb20-9"></a>                   <span class="dt">alpha_ci_lower =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.025</span>),</span>
+<span id="cb20-10"><a href="#cb20-10"></a>                   <span class="dt">alpha_ci_upper =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.975</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11"></a><span class="st">  </span><span class="kw">left_join</span>(data_n_per_domain, <span class="dt">by =</span> <span class="st">&quot;domain&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb20-12"><a href="#cb20-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parts =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb20-13"><a href="#cb20-13"></a><span class="st">  </span><span class="kw">escalc</span>(<span class="dt">measure =</span> <span class="st">&quot;ABT&quot;</span>, </span>
+<span id="cb20-14"><a href="#cb20-14"></a>         <span class="dt">ai =</span> alpha, </span>
+<span id="cb20-15"><a href="#cb20-15"></a>         <span class="dt">mi =</span> parts, </span>
+<span id="cb20-16"><a href="#cb20-16"></a>         <span class="dt">ni =</span> n,</span>
+<span id="cb20-17"><a href="#cb20-17"></a>         <span class="dt">data =</span> .)</span>
+<span id="cb20-18"><a href="#cb20-18"></a></span>
+<span id="cb20-19"><a href="#cb20-19"></a><span class="kw">write_csv</span>(data_A_scores_internal_consistency_permuted_estimates,</span>
+<span id="cb20-20"><a href="#cb20-20"></a>          <span class="st">&quot;data_A_scores_internal_consistency_permuted_estimates.csv&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="difrerences-in-block-order" class="section level2">
 <h2>Difrerences in block order</h2>
 <div id="score-5" class="section level3">
 <h3>Score</h3>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># slow runtime - circa 10 minutes, so check if there&#39;s saved results already first</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a><span class="cf">if</span> (<span class="kw">file.exists</span>(<span class="st">&quot;permutations/data_D_scores_internal_consistency_permutations_by_block_order.RData&quot;</span>)) {</span>
-<span id="cb22-3"><a href="#cb22-3"></a>  </span>
-<span id="cb22-4"><a href="#cb22-4"></a>  <span class="kw">load</span>(<span class="st">&quot;permutations/data_D_scores_internal_consistency_permutations_by_block_order.RData&quot;</span>)</span>
-<span id="cb22-5"><a href="#cb22-5"></a>  </span>
-<span id="cb22-6"><a href="#cb22-6"></a>} <span class="cf">else</span> {</span>
-<span id="cb22-7"><a href="#cb22-7"></a>  </span>
-<span id="cb22-8"><a href="#cb22-8"></a>  <span class="co"># filter domains that have both block_types</span></span>
-<span id="cb22-9"><a href="#cb22-9"></a>  data_ic_subset &lt;-<span class="st"> </span>data_ic <span class="op">%&gt;%</span></span>
-<span id="cb22-10"><a href="#cb22-10"></a><span class="st">    </span><span class="kw">filter</span>(domain <span class="op">%in%</span><span class="st"> </span>(data_ic <span class="op">%&gt;%</span></span>
-<span id="cb22-11"><a href="#cb22-11"></a><span class="st">                          </span><span class="kw">distinct</span>(domain, block_order) <span class="op">%&gt;%</span></span>
-<span id="cb22-12"><a href="#cb22-12"></a><span class="st">                          </span><span class="kw">count</span>(domain) <span class="op">%&gt;%</span></span>
-<span id="cb22-13"><a href="#cb22-13"></a><span class="st">                          </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span></span>
-<span id="cb22-14"><a href="#cb22-14"></a><span class="st">                          </span><span class="kw">pull</span>(domain)))</span>
-<span id="cb22-15"><a href="#cb22-15"></a>  </span>
-<span id="cb22-16"><a href="#cb22-16"></a>  <span class="co"># find domain for each id - to be joined into df further below</span></span>
-<span id="cb22-17"><a href="#cb22-17"></a>  data_domain_for_each_id &lt;-<span class="st"> </span>data_ic_subset <span class="op">%&gt;%</span></span>
-<span id="cb22-18"><a href="#cb22-18"></a><span class="st">    </span><span class="kw">distinct</span>(unique_id, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb22-19"><a href="#cb22-19"></a><span class="st">    </span><span class="kw">select</span>(unique_id, domain, block_order)</span>
-<span id="cb22-20"><a href="#cb22-20"></a>  </span>
-<span id="cb22-21"><a href="#cb22-21"></a>  <span class="co"># create a temp list</span></span>
-<span id="cb22-22"><a href="#cb22-22"></a>  data_internal_consistency_list =<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb22-23"><a href="#cb22-23"></a>  </span>
-<span id="cb22-24"><a href="#cb22-24"></a>  <span class="co"># define progress bar</span></span>
-<span id="cb22-25"><a href="#cb22-25"></a>  step_i &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb22-26"><a href="#cb22-26"></a>  pb =<span class="st"> </span><span class="kw">txtProgressBar</span>(<span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> n_iterations, <span class="dt">initial =</span> <span class="dv">0</span>)</span>
-<span id="cb22-27"><a href="#cb22-27"></a>  </span>
-<span id="cb22-28"><a href="#cb22-28"></a>  <span class="co"># assign row ids</span></span>
-<span id="cb22-29"><a href="#cb22-29"></a>  data_ic_rownumbers &lt;-<span class="st"> </span>data_ic_subset <span class="op">%&gt;%</span></span>
-<span id="cb22-30"><a href="#cb22-30"></a><span class="st">    </span><span class="kw">arrange</span>(unique_id, block_type) <span class="op">%&gt;%</span></span>
-<span id="cb22-31"><a href="#cb22-31"></a><span class="st">    </span><span class="kw">rownames_to_column</span>(<span class="dt">var =</span> <span class="st">&quot;row_id&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb22-32"><a href="#cb22-32"></a><span class="st">    </span><span class="kw">group_by</span>(unique_id, block_type) <span class="op">%&gt;%</span></span>
-<span id="cb22-33"><a href="#cb22-33"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">trial_number =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb22-34"><a href="#cb22-34"></a><span class="st">    </span><span class="kw">ungroup</span>()</span>
-<span id="cb22-35"><a href="#cb22-35"></a>  </span>
-<span id="cb22-36"><a href="#cb22-36"></a>  <span class="co"># apply workflow and append results to list</span></span>
-<span id="cb22-37"><a href="#cb22-37"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n_iterations){</span>
-<span id="cb22-38"><a href="#cb22-38"></a>    </span>
-<span id="cb22-39"><a href="#cb22-39"></a>    <span class="co"># sample exactly half of the data and label as subset &#39;a&#39; vs &#39;b&#39;</span></span>
-<span id="cb22-40"><a href="#cb22-40"></a>    max_trials_per_block &lt;-<span class="st"> </span>data_ic_rownumbers <span class="op">%&gt;%</span></span>
-<span id="cb22-41"><a href="#cb22-41"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">max_trials_per_block =</span> <span class="kw">max</span>(trial_number)) <span class="op">%&gt;%</span></span>
-<span id="cb22-42"><a href="#cb22-42"></a><span class="st">      </span><span class="kw">pull</span>(max_trials_per_block)</span>
-<span id="cb22-43"><a href="#cb22-43"></a>    </span>
-<span id="cb22-44"><a href="#cb22-44"></a>    trial_subset_a &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">trial_number =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> max_trials_per_block, <span class="dt">by =</span> <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-45"><a href="#cb22-45"></a><span class="st">      </span><span class="kw">sample_frac</span>(<span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span></span>
-<span id="cb22-46"><a href="#cb22-46"></a><span class="st">      </span><span class="kw">arrange</span>(trial_number) <span class="op">%&gt;%</span></span>
-<span id="cb22-47"><a href="#cb22-47"></a><span class="st">      </span><span class="kw">pull</span>(trial_number)</span>
-<span id="cb22-48"><a href="#cb22-48"></a>    </span>
-<span id="cb22-49"><a href="#cb22-49"></a>    data_ic_rownumbers_with_subsets &lt;-<span class="st"> </span>data_ic_rownumbers <span class="op">%&gt;%</span></span>
-<span id="cb22-50"><a href="#cb22-50"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">subset =</span> <span class="kw">ifelse</span>(trial_number <span class="op">%in%</span><span class="st"> </span>trial_subset_a, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb22-51"><a href="#cb22-51"></a><span class="st">      </span><span class="kw">arrange</span>(unique_id, block_type, trial_number)</span>
-<span id="cb22-52"><a href="#cb22-52"></a>    </span>
-<span id="cb22-53"><a href="#cb22-53"></a>    data_temp_<span class="dv">1</span> &lt;-<span class="st"> </span>data_ic_rownumbers_with_subsets <span class="op">%&gt;%</span></span>
-<span id="cb22-54"><a href="#cb22-54"></a><span class="st">      </span><span class="kw">filter</span>(rt <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10000</span>)</span>
-<span id="cb22-55"><a href="#cb22-55"></a>    </span>
-<span id="cb22-56"><a href="#cb22-56"></a>    data_temp_<span class="dv">2</span> &lt;-<span class="st"> </span>data_temp_<span class="dv">1</span> <span class="op">%&gt;%</span></span>
-<span id="cb22-57"><a href="#cb22-57"></a><span class="st">      </span><span class="kw">group_by</span>(unique_id, subset, block_type) <span class="op">%&gt;%</span></span>
-<span id="cb22-58"><a href="#cb22-58"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb22-59"><a href="#cb22-59"></a><span class="st">      </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb22-60"><a href="#cb22-60"></a><span class="st">      </span><span class="kw">spread</span>(block_type, mean) <span class="op">%&gt;%</span></span>
-<span id="cb22-61"><a href="#cb22-61"></a><span class="st">      </span><span class="kw">rename</span>(<span class="dt">mean_con =</span> con,</span>
-<span id="cb22-62"><a href="#cb22-62"></a>             <span class="dt">mean_incon =</span> incon)</span>
-<span id="cb22-63"><a href="#cb22-63"></a>    </span>
-<span id="cb22-64"><a href="#cb22-64"></a>    data_temp_<span class="dv">3</span> &lt;-<span class="st"> </span>data_temp_<span class="dv">1</span> <span class="op">%&gt;%</span></span>
-<span id="cb22-65"><a href="#cb22-65"></a><span class="st">      </span><span class="kw">group_by</span>(unique_id, subset) <span class="op">%&gt;%</span></span>
-<span id="cb22-66"><a href="#cb22-66"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">sd =</span> <span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb22-67"><a href="#cb22-67"></a><span class="st">      </span><span class="kw">ungroup</span>()</span>
-<span id="cb22-68"><a href="#cb22-68"></a>    </span>
-<span id="cb22-69"><a href="#cb22-69"></a>    data_internal_consistency &lt;-<span class="st"> </span></span>
-<span id="cb22-70"><a href="#cb22-70"></a><span class="st">      </span><span class="kw">left_join</span>(data_temp_<span class="dv">2</span>, data_temp_<span class="dv">3</span>, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;subset&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb22-71"><a href="#cb22-71"></a><span class="st">      </span><span class="co"># finish calculating D scores for each participant and subset</span></span>
-<span id="cb22-72"><a href="#cb22-72"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">D =</span> (mean_incon <span class="op">-</span><span class="st"> </span>mean_con)<span class="op">/</span>sd) <span class="op">%&gt;%</span></span>
-<span id="cb22-73"><a href="#cb22-73"></a><span class="st">      </span><span class="kw">select</span>(unique_id, D, subset) <span class="op">%&gt;%</span></span>
-<span id="cb22-74"><a href="#cb22-74"></a><span class="st">      </span><span class="kw">spread</span>(subset, D) <span class="op">%&gt;%</span></span>
-<span id="cb22-75"><a href="#cb22-75"></a><span class="st">      </span><span class="kw">rename</span>(<span class="dt">D_a =</span> a,</span>
-<span id="cb22-76"><a href="#cb22-76"></a>             <span class="dt">D_b =</span> b) <span class="op">%&gt;%</span></span>
-<span id="cb22-77"><a href="#cb22-77"></a><span class="st">      </span><span class="co"># re add the study domain</span></span>
-<span id="cb22-78"><a href="#cb22-78"></a><span class="st">      </span><span class="kw">left_join</span>(data_domain_for_each_id, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb22-79"><a href="#cb22-79"></a><span class="st">      </span><span class="co"># calculate correlations between subsets</span></span>
-<span id="cb22-80"><a href="#cb22-80"></a><span class="st">      </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span></span>
-<span id="cb22-81"><a href="#cb22-81"></a><span class="st">      </span><span class="kw">group_by</span>(domain, block_order) <span class="op">%&gt;%</span></span>
-<span id="cb22-82"><a href="#cb22-82"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">r_pearson =</span> <span class="kw">cor</span>(D_a, D_b)) <span class="op">%&gt;%</span></span>
-<span id="cb22-83"><a href="#cb22-83"></a><span class="st">      </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb22-84"><a href="#cb22-84"></a><span class="st">      </span><span class="co"># apply spearman brown correction</span></span>
-<span id="cb22-85"><a href="#cb22-85"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">r_sb =</span> <span class="kw">spearman_brown_correction</span>(r_pearson)) <span class="op">%&gt;%</span></span>
-<span id="cb22-86"><a href="#cb22-86"></a><span class="st">      </span><span class="co"># add iteration</span></span>
-<span id="cb22-87"><a href="#cb22-87"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">iteration =</span> i)</span>
-<span id="cb22-88"><a href="#cb22-88"></a>    <span class="co">#orderedness = subset_orderedness)</span></span>
-<span id="cb22-89"><a href="#cb22-89"></a>    </span>
-<span id="cb22-90"><a href="#cb22-90"></a>    data_internal_consistency_list[[i]] &lt;-<span class="st"> </span>data_internal_consistency</span>
-<span id="cb22-91"><a href="#cb22-91"></a>    </span>
-<span id="cb22-92"><a href="#cb22-92"></a>    <span class="co"># update progress bar</span></span>
-<span id="cb22-93"><a href="#cb22-93"></a>    step_i =<span class="st"> </span>step_i <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb22-94"><a href="#cb22-94"></a>    <span class="kw">setTxtProgressBar</span>(pb, step_i)</span>
-<span id="cb22-95"><a href="#cb22-95"></a>    </span>
-<span id="cb22-96"><a href="#cb22-96"></a>  }</span>
-<span id="cb22-97"><a href="#cb22-97"></a>  </span>
-<span id="cb22-98"><a href="#cb22-98"></a>  <span class="co"># flatten list and parse results</span></span>
-<span id="cb22-99"><a href="#cb22-99"></a>  data_D_scores_internal_consistency_permutations_by_block_order &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_rows</span>(data_internal_consistency_list)</span>
-<span id="cb22-100"><a href="#cb22-100"></a>  </span>
-<span id="cb22-101"><a href="#cb22-101"></a>  <span class="co"># save</span></span>
-<span id="cb22-102"><a href="#cb22-102"></a>  <span class="kw">save</span>(data_D_scores_internal_consistency_permutations_by_block_order, </span>
-<span id="cb22-103"><a href="#cb22-103"></a>       <span class="dt">file =</span> <span class="st">&quot;permutations/data_D_scores_internal_consistency_permutations_by_block_order.RData&quot;</span>)</span>
-<span id="cb22-104"><a href="#cb22-104"></a>  </span>
-<span id="cb22-105"><a href="#cb22-105"></a>}</span></code></pre></div>
-<pre><code>## ================================================================================</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># slow runtime - circa 10 minutes, so check if there&#39;s saved results already first</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="cf">if</span> (<span class="kw">file.exists</span>(<span class="st">&quot;permutations/data_D_scores_internal_consistency_permutations_by_block_order.RData&quot;</span>)) {</span>
+<span id="cb21-3"><a href="#cb21-3"></a>  </span>
+<span id="cb21-4"><a href="#cb21-4"></a>  <span class="kw">load</span>(<span class="st">&quot;permutations/data_D_scores_internal_consistency_permutations_by_block_order.RData&quot;</span>)</span>
+<span id="cb21-5"><a href="#cb21-5"></a>  </span>
+<span id="cb21-6"><a href="#cb21-6"></a>} <span class="cf">else</span> {</span>
+<span id="cb21-7"><a href="#cb21-7"></a>  </span>
+<span id="cb21-8"><a href="#cb21-8"></a>  <span class="co"># filter domains that have both block_types</span></span>
+<span id="cb21-9"><a href="#cb21-9"></a>  data_ic_subset &lt;-<span class="st"> </span>data_ic <span class="op">%&gt;%</span></span>
+<span id="cb21-10"><a href="#cb21-10"></a><span class="st">    </span><span class="kw">filter</span>(domain <span class="op">%in%</span><span class="st"> </span>(data_ic <span class="op">%&gt;%</span></span>
+<span id="cb21-11"><a href="#cb21-11"></a><span class="st">                          </span><span class="kw">distinct</span>(domain, block_order) <span class="op">%&gt;%</span></span>
+<span id="cb21-12"><a href="#cb21-12"></a><span class="st">                          </span><span class="kw">count</span>(domain) <span class="op">%&gt;%</span></span>
+<span id="cb21-13"><a href="#cb21-13"></a><span class="st">                          </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb21-14"><a href="#cb21-14"></a><span class="st">                          </span><span class="kw">pull</span>(domain)))</span>
+<span id="cb21-15"><a href="#cb21-15"></a>  </span>
+<span id="cb21-16"><a href="#cb21-16"></a>  <span class="co"># find domain for each id - to be joined into df further below</span></span>
+<span id="cb21-17"><a href="#cb21-17"></a>  data_domain_for_each_id &lt;-<span class="st"> </span>data_ic_subset <span class="op">%&gt;%</span></span>
+<span id="cb21-18"><a href="#cb21-18"></a><span class="st">    </span><span class="kw">distinct</span>(unique_id, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb21-19"><a href="#cb21-19"></a><span class="st">    </span><span class="kw">select</span>(unique_id, domain, block_order)</span>
+<span id="cb21-20"><a href="#cb21-20"></a>  </span>
+<span id="cb21-21"><a href="#cb21-21"></a>  <span class="co"># create a temp list</span></span>
+<span id="cb21-22"><a href="#cb21-22"></a>  data_internal_consistency_list =<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb21-23"><a href="#cb21-23"></a>  </span>
+<span id="cb21-24"><a href="#cb21-24"></a>  <span class="co"># define progress bar</span></span>
+<span id="cb21-25"><a href="#cb21-25"></a>  step_i &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb21-26"><a href="#cb21-26"></a>  pb =<span class="st"> </span><span class="kw">txtProgressBar</span>(<span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> n_iterations, <span class="dt">initial =</span> <span class="dv">0</span>)</span>
+<span id="cb21-27"><a href="#cb21-27"></a>  </span>
+<span id="cb21-28"><a href="#cb21-28"></a>  <span class="co"># assign row ids</span></span>
+<span id="cb21-29"><a href="#cb21-29"></a>  data_ic_rownumbers &lt;-<span class="st"> </span>data_ic_subset <span class="op">%&gt;%</span></span>
+<span id="cb21-30"><a href="#cb21-30"></a><span class="st">    </span><span class="kw">arrange</span>(unique_id, block_type) <span class="op">%&gt;%</span></span>
+<span id="cb21-31"><a href="#cb21-31"></a><span class="st">    </span><span class="kw">rownames_to_column</span>(<span class="dt">var =</span> <span class="st">&quot;row_id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb21-32"><a href="#cb21-32"></a><span class="st">    </span><span class="kw">group_by</span>(unique_id, block_type) <span class="op">%&gt;%</span></span>
+<span id="cb21-33"><a href="#cb21-33"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">trial_number =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb21-34"><a href="#cb21-34"></a><span class="st">    </span><span class="kw">ungroup</span>()</span>
+<span id="cb21-35"><a href="#cb21-35"></a>  </span>
+<span id="cb21-36"><a href="#cb21-36"></a>  <span class="co"># apply workflow and append results to list</span></span>
+<span id="cb21-37"><a href="#cb21-37"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n_iterations){</span>
+<span id="cb21-38"><a href="#cb21-38"></a>    </span>
+<span id="cb21-39"><a href="#cb21-39"></a>    <span class="co"># sample exactly half of the data and label as subset &#39;a&#39; vs &#39;b&#39;</span></span>
+<span id="cb21-40"><a href="#cb21-40"></a>    max_trials_per_block &lt;-<span class="st"> </span>data_ic_rownumbers <span class="op">%&gt;%</span></span>
+<span id="cb21-41"><a href="#cb21-41"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">max_trials_per_block =</span> <span class="kw">max</span>(trial_number)) <span class="op">%&gt;%</span></span>
+<span id="cb21-42"><a href="#cb21-42"></a><span class="st">      </span><span class="kw">pull</span>(max_trials_per_block)</span>
+<span id="cb21-43"><a href="#cb21-43"></a>    </span>
+<span id="cb21-44"><a href="#cb21-44"></a>    trial_subset_a &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">trial_number =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">1</span>, <span class="dt">to =</span> max_trials_per_block, <span class="dt">by =</span> <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-45"><a href="#cb21-45"></a><span class="st">      </span><span class="kw">sample_frac</span>(<span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span></span>
+<span id="cb21-46"><a href="#cb21-46"></a><span class="st">      </span><span class="kw">arrange</span>(trial_number) <span class="op">%&gt;%</span></span>
+<span id="cb21-47"><a href="#cb21-47"></a><span class="st">      </span><span class="kw">pull</span>(trial_number)</span>
+<span id="cb21-48"><a href="#cb21-48"></a>    </span>
+<span id="cb21-49"><a href="#cb21-49"></a>    data_ic_rownumbers_with_subsets &lt;-<span class="st"> </span>data_ic_rownumbers <span class="op">%&gt;%</span></span>
+<span id="cb21-50"><a href="#cb21-50"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">subset =</span> <span class="kw">ifelse</span>(trial_number <span class="op">%in%</span><span class="st"> </span>trial_subset_a, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb21-51"><a href="#cb21-51"></a><span class="st">      </span><span class="kw">arrange</span>(unique_id, block_type, trial_number)</span>
+<span id="cb21-52"><a href="#cb21-52"></a>    </span>
+<span id="cb21-53"><a href="#cb21-53"></a>    data_temp_<span class="dv">1</span> &lt;-<span class="st"> </span>data_ic_rownumbers_with_subsets <span class="op">%&gt;%</span></span>
+<span id="cb21-54"><a href="#cb21-54"></a><span class="st">      </span><span class="kw">filter</span>(rt <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10000</span>)</span>
+<span id="cb21-55"><a href="#cb21-55"></a>    </span>
+<span id="cb21-56"><a href="#cb21-56"></a>    data_temp_<span class="dv">2</span> &lt;-<span class="st"> </span>data_temp_<span class="dv">1</span> <span class="op">%&gt;%</span></span>
+<span id="cb21-57"><a href="#cb21-57"></a><span class="st">      </span><span class="kw">group_by</span>(unique_id, subset, block_type) <span class="op">%&gt;%</span></span>
+<span id="cb21-58"><a href="#cb21-58"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb21-59"><a href="#cb21-59"></a><span class="st">      </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb21-60"><a href="#cb21-60"></a><span class="st">      </span><span class="kw">spread</span>(block_type, mean) <span class="op">%&gt;%</span></span>
+<span id="cb21-61"><a href="#cb21-61"></a><span class="st">      </span><span class="kw">rename</span>(<span class="dt">mean_con =</span> con,</span>
+<span id="cb21-62"><a href="#cb21-62"></a>             <span class="dt">mean_incon =</span> incon)</span>
+<span id="cb21-63"><a href="#cb21-63"></a>    </span>
+<span id="cb21-64"><a href="#cb21-64"></a>    data_temp_<span class="dv">3</span> &lt;-<span class="st"> </span>data_temp_<span class="dv">1</span> <span class="op">%&gt;%</span></span>
+<span id="cb21-65"><a href="#cb21-65"></a><span class="st">      </span><span class="kw">group_by</span>(unique_id, subset) <span class="op">%&gt;%</span></span>
+<span id="cb21-66"><a href="#cb21-66"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">sd =</span> <span class="kw">mean</span>(rt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb21-67"><a href="#cb21-67"></a><span class="st">      </span><span class="kw">ungroup</span>()</span>
+<span id="cb21-68"><a href="#cb21-68"></a>    </span>
+<span id="cb21-69"><a href="#cb21-69"></a>    data_internal_consistency &lt;-<span class="st"> </span></span>
+<span id="cb21-70"><a href="#cb21-70"></a><span class="st">      </span><span class="kw">left_join</span>(data_temp_<span class="dv">2</span>, data_temp_<span class="dv">3</span>, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;subset&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb21-71"><a href="#cb21-71"></a><span class="st">      </span><span class="co"># finish calculating D scores for each participant and subset</span></span>
+<span id="cb21-72"><a href="#cb21-72"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">D =</span> (mean_incon <span class="op">-</span><span class="st"> </span>mean_con)<span class="op">/</span>sd) <span class="op">%&gt;%</span></span>
+<span id="cb21-73"><a href="#cb21-73"></a><span class="st">      </span><span class="kw">select</span>(unique_id, D, subset) <span class="op">%&gt;%</span></span>
+<span id="cb21-74"><a href="#cb21-74"></a><span class="st">      </span><span class="kw">spread</span>(subset, D) <span class="op">%&gt;%</span></span>
+<span id="cb21-75"><a href="#cb21-75"></a><span class="st">      </span><span class="kw">rename</span>(<span class="dt">D_a =</span> a,</span>
+<span id="cb21-76"><a href="#cb21-76"></a>             <span class="dt">D_b =</span> b) <span class="op">%&gt;%</span></span>
+<span id="cb21-77"><a href="#cb21-77"></a><span class="st">      </span><span class="co"># re add the study domain</span></span>
+<span id="cb21-78"><a href="#cb21-78"></a><span class="st">      </span><span class="kw">left_join</span>(data_domain_for_each_id, <span class="dt">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb21-79"><a href="#cb21-79"></a><span class="st">      </span><span class="co"># calculate correlations between subsets</span></span>
+<span id="cb21-80"><a href="#cb21-80"></a><span class="st">      </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span></span>
+<span id="cb21-81"><a href="#cb21-81"></a><span class="st">      </span><span class="kw">group_by</span>(domain, block_order) <span class="op">%&gt;%</span></span>
+<span id="cb21-82"><a href="#cb21-82"></a><span class="st">      </span><span class="kw">summarize</span>(<span class="dt">r_pearson =</span> <span class="kw">cor</span>(D_a, D_b)) <span class="op">%&gt;%</span></span>
+<span id="cb21-83"><a href="#cb21-83"></a><span class="st">      </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb21-84"><a href="#cb21-84"></a><span class="st">      </span><span class="co"># apply spearman brown correction</span></span>
+<span id="cb21-85"><a href="#cb21-85"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">r_sb =</span> <span class="kw">spearman_brown_correction</span>(r_pearson)) <span class="op">%&gt;%</span></span>
+<span id="cb21-86"><a href="#cb21-86"></a><span class="st">      </span><span class="co"># add iteration</span></span>
+<span id="cb21-87"><a href="#cb21-87"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">iteration =</span> i)</span>
+<span id="cb21-88"><a href="#cb21-88"></a>    <span class="co">#orderedness = subset_orderedness)</span></span>
+<span id="cb21-89"><a href="#cb21-89"></a>    </span>
+<span id="cb21-90"><a href="#cb21-90"></a>    data_internal_consistency_list[[i]] &lt;-<span class="st"> </span>data_internal_consistency</span>
+<span id="cb21-91"><a href="#cb21-91"></a>    </span>
+<span id="cb21-92"><a href="#cb21-92"></a>    <span class="co"># update progress bar</span></span>
+<span id="cb21-93"><a href="#cb21-93"></a>    step_i =<span class="st"> </span>step_i <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb21-94"><a href="#cb21-94"></a>    <span class="kw">setTxtProgressBar</span>(pb, step_i)</span>
+<span id="cb21-95"><a href="#cb21-95"></a>    </span>
+<span id="cb21-96"><a href="#cb21-96"></a>  }</span>
+<span id="cb21-97"><a href="#cb21-97"></a>  </span>
+<span id="cb21-98"><a href="#cb21-98"></a>  <span class="co"># flatten list and parse results</span></span>
+<span id="cb21-99"><a href="#cb21-99"></a>  data_D_scores_internal_consistency_permutations_by_block_order &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_rows</span>(data_internal_consistency_list)</span>
+<span id="cb21-100"><a href="#cb21-100"></a>  </span>
+<span id="cb21-101"><a href="#cb21-101"></a>  <span class="co"># save</span></span>
+<span id="cb21-102"><a href="#cb21-102"></a>  <span class="kw">save</span>(data_D_scores_internal_consistency_permutations_by_block_order, </span>
+<span id="cb21-103"><a href="#cb21-103"></a>       <span class="dt">file =</span> <span class="st">&quot;permutations/data_D_scores_internal_consistency_permutations_by_block_order.RData&quot;</span>)</span>
+<span id="cb21-104"><a href="#cb21-104"></a>  </span>
+<span id="cb21-105"><a href="#cb21-105"></a>}</span></code></pre></div>
 </div>
 <div id="calculate-effect-sizes-5" class="section level3">
 <h3>Calculate effect sizes</h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>data_n_per_domain_subset &lt;-<span class="st"> </span>data_ic <span class="op">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="kw">count</span>(domain, block_order) <span class="op">%&gt;%</span></span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="st">  </span><span class="kw">select</span>(domain, block_order, n)</span>
-<span id="cb24-5"><a href="#cb24-5"></a></span>
-<span id="cb24-6"><a href="#cb24-6"></a>data_D_scores_internal_consistency_permuted_estimates_by_block_order &lt;-<span class="st"> </span></span>
-<span id="cb24-7"><a href="#cb24-7"></a><span class="st">  </span>data_D_scores_internal_consistency_permutations_by_block_order <span class="op">%&gt;%</span></span>
-<span id="cb24-8"><a href="#cb24-8"></a><span class="st">  </span><span class="kw">group_by</span>(domain, block_order) <span class="op">%&gt;%</span></span>
-<span id="cb24-9"><a href="#cb24-9"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">alpha =</span> <span class="kw">mean</span>(r_sb, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb24-10"><a href="#cb24-10"></a>                   <span class="dt">alpha_ci_lower =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.025</span>),</span>
-<span id="cb24-11"><a href="#cb24-11"></a>                   <span class="dt">alpha_ci_upper =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.975</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb24-12"><a href="#cb24-12"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb24-13"><a href="#cb24-13"></a><span class="st">  </span><span class="kw">left_join</span>(data_n_per_domain_subset, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;domain&quot;</span>, <span class="st">&quot;block_order&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb24-14"><a href="#cb24-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parts =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span></span>
-<span id="cb24-15"><a href="#cb24-15"></a><span class="st">  </span><span class="kw">escalc</span>(<span class="dt">measure =</span> <span class="st">&quot;ABT&quot;</span>, </span>
-<span id="cb24-16"><a href="#cb24-16"></a>         <span class="dt">ai =</span> alpha, </span>
-<span id="cb24-17"><a href="#cb24-17"></a>         <span class="dt">mi =</span> parts, </span>
-<span id="cb24-18"><a href="#cb24-18"></a>         <span class="dt">ni =</span> n,</span>
-<span id="cb24-19"><a href="#cb24-19"></a>         <span class="dt">data =</span> .)</span>
-<span id="cb24-20"><a href="#cb24-20"></a></span>
-<span id="cb24-21"><a href="#cb24-21"></a><span class="kw">write_csv</span>(data_D_scores_internal_consistency_permuted_estimates_by_block_order,</span>
-<span id="cb24-22"><a href="#cb24-22"></a>          <span class="st">&quot;data_D_scores_internal_consistency_permuted_estimates_by_block_order.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>data_n_per_domain_subset &lt;-<span class="st"> </span>data_ic <span class="op">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="st">  </span><span class="kw">distinct</span>(unique_id, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">count</span>(domain, block_order) <span class="op">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="st">  </span><span class="kw">select</span>(domain, block_order, n)</span>
+<span id="cb22-5"><a href="#cb22-5"></a></span>
+<span id="cb22-6"><a href="#cb22-6"></a>data_D_scores_internal_consistency_permuted_estimates_by_block_order &lt;-<span class="st"> </span></span>
+<span id="cb22-7"><a href="#cb22-7"></a><span class="st">  </span>data_D_scores_internal_consistency_permutations_by_block_order <span class="op">%&gt;%</span></span>
+<span id="cb22-8"><a href="#cb22-8"></a><span class="st">  </span><span class="kw">group_by</span>(domain, block_order) <span class="op">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">alpha =</span> <span class="kw">mean</span>(r_sb, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb22-10"><a href="#cb22-10"></a>                   <span class="dt">alpha_ci_lower =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.025</span>),</span>
+<span id="cb22-11"><a href="#cb22-11"></a>                   <span class="dt">alpha_ci_upper =</span> <span class="kw">quantile</span>(r_sb, <span class="fl">0.975</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb22-12"><a href="#cb22-12"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb22-13"><a href="#cb22-13"></a><span class="st">  </span><span class="kw">left_join</span>(data_n_per_domain_subset, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;domain&quot;</span>, <span class="st">&quot;block_order&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">parts =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb22-15"><a href="#cb22-15"></a><span class="st">  </span><span class="kw">escalc</span>(<span class="dt">measure =</span> <span class="st">&quot;ABT&quot;</span>, </span>
+<span id="cb22-16"><a href="#cb22-16"></a>         <span class="dt">ai =</span> alpha, </span>
+<span id="cb22-17"><a href="#cb22-17"></a>         <span class="dt">mi =</span> parts, </span>
+<span id="cb22-18"><a href="#cb22-18"></a>         <span class="dt">ni =</span> n,</span>
+<span id="cb22-19"><a href="#cb22-19"></a>         <span class="dt">data =</span> .)</span>
+<span id="cb22-20"><a href="#cb22-20"></a></span>
+<span id="cb22-21"><a href="#cb22-21"></a><span class="kw">write_csv</span>(data_D_scores_internal_consistency_permuted_estimates_by_block_order,</span>
+<span id="cb22-22"><a href="#cb22-22"></a>          <span class="st">&quot;data_D_scores_internal_consistency_permuted_estimates_by_block_order.csv&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="differences-in-response-option-positions" class="section level2">
@@ -2817,7 +2815,7 @@ n_trt_after_exlucions
 </div>
 <div id="session-info" class="section level1">
 <h1>Session info</h1>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.0.0 (2020-04-24)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS Catalina 10.15.4

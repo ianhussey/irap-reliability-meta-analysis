@@ -741,7 +741,7 @@ data_correct_n_trials <- data_trial_level_temp %>%
 data_trial_level_temp2 <- semi_join(data_trial_level_temp, data_correct_n_trials, by = c("unique_id", "timepoint"))
 
 # task parameters
-data_task_parameters <- read_excel("../../../measures/word stimuli and task parameters.xlsx") %>%
+data_task_parameters <- read_excel("../../measures/word stimuli and task parameters.xlsx") %>%
   clean_names() %>%
   select(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)
 
@@ -749,7 +749,7 @@ data_trial_level <- data_trial_level_temp2 %>%
   left_join(data_task_parameters, by = "domain")
 
 # write to disk
-write_csv(data_trial_level, "../processed/data_trial_level.csv")
+write_csv(data_trial_level, "data_trial_level.csv")
 
 ```
 
