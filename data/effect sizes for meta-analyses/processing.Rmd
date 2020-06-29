@@ -510,6 +510,27 @@ ggplot(data_D_scores_trt, aes(baseline, followup)) +
 
 ## Calculate effect sizes
 
+### Pearson's r
+
+```{r}
+
+data_D_scores_test_retest_r <- data_D_scores_trt %>%
+  group_by(domain) %>%
+  summarize(r = cor(baseline, followup, method = "pearson", use = "pairwise.complete.obs")) %>%
+  ungroup() %>%
+  left_join(data_D_scores_trt %>%
+              count(domain), by = "domain") %>%
+  escalc(measure = "ZCOR", 
+         ri = r, 
+         ni = n,
+         data = .)
+
+write_csv(data_D_scores_test_retest_r, "data_D_scores_test_retest_r.csv")
+
+```
+
+### ICC
+
 ```{r}
 
 data_D_scores_test_retest_icc <- data_D_scores_trt %>%

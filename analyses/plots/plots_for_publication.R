@@ -35,7 +35,7 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 transf = transf.iabt,
                 xlab = bquote(paste("Cronbach's ", alpha)),
                 addcred = TRUE,
-                refline = FALSE,
+                refline = NULL,
                 xlim = c(-1, 1.6),
                 at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates))
@@ -65,7 +65,7 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 transf = transf.iabt,
                 xlab = bquote(paste("Cronbach's ", alpha)),
                 addcred = TRUE,
-                refline = FALSE,
+                refline = NULL,
                 xlim = c(-1, 1.6),
                 at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
@@ -88,15 +88,14 @@ pdf(NULL)
 dev.control(displaylist = "enable")
 
 metafor::forest(fit_test_retest_icc,
-                transf = transf.ztor,
                 xlab = "Absolute Agreement Interclass Correlation",
                 addcred = TRUE,
-                refline = FALSE,
-                xlim = c(-1.78, 1.82),
-                at = c(-0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+                refline = NULL,
+                xlim = c(-2, 1.91),
+                at = c(-0.5, 0.0, 0.5, 1.0),
                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
-text(-1.78, 10, "Test-retest reliability", pos = 4)
-text(1.82, 10, "ICC [95% CI]", pos = 2)
+text(-2, 10, "Test-retest reliability", pos = 4)
+text(1.91, 10, "ICC [95% CI]", pos = 2)
 
 p1 <- recordPlot()
 invisible(dev.off())

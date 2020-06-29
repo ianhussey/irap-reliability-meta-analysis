@@ -94,6 +94,9 @@ data_A_scores_internal_consistency_permuted_estimates <-
 data_D_scores_internal_consistency_permuted_estimates_by_block_order <- 
   read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates_by_block_order.csv") 
 
+data_D_scores_test_retest_r <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_r.csv") 
+
 data_D_scores_test_retest_icc <- 
   read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc.csv") 
 
@@ -248,7 +251,21 @@ Heterogeneity: `r meta_heterogeneity`.
 
 ## Permutation-based split half correlations 
 
-ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019). Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 5000 permutations.   
+ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019). Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 10000 permutations.  
+
+Plot native untransformed data.
+
+```{r}
+
+ggplot(data_D_scores_internal_consistency_permuted_estimates, 
+       aes(y = alpha, x = domain)) +
+  geom_linerange(aes(ymin = alpha_ci_lower, ymax = alpha_ci_upper)) +
+  geom_point() +
+  coord_flip() +
+  xlab("Domain") +
+  ylab("Alpha") 
+
+```
 
 Bonett transformations 
 
@@ -498,7 +515,63 @@ data_for_plotting_ic_sensitivity %>%
 
 # Test-retest reliability
 
-I.e., Intraclass Correlation Coefficients.
+## Pearson's r correlations
+
+with r-to-z transformations.
+
+```{r}
+
+fit_test_retest_r <- data_D_scores_test_retest_r %>%
+  mutate(domain = ifelse(domain == "Sexuality (1)", "Sexuality (1) 7-day followup", domain)) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain) 
+
+# make predictions 
+predictions_test_retest_r <-
+  predict(fit_test_retest_r, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2) 
+
+# plot
+metafor::forest(fit_test_retest_r,
+                xlab = "Pearson's r correlations",
+                transf = transf.ztor,
+                addcred = TRUE,
+                refline = FALSE,
+                xlim = c(-2.5, 2),
+                at = c(-1, -0.5, 0, 0.5, 1),
+                mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_r))
+text(-2.5, 10, "Study", pos = 4)
+text(2, 10, "r [95% CI]", pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_test_retest_r$k, 
+         ", r = ",  round(transf.ztor(predictions_test_retest_r$pred), 2), 
+         ", 95% CI [", round(transf.ztor(predictions_test_retest_r$ci.lb), 2), ", ", 
+         round(transf.ztor(predictions_test_retest_r$ci.ub), 2), "]", 
+         ", 95% CR [", round(transf.ztor(predictions_test_retest_r$cr.lb), 2), ", ", 
+         round(transf.ztor(predictions_test_retest_r$cr.ub), 2), "]") 
+
+meta_heterogeneity <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_test_retest_r$k - 1, ") = ", round(fit_test_retest_r$QE, 2), 
+         ", p ", ifelse(fit_test_retest_r$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_test_retest_r$QEp, 4)))),
+         ", tau^2 = ", round(fit_test_retest_r$tau2, 2), 
+         ", I^2 = ",   round(fit_test_retest_r$I2, 2),
+         "%, H^2 = ",   round(fit_test_retest_r$H2, 2))
+
+# write to disk for pdf plots
+write_rds(fit_test_retest_r, "models/fit_test_retest_r.rds")
+
+```
+
+Meta effect: `r meta_effect`.
+
+Heterogeneity: `r meta_heterogeneity`.
+
+## Intraclass Correlations
 
 "It has been argued that test-retest reliability should reflect absolute agreement, rather than consistency, between measurements (Koo & Li, 2016). For example, a perfect correlation between scores at two time points may occur also when there is a systematic difference between time points (i.e. a difference that is about equal for all participants)." (Parsons, Kruijt, & Fox, 2019).
 Absolute agreement therefore also takes within-participant changes into account in its denominator, where consistency does not.
@@ -507,6 +580,7 @@ Absolute agreement therefore also takes within-participant changes into account 
 
 # fit random Effects model 
 fit_test_retest_icc <- data_D_scores_test_retest_icc %>%
+  mutate(domain = ifelse(domain == "Sexuality (1)", "Sexuality (1) 7-day followup", domain)) %>%
   rma(yi   = ICC, 
       sei  = se, 
       data = .,
@@ -532,11 +606,11 @@ text(1.7, 10, "ICC [95% CI]", pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_test_retest_icc$k, 
-         ", ICC2 = ",  round(transf.ztor(predictions_test_retest_icc$pred), 2), 
-         ", 95% CI [", round(transf.ztor(predictions_test_retest_icc$ci.lb), 2), ", ", 
-         round(transf.ztor(predictions_test_retest_icc$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions_test_retest_icc$cr.lb), 2), ", ", 
-         round(transf.ztor(predictions_test_retest_icc$cr.ub), 2), "]") 
+         ", ICC2 = ",  round(predictions_test_retest_icc$pred, 2), 
+         ", 95% CI [", round(predictions_test_retest_icc$ci.lb, 2), ", ", 
+         round(predictions_test_retest_icc$ci.ub, 2), "]", 
+         ", 95% CR [", round(predictions_test_retest_icc$cr.lb, 2), ", ", 
+         round(predictions_test_retest_icc$cr.ub, 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_test_retest_icc$k - 1, ") = ", round(fit_test_retest_icc$QE, 2), 
@@ -554,7 +628,7 @@ Meta effect: `r meta_effect`.
 
 Heterogeneity: `r meta_heterogeneity`.
 
-## GOSH
+### GOSH
 
 ```{r fig.height=5, fig.width=5}
 
@@ -575,7 +649,7 @@ if(!file.exists("models/fit_gosh_trt.rds")){
 data_for_plotting_trt <- 
   as.tibble(fit_gosh_trt$res) %>%
   mutate(Type = "Other IRAPs",
-         ICC = transf.ztor(estimate)) %>%
+         ICC = estimate) %>%
   # randomize rows to improve plotting
   sample_frac(size = 1)
 
@@ -629,9 +703,13 @@ observed_r <- function(true_r, reliability_a, reliability_b) {
   round(true_r * sqrt(reliability_a*reliability_b), 2)
 }
 
-max_cor <- observed_r(true_r = 1.0, reliability_a = transf.iabt(predictions_permutations_sensitivity$pred), reliability_b = 1.0)
+max_cor <- observed_r(true_r = 1.0, 
+                      reliability_a = transf.iabt(predictions_permutations_sensitivity$pred), 
+                      reliability_b = 1.0)
 
-medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_permutations_sensitivity$pred), reliability_b = 1.0)
+medium_cor <- observed_r(true_r = 0.5, 
+                         reliability_a = transf.iabt(predictions_permutations_sensitivity$pred), 
+                         reliability_b = 1.0)
 
 ```
 
@@ -641,9 +719,13 @@ Given this meta estimate of reliability, assuming that the internal consistency 
 
 ```{r}
 
-max_cor <- observed_r(true_r = 1.0, reliability_a = transf.ztor(predictions_test_retest_icc$pred), reliability_b = 1.0)
+max_cor <- observed_r(true_r = 1.0, 
+                      reliability_a = predictions_test_retest_icc$pred, 
+                      reliability_b = 1.0)
 
-medium_cor <- observed_r(true_r = 0.5, reliability_a = transf.iabt(predictions_test_retest_icc$pred), reliability_b = 1.0)
+medium_cor <- observed_r(true_r = 0.5, 
+                         reliability_a = predictions_test_retest_icc$pred, 
+                         reliability_b = 1.0)
 
 ```
 
@@ -690,7 +772,7 @@ where ${\rho }_{xx'}^{*}$ refers to the goal reliability, ${\rho }_{xx'}$ refers
 
 ```{r}
 
-current_test_retest <- transf.ztor(predictions_test_retest_icc$pred)
+current_test_retest <- predictions_test_retest_icc$pred
 
 goal_test_retest <- 0.90
 trt_length_increase_.90 <- round((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
@@ -703,7 +785,7 @@ trt_length_increase_.70 <- round((goal_test_retest*(1 - current_test_retest)) / 
 
 ```
 
-Using the absolute agreement estimate of `r round(transf.ztor(predictions_test_retest_icc$pred), 2)`, the IRAP would have to be `r trt_length_increase_.70` times longer for it to have a test-retest of >=.70, `r trt_length_increase_.80` times longer for it to have a test-retest of >=.80, or `r trt_length_increase_.90` times longer for it to have a test-retest of >=.90.
+Using the absolute agreement estimate of `r round(predictions_test_retest_icc$pred, 2)`, the IRAP would have to be `r trt_length_increase_.70` times longer for it to have a test-retest of >=.70, `r trt_length_increase_.80` times longer for it to have a test-retest of >=.80, or `r trt_length_increase_.90` times longer for it to have a test-retest of >=.90.
 
 ## Alternative scoring algorithm: A scores
 
@@ -728,7 +810,7 @@ fit_internal_consistency_D_vs_A_scores <-
 
 fit_internal_consistency_D_vs_A_scores
 
-tibble(response_options = c("static", "moving"),
+tibble(response_options = c("D", "A"),
        alpha = c(0.7453, 0.7453+0.0500),
        ci_lower = c(0.6201, 0.7453-0.1007),
        ci_upper = c(0.8705, 0.7453+0.2007)) %>%
