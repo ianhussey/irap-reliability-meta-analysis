@@ -102,7 +102,7 @@ data_D_scores_test_retest_icc <-
 
 ```
 
-# Demographics & sample sizes
+# Demographics 
 
 ```{r}
 
@@ -114,9 +114,30 @@ data_demographics %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 data_demographics %>%
-  count(gender) %>% 
+  count(tolower(gender)) %>% 
+  arrange(desc(n)) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_demographics %>%
+  count(race) %>% 
+  arrange(desc(n)) %>%
+  drop_na() %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_demographics %>%
+  count(sexuality) %>% 
+  drop_na() %>%
+  arrange(desc(n)) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+# Sample sizes
+
+```{r}
 
 data_D_scores_internal_consistency_permuted_estimates %>%
   summarize(total_ic_n = sum(n)) %>%

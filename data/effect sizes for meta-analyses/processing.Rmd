@@ -148,17 +148,48 @@ data_trt <- data_unique_ids_two_timepoints %>%
 
 # Demographics & sample sizes
 
-Whole sample
+Save demographics data to disk
 
 ```{r}
 
 # write demographics to disk
 data_demographics <- data_outliers %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id, age, gender, rt_outlier)
+  select(unique_id, domain, age, gender, rt_outlier) %>%
+  filter(!domain %in% c("Clinton-Trump",
+                        "Disgust (1)",
+                        "Disgust (2)",
+                        "Countries (1)",
+                        "Countries (2)",
+                        "Race (2)",
+                        "Valenced words",
+                        "Rich-Poor",
+                        "Sexuality (1)",
+                        "Sexuality (2)",
+                        "Shapes & colors (5)",
+                        "Shapes & colors (6)",
+                        "Shapes & colors (7)",
+                        "Gender (1)",
+                        "Gender (2)") & 
+           !str_detect(domain, "Personality") & 
+           !str_detect(domain, "Stigma"))
 
-write_csv(data_demographics, "data_demographics.csv")
+data_additional_demographics <- read_csv("../trial level/additional_demographics_data.csv") %>%
+  rename(gender = sex)
 
+data_demographics_combined <- 
+  bind_rows(data_demographics,
+            data_additional_demographics) %>%
+  select(-unique_id, -participant, -rt_outlier) %>%
+  filter(!is.na(age) | !is.na(gender))
+
+write_csv(data_demographics_combined, "data_demographics.csv")
+
+```
+
+Sample sizes
+
+```{r}
 
 # print sample sizes
 data_outliers %>%
