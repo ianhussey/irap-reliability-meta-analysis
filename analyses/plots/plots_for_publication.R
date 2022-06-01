@@ -88,14 +88,14 @@ pdf(NULL)
 dev.control(displaylist = "enable")
 
 metafor::forest(fit_test_retest_icc,
-                xlab = "Absolute Agreement Interclass Correlation",
+                xlab = "Interclass Correlation (2,1)",
                 addcred = TRUE,
                 refline = NULL,
                 xlim = c(-2, 1.91),
                 at = c(-0.5, 0.0, 0.5, 1.0),
                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
 text(-2, 10, "Test-retest reliability", pos = 4)
-text(1.91, 10, "ICC [95% CI]", pos = 2)
+text(1.91, 10, "ICC(2,1) [95% CI]", pos = 2)
 
 p1 <- recordPlot()
 invisible(dev.off())
