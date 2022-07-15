@@ -6,7 +6,7 @@ library(ggExtra)
 library(scales) 
 
 add_heterogeneity_metrics_to_forest <- function(fit) {
-  bquote(paste("RE Model (", tau^2, " = ", .(formatC(round(fit$tau2, 1))), 
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(round(fit$tau2, 2))), 
                ", ", I^2, " = ", .(formatC(round(fit$I2, 1))),
                "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
 }
@@ -88,7 +88,7 @@ pdf(NULL)
 dev.control(displaylist = "enable")
 
 metafor::forest(fit_test_retest_icc,
-                xlab = "Interclass Correlation (2,1)",
+                xlab = "Intraclass Correlation (2,1)",
                 addcred = TRUE,
                 refline = NULL,
                 xlim = c(-2, 1.91),
@@ -152,7 +152,7 @@ dev.control(displaylist = "enable")
 plot_gosh_ic
 p1 <- recordPlot()
 invisible(dev.off())
-pdf("gosh_plot_internalconsistency.pdf",
+pdf("gosh_plot_ic.pdf",
     width = 6, 
     height = 6)
 p1
@@ -163,7 +163,7 @@ dev.control(displaylist = "enable")
 plot_gosh_trt
 p1 <- recordPlot()
 invisible(dev.off())
-pdf("gosh_plot_testretestreliability.pdf",
+pdf("gosh_plot_trt.pdf",
     width = 6, 
     height = 6)
 p1

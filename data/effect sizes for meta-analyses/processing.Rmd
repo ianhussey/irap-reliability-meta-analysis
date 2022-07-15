@@ -514,7 +514,7 @@ write_csv(data_D_scores_internal_consistency_permuted_estimates,
 
 ## Score
 
-```{r}
+```{r fig.height=4, fig.width=4}
 
 data_D_scores_trt <- data_trt %>%
   filter(rt <= 10000) %>%
@@ -527,6 +527,13 @@ data_D_scores_trt <- data_trt %>%
   select(unique_id, D, timepoint) %>%
   spread(timepoint, D) %>%
   left_join(select(distinct(data_trt, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
+
+ggplot(data_D_scores_trt, aes(baseline, followup)) +
+  geom_point(alpha = .5) +
+  theme_classic() +
+  coord_cartesian(ylim = c(-.31, .31), xlim = c(-.31, .31)) +
+  xlab("D scores at Time 1") +
+  ylab("D scores at Time 2")
 
 ```
 

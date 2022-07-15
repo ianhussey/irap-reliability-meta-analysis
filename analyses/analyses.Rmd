@@ -201,8 +201,8 @@ meta_effect <-
          ", r_sb = ",  round(transf.iabt(predictions_oddeven$pred), 2), 
          ", 95% CI [", round(transf.iabt(predictions_oddeven$ci.lb), 2), ", ", 
          round(transf.iabt(predictions_oddeven$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_oddeven$cr.lb), 2), ", ", 
-         round(transf.iabt(predictions_oddeven$cr.ub), 2), "]") 
+         ", 95% CR [", round(transf.iabt(predictions_oddeven$pi.lb), 2), ", ", 
+         round(transf.iabt(predictions_oddeven$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_oddeven$k - 1, ") = ", round(fit_oddeven$QE, 2), 
@@ -254,8 +254,8 @@ meta_effect <-
          ", r_sb = ",  round(transf.iabt(predictions_firstsecond$pred), 2), 
          ", 95% CI [", round(transf.iabt(predictions_firstsecond$ci.lb), 2), ", ", 
          round(transf.iabt(predictions_firstsecond$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_firstsecond$cr.lb), 2), ", ", 
-         round(transf.iabt(predictions_firstsecond$cr.ub), 2), "]") 
+         ", 95% CR [", round(transf.iabt(predictions_firstsecond$pi.lb), 2), ", ", 
+         round(transf.iabt(predictions_firstsecond$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_firstsecond$k - 1, ") = ", round(fit_firstsecond$QE, 2), 
@@ -324,8 +324,8 @@ meta_effect <-
          ", alpha = ",  round(transf.iabt(predictions_permutations$pred), 2), 
          ", 95% CI [", round(transf.iabt(predictions_permutations$ci.lb), 2), ", ", 
          round(transf.iabt(predictions_permutations$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_permutations$cr.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations$cr.ub), 2), "]") 
+         ", 95% CR [", round(transf.iabt(predictions_permutations$pi.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates$QE, 2), 
@@ -452,8 +452,8 @@ meta_effect <-
          ", alpha = ",  round(transf.iabt(predictions_permutations_sensitivity$pred), 2), 
          ", 95% CI [", round(transf.iabt(predictions_permutations_sensitivity$ci.lb), 2), ", ", 
          round(transf.iabt(predictions_permutations_sensitivity$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_permutations_sensitivity$cr.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations_sensitivity$cr.ub), 2), "]") 
+         ", 95% CR [", round(transf.iabt(predictions_permutations_sensitivity$pi.lb), 2), ", ", 
+         round(transf.iabt(predictions_permutations_sensitivity$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates_sensitivity$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates_sensitivity$QE, 2), 
@@ -573,8 +573,8 @@ meta_effect <-
          ", r = ",  round(transf.ztor(predictions_test_retest_r$pred), 2), 
          ", 95% CI [", round(transf.ztor(predictions_test_retest_r$ci.lb), 2), ", ", 
          round(transf.ztor(predictions_test_retest_r$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions_test_retest_r$cr.lb), 2), ", ", 
-         round(transf.ztor(predictions_test_retest_r$cr.ub), 2), "]") 
+         ", 95% CR [", round(transf.ztor(predictions_test_retest_r$pi.lb), 2), ", ", 
+         round(transf.ztor(predictions_test_retest_r$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_test_retest_r$k - 1, ") = ", round(fit_test_retest_r$QE, 2), 
@@ -630,8 +630,8 @@ meta_effect <-
          ", ICC2 = ",  round(predictions_test_retest_icc$pred, 2), 
          ", 95% CI [", round(predictions_test_retest_icc$ci.lb, 2), ", ", 
          round(predictions_test_retest_icc$ci.ub, 2), "]", 
-         ", 95% CR [", round(predictions_test_retest_icc$cr.lb, 2), ", ", 
-         round(predictions_test_retest_icc$cr.ub, 2), "]") 
+         ", 95% CR [", round(predictions_test_retest_icc$pi.lb, 2), ", ", 
+         round(predictions_test_retest_icc$pi.ub, 2), "]") 
 
 meta_heterogeneity <- 
   paste0("Heterogeneity tests: Q(df = ", fit_test_retest_icc$k - 1, ") = ", round(fit_test_retest_icc$QE, 2), 
