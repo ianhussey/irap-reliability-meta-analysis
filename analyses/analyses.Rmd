@@ -796,14 +796,14 @@ where ${\rho }_{xx'}^{*}$ refers to the goal reliability, ${\rho }_{xx'}$ refers
 
 current_test_retest <- predictions_test_retest_icc$pred
 
-goal_test_retest <- 0.90
-trt_length_increase_.90 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
+goal_test_retest <- 0.70
+trt_length_increase_.70 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
 
 goal_test_retest <- 0.80
 trt_length_increase_.80 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
 
-goal_test_retest <- 0.70
-trt_length_increase_.70 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
+goal_test_retest <- 0.90
+trt_length_increase_.90 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
 
 ```
 
