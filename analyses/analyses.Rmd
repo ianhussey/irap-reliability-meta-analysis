@@ -28,12 +28,13 @@ library(kableExtra)
 library(psych)
 library(ggExtra)
 library(scales) 
+library(janitor)
 #library(ggtext) # devtools::install_github("clauswilke/ggtext")
 
 
 # function to round all numeric vars in a data frame
 round_df <- function(df, n_digits = 3) {
-  df %>% mutate_if(is.numeric, round, digits = n_digits)
+  df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
 }
 
 probability_of_superiority_function <- function(x, y) {
@@ -46,21 +47,21 @@ probability_of_superiority_function <- function(x, y) {
 
 spearman_brown_correction <- function(r_pearson) {
   inversion <- ifelse(r_pearson < 0, -1, 1)
-  val <- round(2*abs(r_pearson)/(1 + abs(r_pearson)), 2)
+  val <- janitor::round_half_up(2*abs(r_pearson)/(1 + abs(r_pearson)), 2)
   return(val*inversion)
 }
 
 apa_p_value <- function(p){
-  p_formatted <- ifelse(p >= 0.001, paste("=", round(p, 3)),
+  p_formatted <- ifelse(p >= 0.001, paste("=", janitor::round_half_up(p, 3)),
                         ifelse(p < 0.001, "< .001", NA))
   p_formatted <- gsub(pattern = "0.", replacement = ".", x = p_formatted, fixed = TRUE)
   p_formatted
 }
 
 add_heterogeneity_metrics_to_forest <- function(fit) {
-  bquote(paste("RE Model (", tau^2, " = ", .(formatC(round(fit$tau2, 1))), 
-               ", ", I^2, " = ", .(formatC(round(fit$I2, 1))),
-               "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 1))), 
+               ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 1))), ")"))
 }
 
 # table format in output
@@ -198,18 +199,18 @@ text(1.6, 37, "Spearman-Brown correlation [95% CI]", pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_oddeven$k, 
-         ", r_sb = ",  round(transf.iabt(predictions_oddeven$pred), 2), 
-         ", 95% CI [", round(transf.iabt(predictions_oddeven$ci.lb), 2), ", ", 
-         round(transf.iabt(predictions_oddeven$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_oddeven$pi.lb), 2), ", ", 
-         round(transf.iabt(predictions_oddeven$pi.ub), 2), "]") 
+         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_oddeven$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_oddeven$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_oddeven$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_oddeven$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_oddeven$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_oddeven$k - 1, ") = ", round(fit_oddeven$QE, 2), 
-         ", p ", ifelse(fit_oddeven$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_oddeven$QEp, 4)))),
-         ", tau^2 = ", round(fit_oddeven$tau2, 2), 
-         ", I^2 = ",   round(fit_oddeven$I2, 2),
-         "%, H^2 = ",   round(fit_oddeven$H2, 2))
+  paste0("Heterogeneity tests: Q(df = ", fit_oddeven$k - 1, ") = ", janitor::round_half_up(fit_oddeven$QE, 2), 
+         ", p ", ifelse(fit_oddeven$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_oddeven$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_oddeven$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_oddeven$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_oddeven$H2, 2))
 
 ```
 
@@ -251,18 +252,18 @@ text(1.6, 37, "Spearman-Brown correlation [95% CI]", pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_firstsecond$k, 
-         ", r_sb = ",  round(transf.iabt(predictions_firstsecond$pred), 2), 
-         ", 95% CI [", round(transf.iabt(predictions_firstsecond$ci.lb), 2), ", ", 
-         round(transf.iabt(predictions_firstsecond$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_firstsecond$pi.lb), 2), ", ", 
-         round(transf.iabt(predictions_firstsecond$pi.ub), 2), "]") 
+         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_firstsecond$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_firstsecond$k - 1, ") = ", round(fit_firstsecond$QE, 2), 
-         ", p ", ifelse(fit_firstsecond$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_firstsecond$QEp, 4)))),
-         ", tau^2 = ", round(fit_firstsecond$tau2, 2), 
-         ", I^2 = ",   round(fit_firstsecond$I2, 2),
-         "%, H^2 = ",   round(fit_firstsecond$H2, 2))
+  paste0("Heterogeneity tests: Q(df = ", fit_firstsecond$k - 1, ") = ", janitor::round_half_up(fit_firstsecond$QE, 2), 
+         ", p ", ifelse(fit_firstsecond$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_firstsecond$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_firstsecond$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_firstsecond$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_firstsecond$H2, 2))
 
 ```
 
@@ -321,18 +322,18 @@ text(1.6, 37, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates$k, 
-         ", alpha = ",  round(transf.iabt(predictions_permutations$pred), 2), 
-         ", 95% CI [", round(transf.iabt(predictions_permutations$ci.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_permutations$pi.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations$pi.ub), 2), "]") 
+         ", alpha = ",  janitor::round_half_up(transf.iabt(predictions_permutations$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_permutations$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_permutations$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates$QE, 2), 
-         ", p ", ifelse(fit_internal_consistency_permuted_estimates$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_internal_consistency_permuted_estimates$QEp, 4)))),
-         ", tau^2 = ", round(fit_internal_consistency_permuted_estimates$tau2, 2), 
-         ", I^2 = ",   round(fit_internal_consistency_permuted_estimates$I2, 2),
-         "%, H^2 = ",   round(fit_internal_consistency_permuted_estimates$H2, 2))
+  paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates$k - 1, ") = ", janitor::round_half_up(fit_internal_consistency_permuted_estimates$QE, 2), 
+         ", p ", ifelse(fit_internal_consistency_permuted_estimates$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_internal_consistency_permuted_estimates$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_internal_consistency_permuted_estimates$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_internal_consistency_permuted_estimates$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_internal_consistency_permuted_estimates$H2, 2))
 
 # save to disk for making pdf plot
 write_rds(fit_internal_consistency_permuted_estimates, "models/fit_internal_consistency_permuted_estimates.rds")
@@ -449,18 +450,18 @@ text(1.6, 35, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_sensitivity$k, 
-         ", alpha = ",  round(transf.iabt(predictions_permutations_sensitivity$pred), 2), 
-         ", 95% CI [", round(transf.iabt(predictions_permutations_sensitivity$ci.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations_sensitivity$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.iabt(predictions_permutations_sensitivity$pi.lb), 2), ", ", 
-         round(transf.iabt(predictions_permutations_sensitivity$pi.ub), 2), "]") 
+         ", alpha = ",  janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates_sensitivity$k - 1, ") = ", round(fit_internal_consistency_permuted_estimates_sensitivity$QE, 2), 
-         ", p ", ifelse(fit_internal_consistency_permuted_estimates_sensitivity$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_internal_consistency_permuted_estimates_sensitivity$QEp, 4)))),
-         ", tau^2 = ", round(fit_internal_consistency_permuted_estimates_sensitivity$tau2, 2), 
-         ", I^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity$I2, 2),
-         "%, H^2 = ",   round(fit_internal_consistency_permuted_estimates_sensitivity$H2, 2))
+  paste0("Heterogeneity tests: Q(df = ", fit_internal_consistency_permuted_estimates_sensitivity$k - 1, ") = ", janitor::round_half_up(fit_internal_consistency_permuted_estimates_sensitivity$QE, 2), 
+         ", p ", ifelse(fit_internal_consistency_permuted_estimates_sensitivity$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_internal_consistency_permuted_estimates_sensitivity$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_internal_consistency_permuted_estimates_sensitivity$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_internal_consistency_permuted_estimates_sensitivity$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_internal_consistency_permuted_estimates_sensitivity$H2, 2))
 
 # save to disk for making pdf plot
 write_rds(fit_internal_consistency_permuted_estimates_sensitivity, "models/fit_internal_consistency_permuted_estimates_sensitivity.rds")
@@ -570,18 +571,18 @@ text(2, 10, "r [95% CI]", pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_test_retest_r$k, 
-         ", r = ",  round(transf.ztor(predictions_test_retest_r$pred), 2), 
-         ", 95% CI [", round(transf.ztor(predictions_test_retest_r$ci.lb), 2), ", ", 
-         round(transf.ztor(predictions_test_retest_r$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions_test_retest_r$pi.lb), 2), ", ", 
-         round(transf.ztor(predictions_test_retest_r$pi.ub), 2), "]") 
+         ", r = ",  janitor::round_half_up(transf.ztor(predictions_test_retest_r$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.ztor(predictions_test_retest_r$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions_test_retest_r$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.ztor(predictions_test_retest_r$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions_test_retest_r$pi.ub), 2), "]") 
 
 meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_test_retest_r$k - 1, ") = ", round(fit_test_retest_r$QE, 2), 
-         ", p ", ifelse(fit_test_retest_r$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_test_retest_r$QEp, 4)))),
-         ", tau^2 = ", round(fit_test_retest_r$tau2, 2), 
-         ", I^2 = ",   round(fit_test_retest_r$I2, 2),
-         "%, H^2 = ",   round(fit_test_retest_r$H2, 2))
+  paste0("Heterogeneity tests: Q(df = ", fit_test_retest_r$k - 1, ") = ", janitor::round_half_up(fit_test_retest_r$QE, 2), 
+         ", p ", ifelse(fit_test_retest_r$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_test_retest_r$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_test_retest_r$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_test_retest_r$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_test_retest_r$H2, 2))
 
 # write to disk for pdf plots
 write_rds(fit_test_retest_r, "models/fit_test_retest_r.rds")
@@ -627,18 +628,18 @@ text(1.7, 10, "ICC(2,1) [95% CI]", pos = 2)
 # summarize results
 meta_effect <- 
   paste0("Meta analysis: k = ", fit_test_retest_icc$k, 
-         ", ICC2 = ",  round(predictions_test_retest_icc$pred, 2), 
-         ", 95% CI [", round(predictions_test_retest_icc$ci.lb, 2), ", ", 
-         round(predictions_test_retest_icc$ci.ub, 2), "]", 
-         ", 95% CR [", round(predictions_test_retest_icc$pi.lb, 2), ", ", 
-         round(predictions_test_retest_icc$pi.ub, 2), "]") 
+         ", ICC2 = ",  janitor::round_half_up(predictions_test_retest_icc$pred, 2), 
+         ", 95% CI [", janitor::round_half_up(predictions_test_retest_icc$ci.lb, 2), ", ", 
+         janitor::round_half_up(predictions_test_retest_icc$ci.ub, 2), "]", 
+         ", 95% CR [", janitor::round_half_up(predictions_test_retest_icc$pi.lb, 2), ", ", 
+         janitor::round_half_up(predictions_test_retest_icc$pi.ub, 2), "]") 
 
 meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_test_retest_icc$k - 1, ") = ", round(fit_test_retest_icc$QE, 2), 
-         ", p ", ifelse(fit_test_retest_icc$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_test_retest_icc$QEp, 4)))),
-         ", tau^2 = ", round(fit_test_retest_icc$tau2, 2), 
-         ", I^2 = ",   round(fit_test_retest_icc$I2, 2),
-         "%, H^2 = ",   round(fit_test_retest_icc$H2, 2))
+  paste0("Heterogeneity tests: Q(df = ", fit_test_retest_icc$k - 1, ") = ", janitor::round_half_up(fit_test_retest_icc$QE, 2), 
+         ", p ", ifelse(fit_test_retest_icc$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_test_retest_icc$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_test_retest_icc$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_test_retest_icc$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_test_retest_icc$H2, 2))
 
 # write to disk for pdf plots
 write_rds(fit_test_retest_icc, "models/fit_test_retest_icc.rds")
@@ -721,7 +722,7 @@ $r_{xy}=\frac{\rho_{xy}}{\sqrt{\rho_{xx}\rho_{yy}}}$
 ```{r}
 
 observed_r <- function(true_r, reliability_a, reliability_b) {
-  round(true_r * sqrt(reliability_a*reliability_b), 2)
+  janitor::round_half_up(true_r * sqrt(reliability_a*reliability_b), 2)
 }
 
 max_cor <- observed_r(true_r = 1.0, 
@@ -771,17 +772,17 @@ where $\rho_{xx'}^*$ refers to the goal reliability, $\rho_{xx'}$ refers to the 
 current_ic <- transf.iabt(predictions_permutations_sensitivity$pred)
 
 goal_ic <- 0.70
-ic_length_increase_.70 <- round((goal_ic*(1 - current_ic)) / (current_ic*(1 - goal_ic)), 1)
+ic_length_increase_.70 <- janitor::round_half_up((goal_ic*(1 - current_ic)) / (current_ic*(1 - goal_ic)), 1)
 
 goal_ic <- 0.80
-ic_length_increase_.80 <- round((goal_ic*(1 - current_ic)) / (current_ic*(1 - goal_ic)), 1)
+ic_length_increase_.80 <- janitor::round_half_up((goal_ic*(1 - current_ic)) / (current_ic*(1 - goal_ic)), 1)
 
 goal_ic <- 0.90
-ic_length_increase_.90 <- round((goal_ic*(1 - current_ic)) / (current_ic*(1 - goal_ic)), 1)
+ic_length_increase_.90 <- janitor::round_half_up((goal_ic*(1 - current_ic)) / (current_ic*(1 - goal_ic)), 1)
 
 ```
 
-Using $a$ = `r round(transf.iabt(predictions_permutations_sensitivity$pred), 2)`, the IRAP would have to be `r ic_length_increase_.70` times longer for it to have an internal consistency of >=.70, `r ic_length_increase_.80` times longer for it to have an internal consistency of >=.80, or `r ic_length_increase_.90` times longer for it to have an internal consistency of >=.90.
+Using $a$ = `r janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pred), 2)`, the IRAP would have to be `r ic_length_increase_.70` times longer for it to have an internal consistency of >=.70, `r ic_length_increase_.80` times longer for it to have an internal consistency of >=.80, or `r ic_length_increase_.90` times longer for it to have an internal consistency of >=.90.
 
 ### Test-retest
 
@@ -796,17 +797,17 @@ where ${\rho }_{xx'}^{*}$ refers to the goal reliability, ${\rho }_{xx'}$ refers
 current_test_retest <- predictions_test_retest_icc$pred
 
 goal_test_retest <- 0.90
-trt_length_increase_.90 <- round((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
+trt_length_increase_.90 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
 
 goal_test_retest <- 0.80
-trt_length_increase_.80 <- round((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
+trt_length_increase_.80 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
 
 goal_test_retest <- 0.70
-trt_length_increase_.70 <- round((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
+trt_length_increase_.70 <- janitor::round_half_up((goal_test_retest*(1 - current_test_retest)) / (current_test_retest*(1 - goal_test_retest)), 1)
 
 ```
 
-Using the absolute agreement estimate of `r round(predictions_test_retest_icc$pred, 2)`, the IRAP would have to be `r trt_length_increase_.70` times longer for it to have a test-retest of >=.70, `r trt_length_increase_.80` times longer for it to have a test-retest of >=.80, or `r trt_length_increase_.90` times longer for it to have a test-retest of >=.90.
+Using the absolute agreement estimate of `r janitor::round_half_up(predictions_test_retest_icc$pred, 2)`, the IRAP would have to be `r trt_length_increase_.70` times longer for it to have a test-retest of >=.70, `r trt_length_increase_.80` times longer for it to have a test-retest of >=.80, or `r trt_length_increase_.90` times longer for it to have a test-retest of >=.90.
 
 ## Alternative scoring algorithm: A scores
 

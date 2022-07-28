@@ -4,15 +4,16 @@ library(metafor)
 library(patchwork)
 library(ggExtra)
 library(scales) 
+library(janitor)
 
 add_heterogeneity_metrics_to_forest <- function(fit) {
-  bquote(paste("RE Model (", tau^2, " = ", .(formatC(round(fit$tau2, 2))), 
-               ", ", I^2, " = ", .(formatC(round(fit$I2, 1))),
-               "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 2))), 
+               ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 1))), ")"))
 }
 
-#setwd("~/git/irap-reliability-meta-analysis/analyses/plots")
-setwd("C:/Users/ianhu/Documents/GitHub/irap-reliability-meta-analysis/analyses/plots")
+setwd("~/git/irap-reliability-meta-analysis/analyses/plots")
+#setwd("C:/Users/ianhu/Documents/GitHub/irap-reliability-meta-analysis/analyses/plots")
 
 
 # get data
