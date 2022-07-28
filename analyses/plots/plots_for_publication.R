@@ -9,7 +9,7 @@ library(janitor)
 add_heterogeneity_metrics_to_forest <- function(fit) {
   bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 2))), 
                ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
-               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 1))), ")"))
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 2))), ")"))
 }
 
 setwd("~/git/irap-reliability-meta-analysis/analyses/plots")

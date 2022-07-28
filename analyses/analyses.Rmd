@@ -59,9 +59,9 @@ apa_p_value <- function(p){
 }
 
 add_heterogeneity_metrics_to_forest <- function(fit) {
-  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 1))), 
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 2))), 
                ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
-               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 1))), ")"))
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 2))), ")"))
 }
 
 # table format in output
@@ -833,9 +833,9 @@ fit_internal_consistency_D_vs_A_scores <-
 fit_internal_consistency_D_vs_A_scores
 
 tibble(response_options = c("D", "A"),
-       alpha = c(0.7453, 0.7453+0.0500),
-       ci_lower = c(0.6201, 0.7453-0.1007),
-       ci_upper = c(0.8705, 0.7453+0.2007)) %>%
+       alpha = c(0.7382, 0.7382+0.0460),
+       ci_lower = c(0.6139, 0.7382-0.1047),
+       ci_upper = c(0.8626, 0.7382+0.1967)) %>%
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
@@ -862,9 +862,9 @@ fit_internal_consistency_block_order <-
 fit_internal_consistency_block_order
 
 tibble(block_order = c("con first", "incon first"),
-       alpha = c(0.6101, 0.6101+0.0379),
-       ci_lower = c(0.4018, 0.6101-0.2717),
-       ci_upper = c(0.8184,  0.6101+0.3475)) %>%
+       alpha = c(0.6086, 0.6086+0.0630),
+       ci_lower = c(0.4002, 0.6086-0.2466),
+       ci_upper = c(0.8169,  0.6086+0.3726)) %>%
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
@@ -891,9 +891,9 @@ fit_internal_consistency_response_option_locations <-
 fit_internal_consistency_response_option_locations
 
 tibble(response_options = c("static", "moving"),
-       alpha = c(0.9483, 0.9483-0.2959),
-       ci_lower = c(0.7254, 0.9483-0.5500),
-       ci_upper = c(1.1713, 0.9483-0.0418)) %>%
+       alpha = c(0.8937, 0.8937-0.2246),
+       ci_lower = c(0.6707, 0.8937-0.4784),
+       ci_upper = c(1.1167, 0.8937+0.0293)) %>%
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
