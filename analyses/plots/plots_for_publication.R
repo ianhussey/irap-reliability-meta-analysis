@@ -11,17 +11,18 @@ add_heterogeneity_metrics_to_forest <- function(fit) {
                "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
 }
 
-setwd("~/git/irap-reliability-meta-analysis/analyses/plots")
+#setwd("~/git/irap-reliability-meta-analysis/analyses/plots")
+setwd("C:/Users/ianhu/Documents/GitHub/irap-reliability-meta-analysis/analyses/plots")
 
 
 # get data
-fit_internal_consistency_permuted_estimates <- read_rds("~/git/irap-reliability-meta-analysis/analyses/models/fit_internal_consistency_permuted_estimates.rds")
+fit_internal_consistency_permuted_estimates <- read_rds("../models/fit_internal_consistency_permuted_estimates.rds")
 
-fit_internal_consistency_permuted_estimates_sensitivity <- read_rds("~/git/irap-reliability-meta-analysis/analyses/models/fit_internal_consistency_permuted_estimates_sensitivity.rds")
-fit_test_retest_icc <- read_rds("~/git/irap-reliability-meta-analysis/analyses/models/fit_test_retest_icc.rds")
+fit_internal_consistency_permuted_estimates_sensitivity <- read_rds("../models/fit_internal_consistency_permuted_estimates_sensitivity.rds")
+fit_test_retest_icc <- read_rds("../models/fit_test_retest_icc.rds")
 
-plot_gosh_ic <- read_rds("~/git/irap-reliability-meta-analysis/analyses/models/plot_gosh_ic.rds")
-plot_gosh_trt <- read_rds("~/git/irap-reliability-meta-analysis/analyses/models/plot_gosh_trt.rds")
+plot_gosh_ic <- read_rds("../models/plot_gosh_ic.rds")
+plot_gosh_trt <- read_rds("../models/plot_gosh_trt.rds")
 # plot_gosh <- plot_gosh_ic + plot_gosh_trt + plot_layout(ncol = 2)  # combing them throws an error for some reason
 
 
