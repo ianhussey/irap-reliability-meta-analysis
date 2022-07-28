@@ -24,14 +24,15 @@ library(metafor)
 library(knitr)
 library(kableExtra)
 library(psych)
+library(janitor)
 
 # function to round all numeric vars in a data frame
 round_df <- function(df, n_digits = 3) {
-  df %>% mutate_if(is.numeric, round, digits = n_digits)
+  df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
 }
 
 apa_p_value <- function(p){
-  p_formatted <- ifelse(p >= 0.001, paste("=", round(p, 3)),
+  p_formatted <- ifelse(p >= 0.001, paste("=", janitor::round_half_up(p, 3)),
                         ifelse(p < 0.001, "< .001", NA))
   p_formatted <- gsub(pattern = "0.", replacement = ".", x = p_formatted, fixed = TRUE)
   p_formatted
@@ -47,109 +48,28 @@ probability_of_superiority_function <- function(x, y) {
 
 spearman_brown_correction <- function(r_pearson) {
   inversion <- ifelse(r_pearson < 0, -1, 1)
-  val <- round(2*abs(r_pearson)/(1 + abs(r_pearson)), 2)
+  val <- janitor::round_half_up(2*abs(r_pearson)/(1 + abs(r_pearson)), 2)
   return(val*inversion)
 }
 
 add_heterogeneity_metrics_to_forest <- function(fit) {
   ## more detailed
   # bquote(paste("RE Model (Q(df = ", .(formatC(fit$k - 1)), ") = ", 
-  #              .(formatC(round(fit$QE, 2))), 
+  #              .(formatC(janitor::round_half_up(fit$QE, 2))), 
   #              ", p ", .(formatC(apa_p_value(fit$QEp))),
-  #              ", ", tau^2, " = ", .(formatC(round(fit$tau2, 1))), 
-  #              ", ", I^2, " = ", .(formatC(round(fit$I2, 1))),
-  #              "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
+  #              ", ", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 1))), 
+  #              ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
+  #              "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 1))), ")"))
   ## less detailed
-  bquote(paste("RE Model (", tau^2, " = ", .(formatC(round(fit$tau2, 1))), 
-               ", ", I^2, " = ", .(formatC(round(fit$I2, 1))),
-               "%, ", H^2," = ", .(formatC(round(fit$H2, 1))), ")"))
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 1))), 
+               ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 1))), ")"))
 }
 
 # table format in output
 options(knitr.table.format = "html") 
 
 ```
-
-# Test-retest reliability
-
-## Get data 
-
-```{r}
-
-data_lai_trt <- read.csv("../data/lai_meta_irap_trt.csv") 
-
-```
-
-## Demographics & Ns
-
-```{r}
-
-data_lai_trt %>%
-  summarize(n = sum(ni)) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-```
-
-## Meta-analysis
-
-Variance associated with each effect size calculated mathematically using the effect size and sample size.
-
-```{r fig.height=3.2, fig.width=8}
-
-# fit random Effects model 
-fit_lai_trt <- data_lai_trt %>%
-  escalc(measure = "ZCOR", 
-         ri = yi,
-         ni = ni,
-         data = ., 
-         digits = 8) %>%
-  rma(yi   = yi, 
-      sei  = vi, 
-      data = .,
-      slab = article)
-
-# make predictions 
-predictions <-
-  predict(fit_lai_trt, digits = 5) %>%
-  as.data.frame() %>%
-  round_df(2) 
-
-# plot
-metafor::forest(fit_lai_trt,
-                xlab = "Test-retest reliability [[metric?]]",
-                addcred = TRUE,
-                refline = FALSE,
-                xlim = c(-1.5, 1.7),
-                at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
-                mlab = add_heterogeneity_metrics_to_forest(fit_lai_trt))
-text(-1.5, 7, "Study", pos = 4)
-text(1.7, 7, "??? [95% CI]", pos = 2)
-
-# summarize results
-meta_effect <- 
-  paste0("Meta analysis: k = ", fit_lai_trt$k, 
-         ", ??? = ",  round(transf.ztor(predictions$pred), 2), 
-         ", 95% CI [", round(transf.ztor(predictions$ci.lb), 2), ", ", 
-         round(transf.ztor(predictions$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions$cr.lb), 2), ", ", 
-         round(transf.ztor(predictions$cr.ub), 2), "]") 
-
-meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_lai_trt$k - 1, ") = ", round(fit_lai_trt$QE, 2), 
-         ", p ", ifelse(fit_lai_trt$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_lai_trt$QEp, 4)))),
-         ", tau^2 = ", round(fit_lai_trt$tau2, 2), 
-         ", I^2 = ",   round(fit_lai_trt$I2, 2),
-         "%, H^2 = ",   round(fit_lai_trt$H2, 2))
-
-# write to disk for pdf plots
-write_rds(fit_lai_trt, "models/fit_lai_trt.rds")
-
-```
-
-Meta effect: `r meta_effect`.
-
-Heterogeneity: `r meta_heterogeneity`.
 
 # Internal consistency
 
@@ -193,7 +113,7 @@ fit_lai_ic <- data_lai_ic %>%
       slab = article)
 
 # make predictions 
-predictions <-
+predictions_ic <-
   predict(fit_lai_ic, digits = 5) %>%
   as.data.frame() %>%
   round_df(2)
@@ -211,24 +131,107 @@ text(-3.75, 27, "Study", pos = 4)
 text(2.5, 27, "??? [95% CI]", pos = 2)
 
 # summarize results
-meta_effect <- 
+meta_effect_ic <- 
   paste0("Meta analysis: k = ", fit_lai_ic$k, 
-         ", ??? = ",  round(transf.ztor(predictions$pred), 2), 
-         ", 95% CI [", round(transf.ztor(predictions$ci.lb), 2), ", ", 
-         round(transf.ztor(predictions$ci.ub), 2), "]", 
-         ", 95% CR [", round(transf.ztor(predictions$cr.lb), 2), ", ", 
-         round(transf.ztor(predictions$cr.ub), 2), "]") 
+         ", alpha = ",  janitor::round_half_up(transf.ztor(predictions_ic$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.ztor(predictions_ic$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions_ic$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.ztor(predictions_ic$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions_ic$pi.ub), 2), "]") 
 
-meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_lai_ic$k - 1, ") = ", round(fit_lai_ic$QE, 2), 
-         ", p ", ifelse(fit_lai_ic$QEp < 0.0001, "< .0001", paste0("= ", as.character(round(fit_lai_ic$QEp, 4)))),
-         ", tau^2 = ", round(fit_lai_ic$tau2, 2), 
-         ", I^2 = ",   round(fit_lai_ic$I2, 2),
-         "%, H^2 = ",   round(fit_lai_ic$H2, 2))
+meta_heterogeneity_ic <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_lai_ic$k - 1, ") = ", janitor::round_half_up(fit_lai_ic$QE, 2), 
+         ", p ", ifelse(fit_lai_ic$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_lai_ic$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_lai_ic$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_lai_ic$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_lai_ic$H2, 2))
 
 ```
 
-Meta effect: `r meta_effect`.
+Meta effect: `r meta_effect_ic`.
 
-Heterogeneity: `r meta_heterogeneity`.
+Heterogeneity: `r meta_heterogeneity_ic`.
+
+
+# Test-retest reliability
+
+## Get data 
+
+```{r}
+
+data_lai_trt <- read.csv("../data/lai_meta_irap_trt.csv") 
+
+```
+
+## Demographics & Ns
+
+```{r}
+
+data_lai_trt %>%
+  summarize(n = sum(ni)) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+## Meta-analysis
+
+Variance associated with each effect size calculated mathematically using the effect size and sample size.
+
+```{r fig.height=3.2, fig.width=8}
+
+# fit random Effects model 
+fit_lai_trt <- data_lai_trt %>%
+  escalc(measure = "ZCOR", 
+         ri = yi,
+         ni = ni,
+         data = ., 
+         digits = 8) %>%
+  rma(yi   = yi, 
+      sei  = vi, 
+      data = .,
+      slab = article)
+
+# make predictions 
+predictions_trt <-
+  predict(fit_lai_trt, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2) 
+
+# plot
+metafor::forest(fit_lai_trt,
+                xlab = "Test-retest reliability [[metric?]]",
+                addcred = TRUE,
+                refline = FALSE,
+                xlim = c(-1.5, 1.7),
+                at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+                mlab = add_heterogeneity_metrics_to_forest(fit_lai_trt))
+text(-1.5, 7, "Study", pos = 4)
+text(1.7, 7, "??? [95% CI]", pos = 2)
+
+# summarize results
+meta_effect_trt <- 
+  paste0("Meta analysis: k = ", fit_lai_trt$k, 
+         ", rho = ",  janitor::round_half_up(transf.ztor(predictions_trt$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.ztor(predictions_trt$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions_trt$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.ztor(predictions_trt$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions_trt$pi.ub), 2), "]") 
+
+meta_heterogeneity_trt <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_lai_trt$k - 1, ") = ", janitor::round_half_up(fit_lai_trt$QE, 2), 
+         ", p ", ifelse(fit_lai_trt$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_lai_trt$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_lai_trt$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_lai_trt$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_lai_trt$H2, 2))
+
+# write to disk for pdf plots
+write_rds(fit_lai_trt, "models/fit_lai_trt.rds")
+
+```
+
+Meta effect: `r meta_effect_trt`.
+
+Heterogeneity: `r meta_heterogeneity_trt`.
+
 
