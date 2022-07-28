@@ -96,7 +96,7 @@ data_D_scores_overall <- data_outliers %>%
   group_by(unique_id, timepoint) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
             mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-            sd = mean(rt, na.rm = TRUE)) %>%
+            sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, timepoint, D_overall = D) 
@@ -106,7 +106,7 @@ data_D_scores_trial_type <- data_outliers %>%
   group_by(unique_id, timepoint, trial_type) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
             mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-            sd = mean(rt, na.rm = TRUE)) %>%
+            sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, timepoint, trial_type, D) %>%

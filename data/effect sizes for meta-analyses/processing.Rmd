@@ -247,7 +247,7 @@ data_D_scores_ic_oddeventrials <- data_ic %>%
   group_by(unique_id, trial_odd_even) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
             mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-            sd = mean(rt, na.rm = TRUE)) %>%
+            sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, D, trial_odd_even) %>%
@@ -308,7 +308,7 @@ data_D_scores_ic_firstsecond <- data_halves %>%
   group_by(unique_id, half) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
             mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-            sd = mean(rt, na.rm = TRUE)) %>%
+            sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, D, half) %>%
@@ -425,7 +425,7 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations.RD
     
     data_temp_3 <- data_temp_1 %>%
       group_by(unique_id, subset) %>%
-      summarize(sd = mean(rt, na.rm = TRUE)) %>%
+      summarize(sd = sd(rt, na.rm = TRUE)) %>%
       ungroup()
     
     data_internal_consistency <- left_join(data_temp_2, data_temp_3, by = c("unique_id", "subset")) %>%
@@ -521,7 +521,7 @@ data_D_scores_trt <- data_trt %>%
   group_by(unique_id, timepoint) %>%
   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
             mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-            sd = mean(rt, na.rm = TRUE)) %>%
+            sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, D, timepoint) %>%
@@ -786,7 +786,7 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations_by
     
     data_temp_3 <- data_temp_1 %>%
       group_by(unique_id, subset) %>%
-      summarize(sd = mean(rt, na.rm = TRUE)) %>%
+      summarize(sd = sd(rt, na.rm = TRUE)) %>%
       ungroup()
     
     data_internal_consistency <- 
