@@ -83,7 +83,7 @@ calculate_icc <- function(data) {
   
   fit <- data %>%
     select(baseline, followup) %>%
-    ICC(lmer = TRUE)
+    ICC(lmer = FALSE)
   
   results <- fit$results %>%
     filter(type == "ICC2") %>%
@@ -531,7 +531,7 @@ data_D_scores_trt <- data_trt %>%
 ggplot(data_D_scores_trt, aes(baseline, followup)) +
   geom_point(alpha = .5) +
   theme_classic() +
-  coord_cartesian(ylim = c(-.31, .31), xlim = c(-.31, .31)) +
+  #coord_cartesian(ylim = c(-.51, .51), xlim = c(-.51, .51)) +
   xlab("D scores at Time 1") +
   ylab("D scores at Time 2")
 
