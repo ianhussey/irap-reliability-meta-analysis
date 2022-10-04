@@ -104,11 +104,11 @@ In each case, correlations between D scores calculated from the split halves are
 
 For meta analysis, spearman brown correlations are converted to Fischers r-to-z for meta analysis. Estimates of the meta effect are then converted back for reporting. Heterogeneity metrics represent heterogeneity in Fischer's r-to-z estimates. See [here](https://stats.stackexchange.com/questions/26485/does-transformation-of-r-into-fisher-z-benefit-a-meta-analysis).
 
-## Permutation-based split half correlations 
+## Permutation-based split half correlations
 
 ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019). Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 10000 permutations.  
 
-### Bonett transformations
+### Bonett transformations, all domains
 
 ```{r fig.height=6, fig.width=8}
 
@@ -152,7 +152,7 @@ addpoly(fit_internal_consistency_permuted_estimates, mlab = "", cex = 1, addcred
 #text(0, -1, "RE Model", pos = 4, offset = 0, cex = 1)
 
 # summarize results
-meta_effect <- 
+meta_effect_ic <- 
   paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates$k, 
          ", alpha = ",  janitor::round_half_up(transf.iabt(predictions_permutations$pred), 2), 
          ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_permutations$ci.lb), 2), ", ", 
@@ -165,34 +165,117 @@ meta_effect <-
 
 ```
 
-Meta effect: `r meta_effect`.
+```{r eval=FALSE, fig.height=18, fig.width=7, include=FALSE}
 
-### Native alpha values
+metafor::forest(data_ic_permuted$yi, 
+                data_ic_permuted$vi,
+                slab = paste(data_ic_permuted$domain, data_ic_permuted$trial_type), 
+                transf = transf.iabt,
+                order = "obs")
+
+```
+
+Meta effect: `r meta_effect_ic`.
+
+### Sensitivity analyses
+
+#### Bonett transformations, excluding sexuality domain (as in main analaysis's sensitivity analysis)
+
+```{r fig.height=6, fig.width=8}
+
+data_ic_permuted_sensitivity <- data_D_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality")) |>
+  mutate(se = (alpha_ci_upper - alpha_ci_lower)/(1.96*2))
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates_sensitivity <- 
+  rma.mv(yi     = yi, 
+         V      = vi, 
+         random = ~ 1 | domain,
+         data   = data_ic_permuted_sensitivity,
+         slab   = domain)
+
+# make predictions 
+predictions_permutations_sensitivity <-
+  predict(fit_internal_consistency_permuted_estimates_sensitivity, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(data_ic_permuted_sensitivity$yi, 
+                data_ic_permuted_sensitivity$vi,
+                xlim = c(-0.5, 1.5), # adjust horizontal plot region limits
+                transf = transf.iabt,
+                xlab = bquote(paste("Cronbach's ", alpha)),
+                #at = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0),
+                order = "obs", # order by size of yi
+                slab = NA, 
+                annotate = FALSE, # remove study labels and annotations
+                efac = 0, # remove vertical bars at end of CIs
+                pch = 19, # changing point symbol to filled circle
+                col = "gray40", # change color of points/CIs
+                psize = 2, # increase point size
+                cex.lab = 1, cex.axis = 1, # increase size of x-axis title/labels
+                lty = c("solid", "blank")) # remove horizontal line at top of plot
+points(sort(transf.iabt(data_ic_permuted_sensitivity$yi)), 
+       nrow(data_ic_permuted_sensitivity):1, pch = 19, cex = 0.5) # draw points one more time to make them easier to see
+addpoly(fit_internal_consistency_permuted_estimates_sensitivity, mlab = "", cex = 1, addcred = TRUE) # add summary polygon at bottom and text
+#text(0, -1, "RE Model", pos = 4, offset = 0, cex = 1)
+
+# summarize results
+meta_effect_sensitivity <- 
+  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_sensitivity$k, 
+         ", alpha = ",  janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pi.ub), 2), "]") 
+
+# save to disk for making pdf plot
+#write_rds(fit_internal_consistency_permuted_estimates_sensitivity, "models/fit_internal_consistency_permuted_estimates_sensitivity.rds")
+
+```
+
+```{r eval=FALSE, fig.height=18, fig.width=7, include=FALSE}
+
+metafor::forest(data_ic_permuted_sensitivity$yi, 
+                data_ic_permuted_sensitivity$vi,
+                slab = paste(data_ic_permuted_sensitivity$domain, data_ic_permuted_sensitivity$trial_type), 
+                transf = transf.iabt,
+                order = "obs")
+
+```
+
+Meta effect: `r meta_effect_sensitivity`.
+
+#### Native alpha values, all domains
 
 Given how many estimates and lower bound CIs were <0, the forest plot for the above model might appear distorted by its lower bound of 0 (due to the Bonnett transformations). In order to test the robustness of the result, I also fit a model without Bonnett transformations to the raw alpha values. Of course, this will then suffer from upper bound CIs > 1. The previous model with bonnett transformations is more suitable to direct comparisons with the meta of internal consistency of Overall D scores reported in the main analysis.Rmd file. 
 
 ```{r fig.height=6, fig.width=8}
 
-data_ic_permuted <- data_D_scores_internal_consistency_permuted_estimates %>%
+data_ic_permuted_sensitivity_2 <- data_D_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality")) |>
   mutate(se = (alpha_ci_upper - alpha_ci_lower)/(1.96*2))
 
 # fit random Effects model 
-fit_internal_consistency_permuted_estimates_native <- 
+fit_internal_consistency_permuted_estimates_native_sensitivity_2 <- 
   rma.mv(yi     = alpha, 
          V      = se^2,
          random = ~ 1 | domain,
-         data   = data_ic_permuted,
+         data   = data_ic_permuted_sensitivity_2,
          slab   = domain)
 
 # make predictions 
-predictions_permutations_native <-
-  predict(fit_internal_consistency_permuted_estimates_native, digits = 5) %>%
+predictions_permutations_native_sensitivity_2 <-
+  predict(fit_internal_consistency_permuted_estimates_native_sensitivity_2, digits = 5) %>%
   as.data.frame() %>%
   round_df(2)
 
 # plot
-metafor::forest(data_ic_permuted$alpha, 
-                data_ic_permuted$se^2,
+metafor::forest(data_ic_permuted_sensitivity_2$alpha, 
+                data_ic_permuted_sensitivity_2$se^2,
                 xlim = c(-2, 2), # adjust horizontal plot region limits
                 xlab = bquote(paste("Cronbach's ", alpha)),
                 at = c(-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
@@ -205,25 +288,27 @@ metafor::forest(data_ic_permuted$alpha,
                 psize = 2, # increase point size
                 cex.lab = 1, cex.axis = 1, # increase size of x-axis title/labels
                 lty = c("solid", "blank")) # remove horizontal line at top of plot
-points(sort(data_ic_permuted$alpha), nrow(data_ic_permuted):1, pch = 19, cex = 0.5) # draw points one more time to make them easier to see
-addpoly(fit_internal_consistency_permuted_estimates_native, mlab = "", cex = 1, addcred = TRUE) # add summary polygon at bottom and text
+points(sort(data_ic_permuted_sensitivity_2$alpha), 
+       nrow(data_ic_permuted_sensitivity_2):1, pch = 19, cex = 0.5) # draw points one more time to make them easier to see
+addpoly(fit_internal_consistency_permuted_estimates_native_sensitivity_2, mlab = "", cex = 1, addcred = TRUE) # add summary polygon at bottom and text
 #text(-1, -1, "RE Model", pos = 4, offset = 0, cex = 1)
 
 # summarize results
-meta_effect <- 
-  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_native$k, 
-         ", alpha = ",  janitor::round_half_up(predictions_permutations_native$pred, 2), 
-         ", 95% CI [", janitor::round_half_up(predictions_permutations_native$ci.lb, 2), ", ", 
-         janitor::round_half_up(predictions_permutations_native$ci.ub, 2), "]", 
-         ", 95% CR [", janitor::round_half_up(predictions_permutations_native$pi.lb, 2), ", ", 
-         janitor::round_half_up(predictions_permutations_native$pi.ub, 2), "]") 
+meta_effect_sensitivity_2 <- 
+  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_native_sensitivity_2$k, 
+         ", alpha = ",  janitor::round_half_up(predictions_permutations_native_sensitivity_2$pred, 2), 
+         ", 95% CI [", janitor::round_half_up(predictions_permutations_native_sensitivity_2$ci.lb, 2), ", ", 
+         janitor::round_half_up(predictions_permutations_native_sensitivity_2$ci.ub, 2), "]", 
+         ", 95% CR [", janitor::round_half_up(predictions_permutations_native_sensitivity_2$pi.lb, 2), ", ", 
+         janitor::round_half_up(predictions_permutations_native_sensitivity_2$pi.ub, 2), "]") 
 
 # save to disk for making pdf plot
-#write_rds(fit_internal_consistency_permuted_estimates_native, "models/fit_internal_consistency_permuted_estimates_native.rds")
+#write_rds(fit_internal_consistency_permuted_estimates_native_sensitivity_2,
+#    "models/fit_internal_consistency_permuted_estimates_native_sensitivity_2.rds")
 
 ```
 
-Meta effect: `r meta_effect`.
+Meta effect: `r meta_effect_sensitivity_2`.
 
 # Test-retest reliability
 
@@ -261,7 +346,7 @@ text(-3, 10, "Study", pos = 4)
 text(2.3, 10, "ICC(2,1) [95% CI]", pos = 2)
 
 # summarize results
-meta_effect <- 
+meta_effect_trt <- 
   paste0("Meta analysis: k = ", fit_test_retest_icc$k, 
          ", ICC2 = ",  janitor::round_half_up(predictions_test_retest_icc$pred, 2), 
          ", 95% CI [", janitor::round_half_up(predictions_test_retest_icc$ci.lb, 2), ", ", 
@@ -274,9 +359,7 @@ meta_effect <-
 
 ```
 
-Meta effect: `r meta_effect`.
-
-TODO: polygon for caterpillar plot
+Meta effect: `r meta_effect_trt`.
 
 # Session info
 
