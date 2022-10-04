@@ -1,5 +1,6 @@
 ---
 title: "Process data for meta analyses of the IRAP's reliability"
+subtitle: "Scores for each individual trial type"
 author: "Ian Hussey"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
