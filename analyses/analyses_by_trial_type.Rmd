@@ -1,0 +1,288 @@
+---
+title: "Meta analyses of the IRAP's reliability"
+subtitle: "Scores for each individual trial type"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+# TODO
+
+- Polygon in TRT caterpillar plot not showing
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+set.seed(42)
+
+# dependencies
+library(tidyverse)
+library(metafor)
+library(knitr)
+library(kableExtra)
+library(psych)
+library(ggExtra)
+library(scales) 
+library(janitor)
+library(parallel)
+#library(ggtext) # devtools::install_github("clauswilke/ggtext")
+
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
+}
+
+probability_of_superiority_function <- function(x, y) {
+  nx <- length(x)
+  ny <- length(y)
+  rx <- sum(rank(c(x, y))[1:nx])
+  A = (rx / nx - (nx + 1) / 2) / ny
+  return(A)
+}
+
+spearman_brown_correction <- function(r_pearson) {
+  inversion <- ifelse(r_pearson < 0, -1, 1)
+  val <- janitor::round_half_up(2*abs(r_pearson)/(1 + abs(r_pearson)), 2)
+  return(val*inversion)
+}
+
+apa_p_value <- function(p){
+  p_formatted <- ifelse(p >= 0.001, paste("=", janitor::round_half_up(p, 3)),
+                        ifelse(p < 0.001, "< .001", NA))
+  p_formatted <- gsub(pattern = "0.", replacement = ".", x = p_formatted, fixed = TRUE)
+  p_formatted
+}
+
+add_heterogeneity_metrics_to_forest <- function(fit) {
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 2))), 
+               ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 2))), ")"))
+}
+
+# table format in output
+options(knitr.table.format = "html") 
+
+# create directory needed to save output
+dir.create("models")
+dir.create("plots")
+
+```
+
+# Data 
+
+```{r}
+
+data_D_scores_internal_consistency_permuted_estimates <-
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates_trial_types.csv")
+
+data_D_scores_test_retest_icc <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc_trial_types.csv")
+
+```
+
+# Internal consistency
+
+Three methods of calculating internal consistency for the Implicit Relational Assessment Procedure (IRAP): 
+- Odd vs even trials (mostly commonly reported in literature)
+- First vs second half of task (more common for the most popular implicit measure, the IAT; would allow a like-for-like comparison)
+- Cronbach's alpha via permutation (most robust)
+
+The IRAP effect is most often quantified using the D1 scoring algorithm (Greenwald, Banaji & Nosek, 2003). i.e., trim all RTs > 10,000 ms, then D1 = (mean RT in the inconsistent blocks - mean RT in the consistent blocks)/SD of RTs in both block types. D1 scores are used throughout. Because of this, it wasn't possible to use Sam Parson's splithalf R package. A workflow for permutation-based alpha estimation using D scores is provided below.  
+
+In each case, correlations between D scores calculated from the split halves are calculated, and then the Spearman-Brown prophecy formula is applied, i.e., r_sb = 2*r_pearson / (1+r_pearson). Importantly, this correction is applied to the absolute value of the pearson's correlation, and then its sign is corrected to be congruent with the pearson's correlation. This ensures that r_sb has a possible range of -1 to +1, as correlations should (whereas correction of native negative correlations allow for a lower limit of -Inf). I haven't seen this treatment of SB corrections applied to negative correlations well explicated elsewhere, so it is important to note here. 
+
+For meta analysis, spearman brown correlations are converted to Fischers r-to-z for meta analysis. Estimates of the meta effect are then converted back for reporting. Heterogeneity metrics represent heterogeneity in Fischer's r-to-z estimates. See [here](https://stats.stackexchange.com/questions/26485/does-transformation-of-r-into-fisher-z-benefit-a-meta-analysis).
+
+## Permutation-based split half correlations 
+
+ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019). Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 10000 permutations.  
+
+### Bonett transformations
+
+```{r fig.height=6, fig.width=8}
+
+data_ic_permuted <- data_D_scores_internal_consistency_permuted_estimates %>%
+  mutate(se = (alpha_ci_upper - alpha_ci_lower)/(1.96*2))
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates <- 
+  rma.mv(yi     = yi, 
+         V      = vi, 
+         random = ~ 1 | domain,
+         data   = data_ic_permuted,
+         slab   = domain)
+
+# make predictions 
+predictions_permutations <-
+  predict(fit_internal_consistency_permuted_estimates, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(data_ic_permuted$yi, 
+                data_ic_permuted$vi,
+                xlim = c(-0.5, 1.5), # adjust horizontal plot region limits
+                transf = transf.iabt,
+                xlab = bquote(paste("Cronbach's ", alpha)),
+                #at = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0),
+                order = "obs", # order by size of yi
+                slab = NA, 
+                annotate = FALSE, # remove study labels and annotations
+                efac = 0, # remove vertical bars at end of CIs
+                pch = 19, # changing point symbol to filled circle
+                col = "gray40", # change color of points/CIs
+                psize = 2, # increase point size
+                cex.lab = 1, cex.axis = 1, # increase size of x-axis title/labels
+                lty = c("solid", "blank")) # remove horizontal line at top of plot
+points(sort(transf.iabt(data_ic_permuted$yi)), 
+       nrow(data_ic_permuted):1, pch = 19, cex = 0.5) # draw points one more time to make them easier to see
+addpoly(fit_internal_consistency_permuted_estimates, mlab = "", cex = 1, addcred = TRUE) # add summary polygon at bottom and text
+#text(0, -1, "RE Model", pos = 4, offset = 0, cex = 1)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates$k, 
+         ", alpha = ",  janitor::round_half_up(transf.iabt(predictions_permutations$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_permutations$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_permutations$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_permutations$pi.ub), 2), "]") 
+
+# save to disk for making pdf plot
+#write_rds(fit_internal_consistency_permuted_estimates, "models/fit_internal_consistency_permuted_estimates.rds")
+
+```
+
+Meta effect: `r meta_effect`.
+
+### Native alpha values
+
+Given how many estimates and lower bound CIs were <0, the forest plot for the above model might appear distorted by its lower bound of 0 (due to the Bonnett transformations). In order to test the robustness of the result, I also fit a model without Bonnett transformations to the raw alpha values. Of course, this will then suffer from upper bound CIs > 1. The previous model with bonnett transformations is more suitable to direct comparisons with the meta of internal consistency of Overall D scores reported in the main analysis.Rmd file. 
+
+```{r fig.height=6, fig.width=8}
+
+data_ic_permuted <- data_D_scores_internal_consistency_permuted_estimates %>%
+  mutate(se = (alpha_ci_upper - alpha_ci_lower)/(1.96*2))
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates_native <- 
+  rma.mv(yi     = alpha, 
+         V      = se^2,
+         random = ~ 1 | domain,
+         data   = data_ic_permuted,
+         slab   = domain)
+
+# make predictions 
+predictions_permutations_native <-
+  predict(fit_internal_consistency_permuted_estimates_native, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(data_ic_permuted$alpha, 
+                data_ic_permuted$se^2,
+                xlim = c(-2, 2), # adjust horizontal plot region limits
+                xlab = bquote(paste("Cronbach's ", alpha)),
+                at = c(-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
+                order = "obs", # order by size of yi
+                slab = NA, 
+                annotate = FALSE, # remove study labels and annotations
+                efac = 0, # remove vertical bars at end of CIs
+                pch = 19, # changing point symbol to filled circle
+                col = "gray40", # change color of points/CIs
+                psize = 2, # increase point size
+                cex.lab = 1, cex.axis = 1, # increase size of x-axis title/labels
+                lty = c("solid", "blank")) # remove horizontal line at top of plot
+points(sort(data_ic_permuted$alpha), nrow(data_ic_permuted):1, pch = 19, cex = 0.5) # draw points one more time to make them easier to see
+addpoly(fit_internal_consistency_permuted_estimates_native, mlab = "", cex = 1, addcred = TRUE) # add summary polygon at bottom and text
+#text(-1, -1, "RE Model", pos = 4, offset = 0, cex = 1)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_native$k, 
+         ", alpha = ",  janitor::round_half_up(predictions_permutations_native$pred, 2), 
+         ", 95% CI [", janitor::round_half_up(predictions_permutations_native$ci.lb, 2), ", ", 
+         janitor::round_half_up(predictions_permutations_native$ci.ub, 2), "]", 
+         ", 95% CR [", janitor::round_half_up(predictions_permutations_native$pi.lb, 2), ", ", 
+         janitor::round_half_up(predictions_permutations_native$pi.ub, 2), "]") 
+
+# save to disk for making pdf plot
+#write_rds(fit_internal_consistency_permuted_estimates_native, "models/fit_internal_consistency_permuted_estimates_native.rds")
+
+```
+
+Meta effect: `r meta_effect`.
+
+# Test-retest reliability
+
+## Intraclass Correlations
+
+"It has been argued that test-retest reliability should reflect absolute agreement, rather than consistency, between measurements (Koo & Li, 2016). For example, a perfect correlation between scores at two time points may occur also when there is a systematic difference between time points (i.e. a difference that is about equal for all participants)." (Parsons, Kruijt, & Fox, 2019).
+Absolute agreement therefore also takes within-participant changes into account in its denominator, where consistency does not.
+
+```{r fig.height=4, fig.width=8}
+
+# fit random Effects model 
+fit_test_retest_icc <- 
+  rma.mv(yi     = ICC, 
+         V      = se^2, 
+         random = ~ 1 | domain,
+         data   = data_D_scores_test_retest_icc,
+         slab   = domain)
+
+# make predictions 
+predictions_test_retest_icc <-
+  predict(fit_test_retest_icc, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2) 
+
+# plot
+metafor::forest(fit_test_retest_icc,
+                xlab = "Intraclass Correlation",
+                addcred = TRUE,
+                refline = FALSE,
+                xlim = c(-3, 2.3),
+                #at = c(-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
+                at = c(-1, -0.5, 0, 0.5, 1))
+                #mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
+text(-3, 10, "Study", pos = 4)
+text(2.3, 10, "ICC(2,1) [95% CI]", pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_test_retest_icc$k, 
+         ", ICC2 = ",  janitor::round_half_up(predictions_test_retest_icc$pred, 2), 
+         ", 95% CI [", janitor::round_half_up(predictions_test_retest_icc$ci.lb, 2), ", ", 
+         janitor::round_half_up(predictions_test_retest_icc$ci.ub, 2), "]", 
+         ", 95% CR [", janitor::round_half_up(predictions_test_retest_icc$pi.lb, 2), ", ", 
+         janitor::round_half_up(predictions_test_retest_icc$pi.ub, 2), "]") 
+
+# write to disk for pdf plots
+#write_rds(fit_test_retest_icc, "models/fit_test_retest_icc.rds")
+
+```
+
+Meta effect: `r meta_effect`.
+
+TODO: polygon for caterpillar plot
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
+
