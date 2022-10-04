@@ -387,17 +387,17 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations.RD
   for(i in 1:n_iterations){
     
     # sample exactly half of the data and label as subset 'a' vs 'b'
-    max_trials_per_block <- data_ic_rownumbers %>%
-      summarize(max_trials_per_block = max(trial_number)) %>%
+    max_trials_per_block <- data_ic_rownumbers |>
+      summarize(max_trials_per_block = max(trial_number)) |>
       pull(max_trials_per_block)
     
-    trial_subset_a <- data.frame(trial_number = seq(from = 1, to = max_trials_per_block, by = 1)) %>% 
-      sample_frac(size = 0.5) %>%
-      arrange(trial_number) %>%
+    trial_subset_a <- data.frame(trial_number = seq(from = 1, to = max_trials_per_block, by = 1)) |> 
+      sample_frac(size = 0.5) |>
+      arrange(trial_number) |>
       pull(trial_number)
     
-    data_ic_rownumbers_with_subsets <- data_ic_rownumbers %>%
-      mutate(subset = ifelse(trial_number %in% trial_subset_a, "a", "b")) %>%
+    data_ic_rownumbers_with_subsets <- data_ic_rownumbers |>
+      mutate(subset = ifelse(trial_number %in% trial_subset_a, "a", "b")) |>
       arrange(unique_id, block_type, trial_number)
     
     # # calculate a metric of how ordered this randomized subset of the trials are
@@ -412,38 +412,38 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations.RD
     
     # then calculate D1 scores (Greenwald, Banaji & Nosek, 2003)
     # these involve: 1) trimming RTs > 10000 ms, 2) finding a mean rt for each block type, 3) findings an sd for all the pooled RTs across blocks, 4) D = (mean_incon - mean_con)/sd
-    data_temp_1 <- data_ic_rownumbers_with_subsets %>%
+    data_temp_1 <- data_ic_rownumbers_with_subsets |>
       filter(rt <= 10000)
     
-    data_temp_2 <- data_temp_1 %>%
-      group_by(unique_id, subset, block_type) %>%
-      summarize(mean = mean(rt, na.rm = TRUE)) %>%
-      ungroup() %>%
-      spread(block_type, mean) %>%
+    data_temp_2 <- data_temp_1 |>
+      group_by(unique_id, subset, block_type) |>
+      summarize(mean = mean(rt, na.rm = TRUE), .groups = "keep") |>
+      ungroup() |>
+      spread(block_type, mean) |>
       rename(mean_con = con,
              mean_incon = incon)
     
-    data_temp_3 <- data_temp_1 %>%
-      group_by(unique_id, subset) %>%
-      summarize(sd = sd(rt, na.rm = TRUE)) %>%
+    data_temp_3 <- data_temp_1 |>
+      group_by(unique_id, subset) |>
+      summarize(sd = sd(rt, na.rm = TRUE), .groups = "keep") |>
       ungroup()
     
-    data_internal_consistency <- left_join(data_temp_2, data_temp_3, by = c("unique_id", "subset")) %>%
+    data_internal_consistency <- left_join(data_temp_2, data_temp_3, by = c("unique_id", "subset")) |>
       # finish calculating D scores for each participant and subset
-      mutate(D = (mean_incon - mean_con)/sd) %>%
-      select(unique_id, D, subset) %>%
-      spread(subset, D) %>%
+      mutate(D = (mean_incon - mean_con)/sd) |>
+      select(unique_id, D, subset) |>
+      spread(subset, D) |>
       rename(D_a = a,
-             D_b = b) %>%
+             D_b = b) |>
       # re add the study domain
-      left_join(data_domain_for_each_id, by = "unique_id") %>%
+      left_join(data_domain_for_each_id, by = "unique_id") |>
       # calculate correlations between subsets
-      na.omit() %>%
-      group_by(domain) %>%
-      summarize(r_pearson = cor(D_a, D_b)) %>%
-      ungroup() %>%
+      na.omit() |>
+      group_by(domain) |>
+      summarize(r_pearson = cor(D_a, D_b), .groups = "keep") |>
+      ungroup() |>
       # apply spearman brown correction
-      mutate(r_sb = spearman_brown_correction(r_pearson)) %>%
+      mutate(r_sb = spearman_brown_correction(r_pearson)) |>
       # add iteration
       mutate(iteration = i)
     #orderedness = subset_orderedness)
@@ -629,7 +629,7 @@ if (file.exists("permutations/data_A_scores_internal_consistency_permutations.RD
     
     # sample exactly half of the data and label as subset 'a' vs 'b'
     max_trials_per_block <- data_ic_rownumbers %>%
-      summarize(max_trials_per_block = max(trial_number)) %>%
+      summarize(max_trials_per_block = max(trial_number), .groups = "keep") %>%
       pull(max_trials_per_block)
     
     trial_subset_a <- data.frame(trial_number = seq(from = 1, to = max_trials_per_block, by = 1)) %>% 
@@ -655,7 +655,7 @@ if (file.exists("permutations/data_A_scores_internal_consistency_permutations.RD
       # calculate correlations between subsets
       na.omit() %>%
       group_by(domain) %>%
-      summarize(r_pearson = cor(A_a, A_b)) %>%
+      summarize(r_pearson = cor(A_a, A_b), .groups = "keep") %>%
       ungroup() %>%
       # apply spearman brown correction
       mutate(r_sb = spearman_brown_correction(r_pearson)) %>%
@@ -760,52 +760,52 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations_by
   for(i in 1:n_iterations){
     
     # sample exactly half of the data and label as subset 'a' vs 'b'
-    max_trials_per_block <- data_ic_rownumbers %>%
-      summarize(max_trials_per_block = max(trial_number)) %>%
+    max_trials_per_block <- data_ic_rownumbers |>
+      summarize(max_trials_per_block = max(trial_number)) |>
       pull(max_trials_per_block)
     
-    trial_subset_a <- data.frame(trial_number = seq(from = 1, to = max_trials_per_block, by = 1)) %>% 
-      sample_frac(size = 0.5) %>%
-      arrange(trial_number) %>%
+    trial_subset_a <- data.frame(trial_number = seq(from = 1, to = max_trials_per_block, by = 1)) |> 
+      sample_frac(size = 0.5) |>
+      arrange(trial_number) |>
       pull(trial_number)
     
-    data_ic_rownumbers_with_subsets <- data_ic_rownumbers %>%
-      mutate(subset = ifelse(trial_number %in% trial_subset_a, "a", "b")) %>%
+    data_ic_rownumbers_with_subsets <- data_ic_rownumbers |>
+      mutate(subset = ifelse(trial_number %in% trial_subset_a, "a", "b")) |>
       arrange(unique_id, block_type, trial_number)
     
-    data_temp_1 <- data_ic_rownumbers_with_subsets %>%
+    data_temp_1 <- data_ic_rownumbers_with_subsets |>
       filter(rt <= 10000)
     
-    data_temp_2 <- data_temp_1 %>%
-      group_by(unique_id, subset, block_type) %>%
-      summarize(mean = mean(rt, na.rm = TRUE)) %>%
-      ungroup() %>%
-      spread(block_type, mean) %>%
+    data_temp_2 <- data_temp_1 |>
+      group_by(unique_id, subset, block_type) |>
+      summarize(mean = mean(rt, na.rm = TRUE), .groups = "keep") |>
+      ungroup() |>
+      spread(block_type, mean) |>
       rename(mean_con = con,
              mean_incon = incon)
     
-    data_temp_3 <- data_temp_1 %>%
-      group_by(unique_id, subset) %>%
-      summarize(sd = sd(rt, na.rm = TRUE)) %>%
+    data_temp_3 <- data_temp_1 |>
+      group_by(unique_id, subset) |>
+      summarize(sd = sd(rt, na.rm = TRUE), .groups = "keep") |>
       ungroup()
     
     data_internal_consistency <- 
-      left_join(data_temp_2, data_temp_3, by = c("unique_id", "subset")) %>%
+      left_join(data_temp_2, data_temp_3, by = c("unique_id", "subset")) |>
       # finish calculating D scores for each participant and subset
-      mutate(D = (mean_incon - mean_con)/sd) %>%
-      select(unique_id, D, subset) %>%
-      spread(subset, D) %>%
+      mutate(D = (mean_incon - mean_con)/sd) |>
+      select(unique_id, D, subset) |>
+      spread(subset, D) |>
       rename(D_a = a,
-             D_b = b) %>%
+             D_b = b) |>
       # re add the study domain
-      left_join(data_domain_for_each_id, by = "unique_id") %>%
+      left_join(data_domain_for_each_id, by = "unique_id") |>
       # calculate correlations between subsets
-      na.omit() %>%
-      group_by(domain, block_order) %>%
-      summarize(r_pearson = cor(D_a, D_b)) %>%
-      ungroup() %>%
+      na.omit() |>
+      group_by(domain, block_order) |>
+      summarize(r_pearson = cor(D_a, D_b), .groups = "keep") |>
+      ungroup() |>
       # apply spearman brown correction
-      mutate(r_sb = spearman_brown_correction(r_pearson)) %>%
+      mutate(r_sb = spearman_brown_correction(r_pearson)) |>
       # add iteration
       mutate(iteration = i)
     #orderedness = subset_orderedness)
