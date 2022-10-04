@@ -1,6 +1,8 @@
 - Note the change in the implementation of ICC method, i.e., user lmer = FALSE, so that negative values are possible. This makes for a less deceptive forest plot. Note the estimate also changes throughout.
 - Update cover page to DFG wording
 
+update all plots, these were reproduced after updating the data processing using the correct rounding strategy
+
 
 
 maybe add this quote:
