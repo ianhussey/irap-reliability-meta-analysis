@@ -1,0 +1,379 @@
+---
+title: "Process data for meta analyses of the IRAP's reliability"
+subtitle: "Scores for each individual trial type"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+# set seed for computational reproducibility
+set.seed(42)
+
+# dependencies
+library(tidyverse)
+library(metafor)
+library(knitr)
+library(kableExtra)
+library(psych)
+library(readxl)
+library(janitor)
+
+# n iterations in permutation resampling procedures
+n_iterations <- 1000
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, round, digits = n_digits)
+}
+
+spearman_brown_correction <- function(r_pearson) {
+  inversion <- ifelse(r_pearson < 0, -1, 1)
+  val <- 2*abs(r_pearson)/(1 + abs(r_pearson))
+  return(val*inversion)
+}
+
+apa_p_value <- function(p){
+  p_formatted <- ifelse(p >= 0.001, paste("=", janitor::round_half_up(p, 3)),
+                        ifelse(p < 0.001, "< .001", NA))
+  p_formatted <- gsub(pattern = "0.", replacement = ".", x = p_formatted, fixed = TRUE)
+  p_formatted
+}
+
+add_heterogeneity_metrics_to_forest <- function(fit) {
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 1))), 
+               ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 1))), ")"))
+}
+
+# using Ruscio's own code
+ruscios_A_function <- function(x, y) {
+  nx <- length(x)
+  ny <- length(y)
+  rx <- sum(rank(c(x, y))[1:nx])
+  A = (rx / nx - (nx + 1) / 2) / ny
+  return(A)
+}
+
+ruscios_A <- function(data, variable = "rt", group = "block_type", value1 = "incon", value2 = "con") {
+  # Ensure data is a data frame (e.g., not a tbl_data)
+  data <- as.data.frame(data)
+  # Select the observations for group 1
+  x <- data[data[[group]] == value1, variable]
+  # Select the observations for group 2
+  y <- data[data[[group]] == value2, variable]
+  A.obs <- ruscios_A_function(x, y)
+  return(as.numeric(A.obs))
+}
+
+# test retest icc
+calculate_icc <- function(data) {
+  require(psych)
+  
+  fit <- data %>%
+    select(baseline, followup) %>%
+    ICC(lmer = FALSE)
+  
+  results <- fit$results %>%
+    filter(type == "ICC2") %>%
+    select(type, ICC, ICC_ci_lower = "lower bound", ICC_ci_upper = "upper bound") %>%
+    mutate(se = (ICC_ci_upper - ICC_ci_lower)/(1.96*2))
+  
+  return(results)
+}
+
+# table format in output
+options(knitr.table.format = "html") 
+
+# create directory needed to save output
+dir.create("permutations")
+
+```
+
+# Get data and exclude outliers  
+
+Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
+
+```{r}
+
+# all
+data_all <- read_csv("../trial level/data_trial_level.csv") 
+
+# exclusions
+data_outliers <- data_all %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  select(unique_id, domain, mean_rt) %>%
+  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
+         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
+  # exclude median +- 2MAD
+  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
+                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+  filter(rt_outlier == FALSE) %>%
+  select(unique_id, rt_outlier) %>%
+  full_join(data_all, by = "unique_id") %>%
+  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
+
+data_outliers_removed <- data_outliers %>%
+  filter(rt_outlier == FALSE)
+
+# subset ic
+data_ic <- data_outliers_removed %>%
+  filter(timepoint == "baseline")
+
+# subset trt
+data_unique_ids_two_timepoints <- data_outliers_removed %>%
+  filter(timepoint %in% c("baseline", "followup")) %>%
+  distinct(unique_id, timepoint, .keep_all = TRUE) %>%
+  select(unique_id, timepoint, domain) %>%
+  mutate(present = TRUE) %>%
+  spread(timepoint, present) %>%
+  filter(baseline == TRUE & followup == TRUE) %>%
+  select(unique_id) 
+
+data_trt <- data_unique_ids_two_timepoints %>%
+  left_join(data_outliers, by = "unique_id")
+
+```
+
+# Internal consistency
+
+## Permutation-based split half correlations 
+
+ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019).
+
+Because of the large number of D/A scores that are calculated (i.e., 2 per participant \* N participants \* N permutations = several million scores) this section can take a several minutes to run. I've already done some timing optimization to speed up this process by a factor of 5, but perhaps more is possible.
+
+### Score
+
+```{r}
+
+# slow runtime - circa 10 minutes, so check if there's saved results already first
+if (file.exists("permutations/data_D_scores_internal_consistency_permutations_trial_types.RData")) {
+  
+  load("permutations/data_D_scores_internal_consistency_permutations_trial_types.RData")
+  
+} else {
+  
+  # find domain for each id - to be joined into df further below
+  data_domain_for_each_id <- data_ic %>%
+    distinct(unique_id, .keep_all = TRUE) %>%
+    select(unique_id, domain)
+  
+  # create a temp list
+  data_internal_consistency_list = list()
+  
+  # define progress bar
+  step_i <- 0
+  pb = txtProgressBar(min = 0, max = n_iterations, initial = 0)
+  
+  # assign row ids
+  data_ic_rownumbers <- data_ic %>%
+    arrange(unique_id, block_type, trial_type) %>%
+    rownames_to_column(var = "row_id") %>%
+    group_by(unique_id, block_type, trial_type) %>%
+    mutate(trial_number = row_number()) %>%
+    ungroup()
+  
+  # apply workflow and append results to list
+  for(i in 1:n_iterations){
+    
+    # sample exactly half of the data and label as subset 'a' vs 'b'
+    max_trials_per_block <- data_ic_rownumbers |>
+      summarize(max_trials_per_block = max(trial_number)) |>
+      pull(max_trials_per_block)
+    
+    trial_subset_a <- data.frame(trial_number = seq(from = 1, to = max_trials_per_block, by = 1)) |> 
+      sample_frac(size = 0.5) |>
+      arrange(trial_number) |>
+      pull(trial_number)
+    
+    data_ic_rownumbers_with_subsets <- data_ic_rownumbers |>
+      mutate(subset = ifelse(trial_number %in% trial_subset_a, "a", "b")) |>
+      arrange(unique_id, block_type, trial_number)
+    
+    # # calculate a metric of how ordered this randomized subset of the trials are
+    # ## start by creating the 'b' vector
+    # temp <- seq(from = 1, to = max_trials_per_block, by = 1)
+    # trial_subset_b <- temp[!temp %in% trial_subset_a]
+    # 
+    # ## probability that b > a
+    # probability_of_superiority <- ruscios_A_function(trial_subset_b, trial_subset_a)
+    # 
+    # subset_orderedness <- abs(probability_of_superiority - 0.50) + 0.5
+    
+    # then calculate D1 scores (Greenwald, Banaji & Nosek, 2003)
+    # these involve: 1) trimming RTs > 10000 ms, 2) finding a mean rt for each block type, 3) findings an sd for all the pooled RTs across blocks, 4) D = (mean_incon - mean_con)/sd
+    data_temp_1 <- data_ic_rownumbers_with_subsets |>
+      filter(rt <= 10000)
+    
+    data_temp_2 <- data_temp_1 |>
+      group_by(unique_id, subset, block_type, trial_type) |>
+      summarize(mean = mean(rt, na.rm = TRUE), .groups = "keep") |>
+      ungroup() |>
+      spread(block_type, mean) |>
+      rename(mean_con = con,
+             mean_incon = incon)
+    
+    data_temp_3 <- data_temp_1 |>
+      group_by(unique_id, trial_type, subset) |>
+      summarize(sd = sd(rt, na.rm = TRUE), .groups = "keep") |>
+      ungroup()
+    
+    data_internal_consistency <- left_join(data_temp_2, data_temp_3, by = c("unique_id", "trial_type", "subset")) |>
+      # finish calculating D scores for each participant and subset
+      mutate(D = (mean_incon - mean_con)/sd) |>
+      select(unique_id, D, trial_type, subset) |>
+      spread(subset, D) |>
+      rename(D_a = a,
+             D_b = b) |>
+      # re add the study domain
+      left_join(data_domain_for_each_id, by = "unique_id") |>
+      # calculate correlations between subsets
+      drop_na() |>
+      group_by(domain, trial_type) |>
+      summarize(r_pearson = cor(D_a, D_b), .groups = "keep") |>
+      ungroup() |>
+      # apply spearman brown correction
+      mutate(r_sb = spearman_brown_correction(r_pearson)) |>
+      # add iteration
+      mutate(iteration = i)
+      #orderedness = subset_orderedness)
+    
+    data_internal_consistency_list[[i]] <- data_internal_consistency
+    
+    # update progress bar
+    step_i = step_i + 1
+    setTxtProgressBar(pb, step_i)
+    
+  }
+  
+  # flatten list and parse results
+  data_D_scores_internal_consistency_permutations_trial_types <- dplyr::bind_rows(data_internal_consistency_list)
+  
+  # save
+  save(data_D_scores_internal_consistency_permutations_trial_types, 
+       file = "permutations/data_D_scores_internal_consistency_permutations_trial_types.RData")
+  
+}
+
+```
+
+### Calculate effect sizes
+
+Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 2000 permutations.   
+
+Bonett transformations 
+
+NB forest plot above includes empirical CIs across the permutation resamples using the percentile method, whereas the forest plot below estimates CIs based on the variance calculated from the Fischer's r-to-z and N. 
+
+Also includes response option location for later moderator meta analysis
+
+```{r fig.height=8, fig.width=8}
+
+data_n_per_domain <- data_ic %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  count(domain) %>%
+  select(domain, n)
+
+data_response_option_locations <- data_ic %>%
+  distinct(domain, 
+           response_option_locations, 
+           trials_per_block, 
+           number_of_pairs_of_test_blocks, 
+           response_option_locations)
+
+data_D_scores_internal_consistency_permuted_estimates_trial_types <- data_D_scores_internal_consistency_permutations_trial_types %>%
+  group_by(domain, trial_type) %>%
+  dplyr::summarize(alpha = mean(r_sb, na.rm = TRUE),
+                   alpha_ci_lower = quantile(r_sb, 0.025),
+                   alpha_ci_upper = quantile(r_sb, 0.975)) %>%
+  left_join(data_n_per_domain, by = "domain") %>%
+  left_join(data_response_option_locations, by = "domain") %>%
+  mutate(parts = 2) %>%
+  escalc(measure = "ABT", 
+         ai = alpha, 
+         mi = parts, 
+         ni = n,
+         data = .)
+
+write_csv(data_D_scores_internal_consistency_permuted_estimates_trial_types,
+          "data_D_scores_internal_consistency_permuted_estimates_trial_types.csv")
+
+```
+
+# Test-retest reliability
+
+## Score
+
+```{r fig.height=4, fig.width=4}
+
+data_D_scores_trt <- data_trt %>%
+  filter(rt <= 10000) %>%
+  group_by(unique_id, timepoint, trial_type) %>%
+  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+            sd = sd(rt, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(D = (mean_incon - mean_con)/sd) %>%
+  select(unique_id, D, timepoint, trial_type) %>%
+  spread(timepoint, D) %>%
+  left_join(select(distinct(data_trt, unique_id, .keep_all = TRUE), unique_id, domain), by = "unique_id")
+
+ggplot(data_D_scores_trt, aes(baseline, followup)) +
+  geom_point(alpha = .5) +
+  theme_classic() +
+  #coord_cartesian(ylim = c(-.51, .51), xlim = c(-.51, .51)) +
+  xlab("D scores at Time 1") +
+  ylab("D scores at Time 2") +
+  facet_wrap(~ trial_type)
+
+```
+
+```{r fig.height=7, fig.width=7}
+
+ggplot(data_D_scores_trt, aes(baseline, followup)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  facet_grid(domain ~ trial_type)
+
+```
+
+## Calculate effect sizes
+
+### ICC
+
+```{r}
+
+data_D_scores_test_retest_icc_trial_types <- data_D_scores_trt %>%
+  group_by(domain, trial_type) %>%
+  do(calculate_icc(.)) %>%
+  ungroup() %>%
+  left_join(data_D_scores_trt %>%
+              count(domain), by = "domain")
+
+write_csv(data_D_scores_test_retest_icc_trial_types, "data_D_scores_test_retest_icc_trial_types.csv")
+
+```
+
+Variance associated with each effect size calculated mathematically using the effect size and sample size.
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
+

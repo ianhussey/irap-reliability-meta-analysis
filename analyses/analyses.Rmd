@@ -29,6 +29,7 @@ library(psych)
 library(ggExtra)
 library(scales) 
 library(janitor)
+library(parallel)
 #library(ggtext) # devtools::install_github("clauswilke/ggtext")
 
 
@@ -96,10 +97,10 @@ data_D_scores_internal_consistency_permuted_estimates_by_block_order <-
   read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates_by_block_order.csv") 
 
 data_D_scores_test_retest_r <- 
-  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_r.csv") 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_r.csv")
 
 data_D_scores_test_retest_icc <- 
-  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc.csv") 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc.csv")
 
 ```
 
@@ -355,7 +356,7 @@ if(!file.exists("models/fit_gosh_ic.rds")){
   fit_gosh_ic <- gosh(fit_internal_consistency_permuted_estimates, 
                       subsets = 10000,
                       parallel = "multicore",  # change to "snow" on windows
-                      ncpus = 4)
+                      ncpus = parallel::detectCores())
   
   write_rds(fit_gosh_ic, "models/fit_gosh_ic.rds")
   
@@ -481,7 +482,7 @@ if(!file.exists("models/fit_gosh_ic_sensitivity.rds")){
   fit_gosh_ic_sensitivity <- gosh(fit_internal_consistency_permuted_estimates_sensitivity, 
                                   subsets = 10000,
                                   parallel = "multicore",  # change to "snow" on windows
-                                  ncpus = 4)
+                                  ncpus = parallel::detectCores())
   
   write_rds(fit_gosh_ic_sensitivity, "models/fit_gosh_ic_sensitivity.rds")
   
@@ -614,16 +615,28 @@ predictions_test_retest_icc <-
   as.data.frame() %>%
   round_df(2) 
 
+# # plot
+# metafor::forest(fit_test_retest_icc,
+#                 xlab = "ICC(2,1)",
+#                 addcred = TRUE,
+#                 refline = FALSE,
+#                 xlim = c(-1.5, 1.7),
+#                 at = c(-0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
+#                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
+# text(-1.5, 10, "Study", pos = 4)
+# text(1.7, 10, "ICC(2,1) [95% CI]", pos = 2)
+
 # plot
 metafor::forest(fit_test_retest_icc,
-                xlab = "ICC(2,1)",
+                xlab = "Intraclass Correlation",
                 addcred = TRUE,
                 refline = FALSE,
-                xlim = c(-1.5, 1.7),
-                at = c(-0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
+                xlim = c(-3, 2.3),
+                #at = c(-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
+                at = c(-1, -0.5, 0, 0.5, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
-text(-1.5, 10, "Study", pos = 4)
-text(1.7, 10, "ICC(2,1) [95% CI]", pos = 2)
+text(-3, 10, "Study", pos = 4)
+text(2.3, 10, "ICC(2,1) [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -658,7 +671,7 @@ if(!file.exists("models/fit_gosh_trt.rds")){
   
   fit_gosh_trt <- gosh(fit_test_retest_icc, 
                        parallel = "multicore", # change to "snow" on windows
-                       ncpus = 4)
+                       ncpus = parallel::detectCores())
   
   write_rds(fit_gosh_trt, "models/fit_gosh_trt.rds")
   
