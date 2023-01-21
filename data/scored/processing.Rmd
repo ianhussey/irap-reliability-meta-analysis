@@ -42,7 +42,7 @@ ruscios_A_function <- function(x, y) {
     return(A)
 }
 
-ruscios_A <- function(data, variable = "rt", group = "block_type", value1 = "incon", value2 = "con") {
+ruscios_A <- function(data, variable = "rt", group = "block_type", value1 = "inconsistent", value2 = "consistent") {
   # Ensure data is a data frame (e.g., not a tbl_data)
   data <- as.data.frame(data)
   # Select the observations for group 1
@@ -64,22 +64,7 @@ Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
 
 ```{r}
 
-# all
 data_all <- read.csv("../trial level/data_trial_level.csv") 
-
-# outliers
-data_outliers <- data_all %>%
-  distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id, domain, mean_rt) %>%
-  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
-         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
-  # exclude median +- 2MAD
-  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
-                            mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
-  filter(rt_outlier == FALSE) %>%
-  select(unique_id, rt_outlier) %>%
-  full_join(data_all, by = "unique_id") %>%
-  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
 
 ```
 
@@ -91,21 +76,21 @@ Not employed for the test-retest analyses but may be useful for others to reuse.
 
 ```{r}
 
-data_D_scores_overall <- data_outliers %>%
+data_D_scores_overall <- data_all %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, timepoint) %>%
-  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+  summarize(mean_con = mean(rt[block_type == "consistent"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "inconsistent"], na.rm = TRUE),
             sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
   select(unique_id, timepoint, D_overall = D) 
 
-data_D_scores_trial_type <- data_outliers %>%
+data_D_scores_trial_type <- data_all %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, timepoint, trial_type) %>%
-  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+  summarize(mean_con = mean(rt[block_type == "consistent"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "inconsistent"], na.rm = TRUE),
             sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
@@ -122,13 +107,13 @@ data_D_scores_trial_type <- data_outliers %>%
 
 ```{r}
 
-data_A_scores_overall <- data_outliers %>%
+data_A_scores_overall <- data_all %>%
   group_by(unique_id, timepoint) %>%
   do(A_overall = ruscios_A(data = .)) %>%
   ungroup() %>%
   mutate(A_overall = as.numeric(A_overall)) 
 
-data_A_scores_trial_type <- data_outliers %>%
+data_A_scores_trial_type <- data_all %>%
   group_by(unique_id, timepoint, trial_type) %>%
   do(A = ruscios_A(data = .)) %>%
   ungroup() %>%
@@ -149,16 +134,28 @@ data_scored <- data_D_scores_overall %>%
   full_join(data_D_scores_trial_type, by = c("unique_id", "timepoint")) %>%
   full_join(data_A_scores_overall, by = c("unique_id", "timepoint")) %>%
   full_join(data_A_scores_trial_type, by = c("unique_id", "timepoint")) %>%
-  left_join(select(distinct(data_outliers, unique_id, .keep_all = TRUE), 
-                   unique_id, domain, age, gender, block_order, rt_outlier,
-                   trials_per_block, number_of_pairs_of_test_blocks, 
-                   response_option_locations), by = "unique_id") %>%
-  select(unique_id, domain, timepoint, age, gender, 
-         block_order, rt_outlier,
+  left_join(data_all |>
+              select(unique_id, 
+                     domain, 
+                     age, 
+                     gender, 
+                     block_order, 
+                     trials_per_block, 
+                     #number_of_pairs_of_test_blocks, 
+                     #response_option_locations,
+                     met_performance_criteria) |>
+              distinct(unique_id, .keep_all = TRUE), 
+            by = "unique_id") %>%
+  select(unique_id, domain, timepoint, 
+         age, gender, 
+         block_order, 
+         met_performance_criteria,
          D_overall, D_tt1, D_tt2, D_tt3, D_tt4,
          A_overall, A_tt1, A_tt2, A_tt3, A_tt4)
 
 write_csv(data_scored, "data_scored.csv")
+
+# data_scored <- read_csv("data_scored.csv")
 
 ```
 
