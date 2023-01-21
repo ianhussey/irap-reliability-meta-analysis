@@ -224,6 +224,19 @@ ian_death_participants_to_retain_2 <- ian_death_selfother |>
 ian_death_selfother <- ian_death_selfother |>
   semi_join(ian_death_participants_to_retain_2, by = "participant")
 
+
+stigma_domains <- read_csv("raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv") %>%
+  filter(data_type == "Target 3 Raw Latency") %>%
+  mutate(participant = as.character(participant),
+         experiment = case_when(stimuli_attribute_2 == "damaged" ~ "PTSD",
+                                stimuli_attribute_2 == "defective" ~ "ADHD",
+                                stimuli_attribute_2 == "dangerous" ~ "schizophrenia")) |>
+  select(participant, experiment)
+
+chad_mental_illness_stigma <- chad_mental_illness_stigma |>
+  select(-experiment) |>
+  left_join(stigma_domains, by = "participant")
+  
 ```
 
 ```{r}
@@ -884,7 +897,7 @@ data_trial_level_temp_1 <-
                                 "ian death emma" = "Death (1)",
                                 "ian death june" = "Death (2)",
                                 "ian death tarah" = "Death (3)",
-                                "Death (self-other)" = "Death (self-other)",
+                                "Death (self-other)" = "Death (4)",
                                 "Disgust (1)" = "Disgust (1)",
                                 "Disgust (2)" = "Disgust (2)",
                                 "Sexuality (1)" = "Sexuality (1)",
@@ -932,8 +945,13 @@ data_task_parameters <- read_excel("../../measures/word stimuli and task paramet
   clean_names() %>%
   select(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)
 
-data_trial_level <- data_trial_level_temp_2 %>%
+data_trial_level_temp_3 <- data_trial_level_temp_2 %>%
   left_join(data_task_parameters, by = "domain")
+
+data_trial_level <- data_trial_level_temp_3 |>
+  # remove spurious age data
+  mutate(age = ifelse(age > 999, NA, age),
+         age = ifelse(age < 18, NA, age))
 
 # write to disk
 write_csv(data_trial_level, "data_trial_level.csv")

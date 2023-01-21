@@ -1873,7 +1873,20 @@ old IRAP data files for this headache.</p>
 <span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(exclude <span class="sc">==</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>ian_death_selfother <span class="ot">&lt;-</span> ian_death_selfother <span class="sc">|&gt;</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(ian_death_participants_to_retain_2, <span class="at">by =</span> <span class="st">&quot;participant&quot;</span>)</span></code></pre></div>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(ian_death_participants_to_retain_2, <span class="at">by =</span> <span class="st">&quot;participant&quot;</span>)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>stigma_domains <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;raw/IRAP 2012 VB6 format files/chad mental illness stigma.csv&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_type <span class="sc">==</span> <span class="st">&quot;Target 3 Raw Latency&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">participant =</span> <span class="fu">as.character</span>(participant),</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>         <span class="at">experiment =</span> <span class="fu">case_when</span>(stimuli_attribute_2 <span class="sc">==</span> <span class="st">&quot;damaged&quot;</span> <span class="sc">~</span> <span class="st">&quot;PTSD&quot;</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                                stimuli_attribute_2 <span class="sc">==</span> <span class="st">&quot;defective&quot;</span> <span class="sc">~</span> <span class="st">&quot;ADHD&quot;</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>                                stimuli_attribute_2 <span class="sc">==</span> <span class="st">&quot;dangerous&quot;</span> <span class="sc">~</span> <span class="st">&quot;schizophrenia&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(participant, experiment)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>chad_mental_illness_stigma <span class="ot">&lt;-</span> chad_mental_illness_stigma <span class="sc">|&gt;</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>experiment) <span class="sc">|&gt;</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(stigma_domains, <span class="at">by =</span> <span class="st">&quot;participant&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some domains need demographics joined in</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data_demographics_temp_3 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;raw/additional demographics data/gender rich clinton.csv&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">participant =</span> ParticipantNumberQualtrics, <span class="at">age =</span> Age, <span class="at">gender =</span> Sex) <span class="sc">|&gt;</span></span>
@@ -2494,7 +2507,7 @@ old IRAP data files for this headache.</p>
 <span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death emma&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (1)&quot;</span>,</span>
 <span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death june&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (2)&quot;</span>,</span>
 <span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death tarah&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (3)&quot;</span>,</span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Death (self-other)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (self-other)&quot;</span>,</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Death (self-other)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (4)&quot;</span>,</span>
 <span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Disgust (1)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Disgust (1)&quot;</span>,</span>
 <span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Disgust (2)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Disgust (2)&quot;</span>,</span>
 <span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Sexuality (1)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Sexuality (1)&quot;</span>,</span>
@@ -2542,11 +2555,18 @@ old IRAP data files for this headache.</p>
 <span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)</span>
 <span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>data_trial_level <span class="ot">&lt;-</span> data_trial_level_temp_2 <span class="sc">%&gt;%</span></span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>data_trial_level_temp_3 <span class="ot">&lt;-</span> data_trial_level_temp_2 <span class="sc">%&gt;%</span></span>
 <span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_task_parameters, <span class="at">by =</span> <span class="st">&quot;domain&quot;</span>)</span>
 <span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a><span class="co"># write to disk</span></span>
-<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(data_trial_level, <span class="st">&quot;data_trial_level.csv&quot;</span>)</span></code></pre></div>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>data_trial_level <span class="ot">&lt;-</span> data_trial_level_temp_3 <span class="sc">|&gt;</span></span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove spurious age data</span></span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">ifelse</span>(age <span class="sc">&gt;</span> <span class="dv">999</span>, <span class="cn">NA</span>, age),</span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>         <span class="at">age =</span> <span class="fu">ifelse</span>(age <span class="sc">&lt;</span> <span class="dv">18</span>, <span class="cn">NA</span>, age))</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a><span class="co"># write to disk</span></span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(data_trial_level, <span class="st">&quot;data_trial_level.csv&quot;</span>)</span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>data_trial_level <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data_trial_level.csv&quot;</span>)</span></code></pre></div>
 </div>
 <div id="session-info" class="section level1">
 <h1>Session info</h1>
