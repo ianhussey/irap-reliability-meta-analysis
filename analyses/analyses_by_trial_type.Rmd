@@ -12,10 +12,6 @@ output:
     toc_float: yes
 ---
 
-# TODO
-
-- Polygon in TRT caterpillar plot not showing
-
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message = FALSE,
                       warning = FALSE)
@@ -249,67 +245,6 @@ metafor::forest(data_ic_permuted_sensitivity$yi,
 
 Meta effect: `r meta_effect_sensitivity`.
 
-#### Native alpha values, all domains
-
-Given how many estimates and lower bound CIs were <0, the forest plot for the above model might appear distorted by its lower bound of 0 (due to the Bonnett transformations). In order to test the robustness of the result, I also fit a model without Bonnett transformations to the raw alpha values. Of course, this will then suffer from upper bound CIs > 1. The previous model with bonnett transformations is more suitable to direct comparisons with the meta of internal consistency of Overall D scores reported in the main analysis.Rmd file. 
-
-```{r fig.height=6, fig.width=8}
-
-data_ic_permuted_sensitivity_2 <- data_D_scores_internal_consistency_permuted_estimates %>%
-  filter(!str_detect(domain, "Sexuality")) |>
-  mutate(se = (alpha_ci_upper - alpha_ci_lower)/(1.96*2))
-
-# fit random Effects model 
-fit_internal_consistency_permuted_estimates_native_sensitivity_2 <- 
-  rma.mv(yi     = alpha, 
-         V      = se^2,
-         random = ~ 1 | domain,
-         data   = data_ic_permuted_sensitivity_2,
-         slab   = domain)
-
-# make predictions 
-predictions_permutations_native_sensitivity_2 <-
-  predict(fit_internal_consistency_permuted_estimates_native_sensitivity_2, digits = 5) %>%
-  as.data.frame() %>%
-  round_df(2)
-
-# plot
-metafor::forest(data_ic_permuted_sensitivity_2$alpha, 
-                data_ic_permuted_sensitivity_2$se^2,
-                xlim = c(-2, 2), # adjust horizontal plot region limits
-                xlab = bquote(paste("Cronbach's ", alpha)),
-                at = c(-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
-                order = "obs", # order by size of yi
-                slab = NA, 
-                annotate = FALSE, # remove study labels and annotations
-                efac = 0, # remove vertical bars at end of CIs
-                pch = 19, # changing point symbol to filled circle
-                col = "gray40", # change color of points/CIs
-                psize = 2, # increase point size
-                cex.lab = 1, cex.axis = 1, # increase size of x-axis title/labels
-                lty = c("solid", "blank")) # remove horizontal line at top of plot
-points(sort(data_ic_permuted_sensitivity_2$alpha), 
-       nrow(data_ic_permuted_sensitivity_2):1, pch = 19, cex = 0.5) # draw points one more time to make them easier to see
-addpoly(fit_internal_consistency_permuted_estimates_native_sensitivity_2, mlab = "", cex = 1, addcred = TRUE) # add summary polygon at bottom and text
-#text(-1, -1, "RE Model", pos = 4, offset = 0, cex = 1)
-
-# summarize results
-meta_effect_sensitivity_2 <- 
-  paste0("Meta analysis: k = ", fit_internal_consistency_permuted_estimates_native_sensitivity_2$k, 
-         ", alpha = ",  janitor::round_half_up(predictions_permutations_native_sensitivity_2$pred, 2), 
-         ", 95% CI [", janitor::round_half_up(predictions_permutations_native_sensitivity_2$ci.lb, 2), ", ", 
-         janitor::round_half_up(predictions_permutations_native_sensitivity_2$ci.ub, 2), "]", 
-         ", 95% CR [", janitor::round_half_up(predictions_permutations_native_sensitivity_2$pi.lb, 2), ", ", 
-         janitor::round_half_up(predictions_permutations_native_sensitivity_2$pi.ub, 2), "]") 
-
-# save to disk for making pdf plot
-#write_rds(fit_internal_consistency_permuted_estimates_native_sensitivity_2,
-#    "models/fit_internal_consistency_permuted_estimates_native_sensitivity_2.rds")
-
-```
-
-Meta effect: `r meta_effect_sensitivity_2`.
-
 # Test-retest reliability
 
 ## Intraclass Correlations
@@ -317,7 +252,7 @@ Meta effect: `r meta_effect_sensitivity_2`.
 "It has been argued that test-retest reliability should reflect absolute agreement, rather than consistency, between measurements (Koo & Li, 2016). For example, a perfect correlation between scores at two time points may occur also when there is a systematic difference between time points (i.e. a difference that is about equal for all participants)." (Parsons, Kruijt, & Fox, 2019).
 Absolute agreement therefore also takes within-participant changes into account in its denominator, where consistency does not.
 
-```{r fig.height=4, fig.width=8}
+```{r fig.height=8.5, fig.width=8}
 
 # fit random Effects model 
 fit_test_retest_icc <- 
@@ -342,8 +277,8 @@ metafor::forest(fit_test_retest_icc,
                 #at = c(-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
                 at = c(-1, -0.5, 0, 0.5, 1))
                 #mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
-text(-3, 10, "Study", pos = 4)
-text(2.3, 10, "ICC(2,1) [95% CI]", pos = 2)
+text(-3, 34, "Study", pos = 4)
+text(2.3, 34, "ICC2 [95% CI]", pos = 2)
 
 # summarize results
 meta_effect_trt <- 

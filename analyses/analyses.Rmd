@@ -170,7 +170,7 @@ For meta analysis, spearman brown correlations are converted to Fischers r-to-z 
 
 Bonett transformations 
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9.5, fig.width=8}
 
 # fit random Effects model 
 fit_oddeven <-  data_D_scores_internal_consistency_oddeventrials %>%
@@ -194,8 +194,8 @@ metafor::forest(fit_oddeven,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_oddeven))
-text(-1.4, 37, "Study", pos = 4)
-text(1.6, 37, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 41, "Study", pos = 4)
+text(1.6, 41, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -223,7 +223,7 @@ Heterogeneity: `r meta_heterogeneity`.
 
 Bonett transformations 
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9.5, fig.width=8}
 
 # fit random Effects model 
 fit_firstsecond <- data_D_scores_internal_consistency_firstsecondhalves %>%
@@ -247,8 +247,8 @@ metafor::forest(fit_firstsecond,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond))
-text(-1.4, 37, "Study", pos = 4)
-text(1.6, 37, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 41, "Study", pos = 4)
+text(1.6, 41, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -292,7 +292,7 @@ ggplot(data_D_scores_internal_consistency_permuted_estimates,
 
 Bonett transformations 
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9.5, fig.width=8}
 
 # fit random Effects model 
 fit_internal_consistency_permuted_estimates <- 
@@ -317,8 +317,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates))
-text(-1.4, 37, "Study", pos = 4)
-text(1.6, 37, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 41, "Study", pos = 4)
+text(1.6, 41, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -419,7 +419,7 @@ data_for_plotting_ic %>%
 
 excluding Sexuality IRAPs as outliers
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9.5, fig.width=8}
 
 # fit random Effects model 
 fit_internal_consistency_permuted_estimates_sensitivity <- 
@@ -445,8 +445,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
-text(-1.4, 35, "Study", pos = 4)
-text(1.6, 35, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 39, "Study", pos = 4)
+text(1.6, 39, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -617,14 +617,14 @@ predictions_test_retest_icc <-
 
 # # plot
 # metafor::forest(fit_test_retest_icc,
-#                 xlab = "ICC(2,1)",
+#                 xlab = "ICC2",
 #                 addcred = TRUE,
 #                 refline = FALSE,
 #                 xlim = c(-1.5, 1.7),
 #                 at = c(-0.5, -0.25, 0, 0.25, 0.5, 0.75, 1),
 #                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
 # text(-1.5, 10, "Study", pos = 4)
-# text(1.7, 10, "ICC(2,1) [95% CI]", pos = 2)
+# text(1.7, 10, "ICC2 [95% CI]", pos = 2)
 
 # plot
 metafor::forest(fit_test_retest_icc,
@@ -636,7 +636,7 @@ metafor::forest(fit_test_retest_icc,
                 at = c(-1, -0.5, 0, 0.5, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
 text(-3, 10, "Study", pos = 4)
-text(2.3, 10, "ICC(2,1) [95% CI]", pos = 2)
+text(2.3, 10, "ICC2 [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -826,7 +826,7 @@ Using the absolute agreement estimate of `r janitor::round_half_up(predictions_t
 
 Internal consistency using permutation approach sensitivity analysis, comparing D scoring and A scoring. Multilevel moderator meta analyses, acknowledging non-independence between scores produced for each domain, and moderator by scoring type.
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9.5, fig.width=8}
 
 fit_internal_consistency_D_vs_A_scores <- 
   bind_rows(data_A_scores_internal_consistency_permuted_estimates %>%
@@ -860,7 +860,7 @@ tibble(response_options = c("D", "A"),
 
 Internal consistency using permutation approach sensitivity analysis, multilevel moderator meta analysis between block orders for the domains that have both.
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9.5, fig.width=8}
 
 fit_internal_consistency_block_order <- 
   data_D_scores_internal_consistency_permuted_estimates_by_block_order %>%
@@ -889,7 +889,7 @@ tibble(block_order = c("con first", "incon first"),
 
 Internal consistency using permutation approach sensitivity analysis, moderator meta analysis between response option locations between domains.
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9.5, fig.width=8}
 
 fit_internal_consistency_response_option_locations <- 
   data_D_scores_internal_consistency_permuted_estimates %>%
