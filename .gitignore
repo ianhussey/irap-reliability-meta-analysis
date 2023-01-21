@@ -2,15 +2,11 @@
 *.DS_Store
 *.Rhistory
 old/*
-data/trial level data/tidied data.zip
-data/trial level data/raw data.zip
-data/trial level data/raw and processing.zip
-data/trial level/intermediate.zip
-data/trial level/raw.zip
-data/trial level/very raw.zip
+
 measures/image stimuli/disgust sensitivity IRAP/IAPs images, not for distribution.zip
 measures/image stimuli/sexuality IRAP/IAPs images, not for distribution.zip
-data/raw.zip
-data/very raw.zip
+
 data/trial level/raw/*
 data/trial level/very raw/*
+data/trial level/raw.zip
+data/trial level/very raw.zip
