@@ -369,7 +369,7 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations.RD
   # assign row ids
   data_ic_rownumbers <- data_ic %>%
     arrange(unique_id, block_type) %>%
-    rownames_to_column(var = "row_id") %>%
+    mutate(row_id = row_number()) %>%
     group_by(unique_id, block_type) %>%
     mutate(trial_number = row_number()) %>%
     ungroup()
@@ -411,8 +411,8 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations.RD
       summarize(mean = mean(rt, na.rm = TRUE), .groups = "keep") |>
       ungroup() |>
       spread(block_type, mean) |>
-      rename(mean_con = con,
-             mean_incon = incon)
+      rename(mean_con = consistent,
+             mean_incon = inconsistent)
     
     data_temp_3 <- data_temp_1 |>
       group_by(unique_id, subset) |>
@@ -610,7 +610,7 @@ if (file.exists("permutations/data_A_scores_internal_consistency_permutations.RD
   # assign row ids
   data_ic_rownumbers <- data_ic %>%
     arrange(unique_id, block_type) %>%
-    rownames_to_column(var = "row_id") %>%
+    mutate(row_id = row_number()) %>%
     group_by(unique_id, block_type) %>%
     mutate(trial_number = row_number()) %>%
     ungroup()
@@ -742,7 +742,7 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations_by
   # assign row ids
   data_ic_rownumbers <- data_ic_subset %>%
     arrange(unique_id, block_type) %>%
-    rownames_to_column(var = "row_id") %>%
+    mutate(row_id = row_number()) %>%
     group_by(unique_id, block_type) %>%
     mutate(trial_number = row_number()) %>%
     ungroup()
@@ -772,8 +772,8 @@ if (file.exists("permutations/data_D_scores_internal_consistency_permutations_by
       summarize(mean = mean(rt, na.rm = TRUE), .groups = "keep") |>
       ungroup() |>
       spread(block_type, mean) |>
-      rename(mean_con = con,
-             mean_incon = incon)
+      rename(mean_con = consistent,
+             mean_incon = inconsistent)
     
     data_temp_3 <- data_temp_1 |>
       group_by(unique_id, subset) |>
