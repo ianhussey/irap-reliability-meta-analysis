@@ -66,7 +66,7 @@ ruscios_A_function <- function(x, y) {
   return(A)
 }
 
-ruscios_A <- function(data, variable = "rt", group = "block_type", value1 = "incon", value2 = "con") {
+ruscios_A <- function(data, variable = "rt", group = "block_type", value1 = "inconsistent", value2 = "consistent") {
   # Ensure data is a data frame (e.g., not a tbl_data)
   data <- as.data.frame(data)
   # Select the observations for group 1
@@ -108,24 +108,13 @@ Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
 ```{r}
 
 # all
-data_all <- read_csv("../trial level/data_trial_level.csv") 
+data_outliers <- read_csv("../trial level/data_trial_level.csv") |>
+  mutate(timepoint = dplyr::recode(timepoint,
+                                   "1" = "baseline",
+                                   "2" = "followup"))
 
-# exclusions
-data_outliers <- data_all %>%
-  distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id, domain, mean_rt) %>%
-  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
-         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
-  # exclude median +- 2MAD
-  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
-                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
-  filter(rt_outlier == FALSE) %>%
-  select(unique_id, rt_outlier) %>%
-  full_join(data_all, by = "unique_id") %>%
-  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
-
-data_outliers_removed <- data_outliers %>%
-  filter(rt_outlier == FALSE)
+data_outliers_removed <- data_outliers |>
+  filter(met_performance_criteria == TRUE)
 
 # subset ic
 data_ic <- data_outliers_removed %>%
@@ -142,7 +131,7 @@ data_unique_ids_two_timepoints <- data_outliers_removed %>%
   select(unique_id) 
 
 data_trt <- data_unique_ids_two_timepoints %>%
-  left_join(data_outliers, by = "unique_id")
+  left_join(data_outliers_removed, by = "unique_id")
 
 ```
 
@@ -153,14 +142,16 @@ Save demographics data to disk
 ```{r}
 
 # write demographics to disk
-data_demographics <- data_outliers %>%
+data_demographics <- data_outliers_removed %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id, domain, age, gender, rt_outlier) %>%
+  select(unique_id, domain, age, gender, met_performance_criteria) %>%
   filter(!domain %in% c("Clinton-Trump",
                         "Disgust (1)",
                         "Disgust (2)",
                         "Countries (1)",
                         "Countries (2)",
+                        "Countries (3)",
+                        "Countries (4)",
                         "Race (2)",
                         "Valenced words",
                         "Rich-Poor",
@@ -180,7 +171,7 @@ data_additional_demographics <- read_csv("../trial level/additional_demographics
 data_demographics_combined <- 
   bind_rows(data_demographics,
             data_additional_demographics) %>%
-  select(-unique_id, -participant, -rt_outlier) %>%
+  select(-unique_id, -participant, -met_performance_criteria) %>%
   filter(!is.na(age) | !is.na(gender))
 
 write_csv(data_demographics_combined, "data_demographics.csv")
@@ -192,40 +183,40 @@ Sample sizes
 ```{r}
 
 # print sample sizes
-data_outliers %>%
+data_outliers_removed %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  count(rt_outlier) %>%
+  count(met_performance_criteria) %>%
   rename(n_outlier_exclusions = n) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_ic %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   count(domain) %>%
   rename(n_ic_after_exlucions = n) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_ic %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   count() %>%
   rename(n_ic_after_exlucions = n) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_trt %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   count(domain) %>%
   rename(n_trt_after_exlucions = n) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_trt %>%
   distinct(unique_id, .keep_all = TRUE) %>%
   count() %>%
   rename(n_trt_after_exlucions = n) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 ```
 
@@ -245,8 +236,8 @@ Three methods of calculating internal consistency for the Implicit Relational As
 data_D_scores_ic_oddeventrials <- data_ic %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, trial_odd_even) %>%
-  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+  summarize(mean_con = mean(rt[block_type == "consistent"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "inconsistent"], na.rm = TRUE),
             sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
@@ -306,8 +297,8 @@ data_halves <- data_ic %>%
 data_D_scores_ic_firstsecond <- data_halves %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, half) %>%
-  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+  summarize(mean_con = mean(rt[block_type == "consistent"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "inconsistent"], na.rm = TRUE),
             sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
@@ -519,8 +510,8 @@ write_csv(data_D_scores_internal_consistency_permuted_estimates,
 data_D_scores_trt <- data_trt %>%
   filter(rt <= 10000) %>%
   group_by(unique_id, timepoint) %>%
-  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+  summarize(mean_con = mean(rt[block_type == "consistent"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "inconsistent"], na.rm = TRUE),
             sd = sd(rt, na.rm = TRUE)) %>%
   ungroup() %>%
   mutate(D = (mean_incon - mean_con)/sd) %>%
