@@ -698,28 +698,28 @@ chad_personality <-
 
 data_goirap <- 
   bind_rows(
-    # read_csv("raw/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
-    #           select(unique_id, 
-    #                  experiment,
-    #                  gender = participantGender,
-    #                  age = participantAge, 
-    #                  block_order = startingRule, 
-    #                  block_type = currentRule, 
-    #                  trial_type = trialType, 
-    #                  rt = timeToCorrectResponse,
-    #                  accuracy,
-    #                  isTestBlock),
-    #         read_csv("raw/GO-IRAP format files/ian countries 2 care.csv") %>%
-    #           select(unique_id, 
-    #                  experiment,
-    #                  gender = participantGender,
-    #                  age = participantAge, 
-    #                  block_order = startingRule, 
-    #                  block_type = currentRule, 
-    #                  trial_type = trialType, 
-    #                  rt = timeToCorrectResponse,
-    #                  accuracy,
-    #                  isTestBlock),
+    read_csv("raw/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
+      select(unique_id,
+             experiment,
+             gender = participantGender,
+             age = participantAge,
+             block_order = startingRule,
+             block_type = currentRule,
+             trial_type = trialType,
+             rt = timeToCorrectResponse,
+             accuracy,
+             isTestBlock),
+    read_csv("raw/GO-IRAP format files/ian countries 2 care.csv") %>%
+      select(unique_id,
+             experiment,
+             gender = participantGender,
+             age = participantAge,
+             block_order = startingRule,
+             block_type = currentRule,
+             trial_type = trialType,
+             rt = timeToCorrectResponse,
+             accuracy,
+             isTestBlock),
     read_csv("raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv") %>%
       select(unique_id, 
              experiment, 
@@ -937,6 +937,8 @@ data_trial_level <- data_trial_level_temp_2 %>%
 
 # write to disk
 write_csv(data_trial_level, "data_trial_level.csv")
+
+data_trial_level <- read_csv("data_trial_level.csv")
 
 ```
 
