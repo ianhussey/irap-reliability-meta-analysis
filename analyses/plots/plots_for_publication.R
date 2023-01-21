@@ -44,8 +44,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 #ilab = data_internal_consistency_permuted_estimates$n,
                 #ilab.xpos = 1.1,
                 #ilab.pos = 2)
-text(-1, 37, "Internal consistency", pos = 4)
-text(1.6, 37, bquote(paste(alpha, " [95% CI]")), pos = 2)
+text(-1, 41, "Internal consistency", pos = 4)
+text(1.6, 41, bquote(paste(alpha, " [95% CI]")), pos = 2)
 #text(1.1, 37, expression(italic("N")), pos = 2)
 
 
@@ -71,8 +71,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 xlim = c(-1, 1.6),
                 at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
-text(-1, 35, "Internal consistency", pos = 4)
-text(1.6, 35, bquote(paste(alpha, " [95% CI]")), pos = 2)
+text(-1, 39, "Internal consistency", pos = 4)
+text(1.6, 39, bquote(paste(alpha, " [95% CI]")), pos = 2)
 
 p1 <- recordPlot()
 invisible(dev.off())
@@ -97,7 +97,7 @@ metafor::forest(fit_test_retest_icc,
                 at = c(-1, -0.5, 0, 0.5, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_icc))
 text(-3, 10, "Test-retest reliability", pos = 4)
-text(2.2, 10, "ICC(2,1) [95% CI]", pos = 2)
+text(2.2, 10, "ICC2 [95% CI]", pos = 2)
 
 p1 <- recordPlot()
 invisible(dev.off())
@@ -112,7 +112,7 @@ dev.off()
 # ## IC sensitivity + TRT
 # pdf(NULL)
 # dev.control(displaylist = "enable")
-# par(mfrow=c(2,1))
+# par(mfrow=c2)
 # layout(matrix(c(1,2), 2, 1, byrow = TRUE),
 #        widths=c(1), heights = c(1, 0.47))  #c(1.775,1)
 # 
