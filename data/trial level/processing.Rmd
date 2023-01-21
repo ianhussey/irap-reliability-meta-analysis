@@ -168,9 +168,87 @@ chad_religion_IRAP1 <- wrangle_data(file = "raw/IRAP 2012 VB6 format files/chad 
 chad_religion_IRAP2 <- wrangle_data(file = "raw/IRAP 2012 VB6 format files/chad religion t2.csv", 
                                     timepoint = 2)
 
-ian_death <- wrangle_data(file = "raw/IRAP 2012 VB6 format files/ian death.csv") # TODO needs NA blocks excluded
+ian_death <- wrangle_data(file = "raw/IRAP 2012 VB6 format files/ian death.csv")
+
+# this IRAP wasn't evaluative but I include it here as it uses the function developed for them
+ian_death_selfother <- wrangle_data(file = "raw/IRAP 2012 VB6 format files/ian death self other IRAP.csv") |>
+  mutate(experiment = "Death (self-other)")
 
 ian_race <- wrangle_data(file = "raw/IRAP 2012 VB6 format files/ian race 2.csv")
+
+```
+
+```{r}
+
+# some exclusions needed based on a version of the task that contained an error - one block not delivered. exclude these participants.
+ian_death_participants_to_retain <- ian_death |>
+  filter(block_number == 1 & 
+           block_type == "inconsistent") |>
+  pivot_wider(names_from = trial_type,
+              values_from = c(rt, accuracy)) |>
+  mutate(exclude = ifelse(is.na(rt_tt1) & 
+                            is.na(rt_tt2) & 
+                            is.na(rt_tt3) & 
+                            is.na(rt_tt4) & 
+                            is.na(accuracy_tt1) & 
+                            is.na(accuracy_tt2) & 
+                            is.na(accuracy_tt3) & 
+                            is.na(accuracy_tt4),
+                          TRUE,
+                          FALSE)) |>
+  distinct(experiment, participant, exclude) |>
+  filter(exclude == FALSE)
+
+ian_death <- ian_death |>
+  semi_join(ian_death_participants_to_retain, by = "participant")
+
+
+ian_death_participants_to_retain_2 <- ian_death_selfother |>
+  filter(block_number == 1 & 
+           block_type == "inconsistent") |>
+  pivot_wider(names_from = trial_type,
+              values_from = c(rt, accuracy)) |>
+  mutate(exclude = ifelse(is.na(rt_tt1) & 
+                            is.na(rt_tt2) & 
+                            is.na(rt_tt3) & 
+                            is.na(rt_tt4) & 
+                            is.na(accuracy_tt1) & 
+                            is.na(accuracy_tt2) & 
+                            is.na(accuracy_tt3) & 
+                            is.na(accuracy_tt4),
+                          TRUE,
+                          FALSE)) |>
+  distinct(experiment, participant, exclude) |>
+  filter(exclude == FALSE)
+
+ian_death_selfother <- ian_death_selfother |>
+  semi_join(ian_death_participants_to_retain_2, by = "participant")
+
+```
+
+```{r}
+
+# some domains need demographics joined in
+data_demographics_temp_3 <- read_csv("raw/additional demographics data/gender rich clinton.csv") %>%
+  select(participant = ParticipantNumberQualtrics, age = Age, gender = Sex) |>
+  mutate(participant = as.character(participant))
+
+chad_political_attitudes <- 
+  left_join(chad_political_attitudes, data_demographics_temp_3, by = "participant")
+
+chad_gender_IRAP1 <- 
+  left_join(chad_gender_IRAP1, data_demographics_temp_3, by = "participant")
+
+chad_gender_IRAP2 <- 
+  left_join(chad_gender_IRAP2, data_demographics_temp_3, by = "participant")
+
+
+data_demographics_temp_4 <- read_csv("raw/additional demographics data/stigma.csv") %>%
+  select(participant = ParticipantNumber, age = Age, gender = Sex) |>
+  mutate(participant = as.character(round(participant, 0)))
+
+chad_mental_illness_stigma <- 
+  left_join(chad_mental_illness_stigma, data_demographics_temp_4, by = "participant")
 
 ```
 
@@ -265,6 +343,19 @@ chad_lincolnHitlerFriendEnemy_IRAP3 <- chad_lincolnHitlerFriendEnemy_IRAP3 %>%
                                                  combination %in% c("all three")), participant),
                                    NA, 1)))
 
+data_demographics_temp_2 <- read_csv("raw/additional demographics data/lincoln friend.csv") %>%
+  select(participant, age, gender = sex) |>
+  mutate(participant = as.character(participant))
+
+chad_lincolnHitlerFriendEnemy_IRAP1 <- 
+  left_join(chad_lincolnHitlerFriendEnemy_IRAP1, data_demographics_temp_2, by = "participant")
+
+chad_lincolnHitlerFriendEnemy_IRAP2 <- 
+  left_join(chad_lincolnHitlerFriendEnemy_IRAP2, data_demographics_temp_2, by = "participant")
+
+chad_lincolnHitlerFriendEnemy_IRAP3 <- 
+  left_join(chad_lincolnHitlerFriendEnemy_IRAP3, data_demographics_temp_2, by = "participant")
+
 ```
 
 ```{r}
@@ -285,6 +376,7 @@ combined_data <-
             chad_religion_IRAP1,
             chad_religion_IRAP2,
             ian_death,
+            ian_death_selfother,
             ian_race) |>
   mutate(experiment = str_remove(experiment, "IRAP"),
          experiment = str_remove(experiment, "_1"),
@@ -294,22 +386,26 @@ combined_data <-
   mutate(unique_id = paste(experiment, participant, sep = "_")) 
 
 ## get demographics data
-data_demographics <- read_csv("raw/IRAP 2012 VB6 format files/demographics and performance criteria data.csv") %>%
+data_demographics_temp_1 <- read_csv("raw/IRAP 2012 VB6 format files/demographics and performance criteria data.csv") %>%
   select(unique_id, age, gender)
-  # many missed cases. haven't tried to hard to match these.
-  # missing all data for the following domains: gender, clintontrump, menwomen, richpoor, mentalillness_stigma
 
-data_evalautive_temp <- 
-  left_join(combined_data, data_demographics, by = "unique_id")
+data_evaluative_temp <- 
+  left_join(combined_data, data_demographics_temp_1, by = "unique_id")
 
 # filter out participants who do not have the correct number of trials
-data_evalautive <- data_evalautive_temp |>
-  semi_join(data_evalautive_temp |>
+data_evaluative <- data_evaluative_temp |>
+  semi_join(data_evaluative_temp |>
               count(unique_id, timepoint) |>
               filter(n %in% c(144, 192)),
-            by = c("unique_id", "timepoint"))
+            by = c("unique_id", "timepoint")) |>
+  mutate(age = case_when(!is.na(age.x) ~ age.x,
+                         !is.na(age.y) ~ age.y),
+         gender = case_when(!is.na(gender.x) ~ gender.x,
+                            !is.na(gender.y) ~ gender.y)) |>
+  select(unique_id, experiment, participant, age, gender, timepoint, block_order, 
+         stimulus_number, block_number, block_type, trial_type, rt, accuracy)
 
-# data_evalautive |>
+# data_evaluative |>
 #   distinct(unique_id, .keep_all = TRUE) |>
 #   count(experiment, missing = is.na(age))
 
@@ -373,7 +469,22 @@ data_nonevaluative_acc <- data_input %>%
   select(unique_id, block_type, trial_type, stimulus_number, experiment, participant, block_order, accuracy)
 
 data_nonevaluative <- data_nonevaluative_rt |>
-  bind_cols(data_nonevaluative_acc |> select(accuracy))
+  bind_cols(data_nonevaluative_acc |> select(accuracy)) |>
+  mutate(timepoint = 1) |>
+  mutate(stimulus_number = tolower(str_remove(stimulus_number, " ")),
+         block_order = str_remove(block_order, " first"),
+         block_order = dplyr::recode(tolower(block_order),
+                                     "con" = "consistent first",
+                                     "incon" = "inconsistent first"),
+         block_type = dplyr::recode(tolower(block_type),
+                                    "con" = "consistent",
+                                    "incon" = "inconsistent")) |>
+  select(unique_id, experiment, participant, 
+         #age, gender, 
+         timepoint, block_order, 
+         stimulus_number, 
+         #block_number, 
+         block_type, trial_type, rt, accuracy)
 
 ```
 
@@ -400,26 +511,55 @@ data_completeness <- data_input_disgust %>%
   filter(n %in% c(384*2)) # methodologically plausible number of trials
 
 data_disgust_1 <- data_input_disgust %>%
-  semi_join(data_completeness, by = "unique_id") %>%
-  filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
-  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
-                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
-                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
-                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
-                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
-                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon",
-                                "tt1_block4_con", "tt2_block4_con", "tt3_block4_con", "tt4_block4_con", 
-                                "tt1_block4_incon", "tt2_block4_incon", "tt3_block4_incon", "tt4_block4_incon", 
-                                "tt1_block5_con", "tt2_block5_con", "tt3_block5_con", "tt4_block5_con", 
-                                "tt1_block5_incon", "tt2_block5_incon", "tt3_block5_incon", "tt4_block5_incon", 
-                                "tt1_block6_con", "tt2_block6_con", "tt3_block6_con", "tt4_block6_con", 
-                                "tt1_block6_incon", "tt2_block6_incon", "tt3_block6_incon", "tt4_block6_incon")) %>%
+  semi_join(data_completeness, by = c("unique_id")) %>%
+  #filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
+  gather(trial_and_block, response, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
+                                      "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
+                                      "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
+                                      "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
+                                      "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
+                                      "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon",
+                                      "tt1_block4_con", "tt2_block4_con", "tt3_block4_con", "tt4_block4_con", 
+                                      "tt1_block4_incon", "tt2_block4_incon", "tt3_block4_incon", "tt4_block4_incon", 
+                                      "tt1_block5_con", "tt2_block5_con", "tt3_block5_con", "tt4_block5_con", 
+                                      "tt1_block5_incon", "tt2_block5_incon", "tt3_block5_incon", "tt4_block5_incon", 
+                                      "tt1_block6_con", "tt2_block6_con", "tt3_block6_con", "tt4_block6_con", 
+                                      "tt1_block6_incon", "tt2_block6_incon", "tt3_block6_incon", "tt4_block6_incon")) %>%
   separate(trial_and_block, into = c("trial_type", "block", "block_type"), sep = "_") %>%
   mutate(timepoint = ifelse(str_detect(block, "block1") | 
                               str_detect(block, "block2") | 
                               str_detect(block, "block3"), 1, 2),
-         experiment = "Disgust (1)") %>%
-  select(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) 
+         experiment = "Disgust (1)") |>
+  # wrangle acc vs rt
+  mutate(trial_and_data_type = str_replace(trial_and_data_type, "Target ", "target"),
+         trial_and_data_type = str_replace(trial_and_data_type, "Raw Latency", "rt"),
+         trial_and_data_type = str_remove(trial_and_data_type, ":"),
+         trial_and_data_type = str_replace(trial_and_data_type, "Accuracy", "accuracy")) |>
+  separate(trial_and_data_type, into = c("stimulus_number", "data_type"), sep = " ") |>
+  pivot_wider(names_from = data_type, 
+              values_from = "response") |>
+  mutate(block_order = dplyr::recode(block_order,
+                                     "con first" = "consistent first",
+                                     "incon first" = "inconsistent first"),
+         block_type = dplyr::recode(block_type,
+                                    "con" = "consistent",
+                                    "incon" = "inconsistent"),
+         block_number = as.numeric(str_remove(block, "block"))) |>
+  select(unique_id, experiment, participant, 
+         #age, gender, 
+         timepoint, block_order, 
+         stimulus_number, 
+         block_number, 
+         block_type, trial_type, rt, accuracy)
+
+# join demographics
+data_demographics_temp_digust <- 
+  read_csv("raw/additional demographics data/disgust 1 explicits and bats.csv") %>%
+  select(participant, age, gender) |>
+  mutate(participant = paste0(as.character(participant), "I"))
+
+data_disgust_1 <- 
+  left_join(data_disgust_1, data_demographics_temp_digust, by = "participant")
 
 ```
 
@@ -427,7 +567,7 @@ data_disgust_1 <- data_input_disgust %>%
 
 ```{r}
 
-data_input_sexuality <- read_csv("raw/IRAP 2012 VB6 format files/ian sexuality 1.csv") 
+data_input_sexuality <- read_csv("raw/IRAP 2012 VB6 format files/ian sexuality 1.csv")
 
 data_completeness <- data_input_sexuality %>%
   gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
@@ -441,23 +581,40 @@ data_completeness <- data_input_sexuality %>%
 
 data_sexuality_1 <- data_input_sexuality %>%
   semi_join(data_completeness, by = c("unique_id", "timepoint")) %>%
-  filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
-  gather(trial_and_block, rt, c("tt1_block1_con", "tt2_block1_con", "tt3_block1_con", "tt4_block1_con", 
-                                "tt1_block1_incon", "tt2_block1_incon", "tt3_block1_incon", "tt4_block1_incon", 
-                                "tt1_block2_con", "tt2_block2_con", "tt3_block2_con", "tt4_block2_con", 
-                                "tt1_block2_incon", "tt2_block2_incon", "tt3_block2_incon", "tt4_block2_incon", 
-                                "tt1_block3_con", "tt2_block3_con", "tt3_block3_con", "tt4_block3_con", 
-                                "tt1_block3_incon", "tt2_block3_incon", "tt3_block3_incon", "tt4_block3_incon")) %>%
+  #filter(str_detect(trial_and_data_type, "Raw Latency")) %>%
+  pivot_longer(cols = starts_with("tt"),
+               names_to = "trial_and_block", 
+               values_to = "response") %>%
+  mutate(trial_and_data_type = str_replace(trial_and_data_type, "Target ", "target"),
+         trial_and_data_type = str_replace(trial_and_data_type, "Raw Latency", "rt"),
+         trial_and_data_type = str_remove(trial_and_data_type, ":"),
+         trial_and_data_type = str_replace(trial_and_data_type, "Accuracy", "accuracy")) |>
+  separate(trial_and_data_type, into = c("stimulus_number", "data_type"), sep = " ") |>
+  pivot_wider(names_from = data_type, 
+              values_from = "response") |>
   separate(trial_and_block, into = c("trial_type", "block", "block_type"), sep = "_") %>%
-  mutate(test_block = ifelse(str_detect(block, "prac"), FALSE, TRUE),
-         experiment = "Sexuality (1)") %>%
-  select(unique_id, timepoint, block_type, trial_type, rt, experiment, block_order) 
+  # drop practice blocks
+  filter(!str_detect(block, "prac")) |>
+  mutate(experiment = "Sexuality (1)") %>%
+  # wrangle acc vs rt
+  mutate(block_order = dplyr::recode(block_order,
+                                     "con first" = "consistent first",
+                                     "incon first" = "inconsistent first"),
+         block_type = dplyr::recode(block_type,
+                                    "con" = "consistent",
+                                    "incon" = "inconsistent"),
+         participant = as.factor(participant),
+         block_number = as.numeric(str_remove(block, "block"))) |>
+  select(unique_id, experiment, participant, 
+         #age, gender, 
+         timepoint, block_order, 
+         stimulus_number, 
+         block_number, 
+         block_type, trial_type, rt, accuracy)
 
 ```
 
 ### Personality IRAPs
-
-A late addition from Chad
 
 ```{r}
 
@@ -471,7 +628,7 @@ chad_personality_temp <- read_csv("raw/IRAP 2012 VB6 format files/chad personali
                  -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2), as.numeric) %>%
   mutate_at(vars(experiment, participant, data_type, 
                  stimuli_category_1, stimuli_category_2, stimuli_attribute_1, stimuli_attribute_2), as.character) %>%
-  filter(grepl("Target", data_type) & grepl("Latency", data_type)) %>%
+  #filter(grepl("Target", data_type) & grepl("Latency", data_type)) %>%
   right_join(read_csv("raw/IRAP 2012 VB6 format files/chad personality.csv") %>%
                mutate(participant = as.factor(participant)) %>%
                select(participant, block_order) %>%
@@ -487,22 +644,51 @@ chad_personality_ids <- chad_personality_temp %>%
   distinct(participant) %>%
   rownames_to_column(var = "anonymized_participant")
 
-chad_personality <- chad_personality_temp %>%
+chad_personality_temp_2 <- chad_personality_temp %>%
   full_join(chad_personality_ids, by = "participant") %>%
-  select(-participant) %>%
+  semi_join(chad_personality_temp |>
+              count(participant) |>
+              filter(n == 60),
+            by = "participant") |>
+  select(-participant, -stimuli_category_1, -stimuli_category_2, -stimuli_attribute_1, -stimuli_attribute_2) %>%
   rename(participant = anonymized_participant) %>%
   mutate(timepoint = 1,
-         unique_id = paste(experiment, participant, sep = "_"),
-         stimulus_number = str_remove_all(data_type, " Raw Latency")) %>%
+         unique_id = paste(experiment, participant, sep = "_")) %>%
   pivot_longer(cols = starts_with("t1_") | starts_with("t2_") | starts_with("t3_"),
                names_to = "type",
-               values_to = "rt") %>%
+               values_to = "response") %>%
   separate(type, into = c("blockpair_number", "block_type", "trial_type")) %>%
-  select(unique_id, experiment, timepoint, participant, 
-         block_order, block_type, trial_type, stimulus_number, rt) %>%
-  mutate(block_type = recode(block_type,
-                             "ic" = "incon",
-                             "c" = "con"))
+  # wrangle acc vs rt
+  mutate(data_type = str_replace(data_type, "Target ", "target"),
+         data_type = str_replace(data_type, "Raw Latency", "rt"),
+         data_type =  str_remove(data_type, ":"),
+         data_type = str_replace(data_type, "Accuracy", "accuracy")) |>
+  separate(data_type, into = c("stimulus_number", "data_type"), sep = " ") |>
+  pivot_wider(names_from = "data_type", 
+              values_from = "response") |>
+  # wrangle acc vs rt
+  mutate(block_order = dplyr::recode(block_order,
+                                     "Consistent" = "consistent first",
+                                     "Inconsistent" = "inconsistent first"),
+         block_type = dplyr::recode(block_type,
+                                    "c" = "consistent",
+                                    "ic" = "inconsistent"),
+         block_number = as.numeric(str_remove(blockpair_number, "t"))) |>
+  select(unique_id, experiment, participant, 
+         #age, gender, 
+         timepoint, block_order, 
+         stimulus_number, 
+         block_number, 
+         block_type, trial_type, rt, accuracy)
+
+## get demographics data
+data_demographics_personality <- 
+  read_csv("raw/additional demographics data/personality.csv") %>%
+  select(participant = Participant, age = Age, gender = Sex) |>
+  mutate(participant = as.character(participant))
+
+chad_personality <- 
+  left_join(chad_personality_temp_2, data_demographics_personality, by = "participant")
 
 ```
 
@@ -536,51 +722,94 @@ data_goirap <-
     #                  isTestBlock),
     read_csv("raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv") %>%
       select(unique_id, 
-             experiment,
-             gender = participantGender,
+             experiment, 
+             participant = participantCode, 
              age = participantAge, 
+             gender = participantGender,
+             # timepoint, 
              block_order = startingRule, 
+             stimulus_number = target, 
+             block_number = blockPairNumber,
              block_type = currentRule, 
              trial_type = trialType, 
-             rt = timeToCorrectResponse,
+             rt = timeToCorrectResponse, 
              accuracy,
-             isTestBlock),
+             isTestBlock) |>
+      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+                                             "Square" = "target1",		
+                                             "Triangle" = "target2",
+                                             "Circle" = "target3",				
+                                             "Blue" = "target1",		
+                                             "Red" = "target2",			
+                                             "Green" = "target3")),
     read_csv("raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv") %>%
       select(unique_id, 
-             experiment,
-             gender = participantGender,
+             experiment, 
+             participant = participantCode, 
              age = participantAge, 
+             gender = participantGender,
+             # timepoint, 
              block_order = startingRule, 
+             stimulus_number = target, 
+             block_number = blockPairNumber,
              block_type = currentRule, 
              trial_type = trialType, 
-             rt = timeToCorrectResponse,
+             rt = timeToCorrectResponse, 
              accuracy,
-             isTestBlock),
+             isTestBlock) |>
+      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+                                             "Square" = "target1",		
+                                             "Triangle" = "target2",
+                                             "Circle" = "target3",				
+                                             "Blue" = "target1",		
+                                             "Red" = "target2",			
+                                             "Green" = "target3")),
     read_csv("raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv") %>%
       select(unique_id, 
-             experiment,
-             gender = participantGender,
+             experiment, 
+             participant = participantCode, 
              age = participantAge, 
+             gender = participantGender,
+             # timepoint, 
              block_order = startingRule, 
+             stimulus_number = target, 
+             block_number = blockPairNumber,
              block_type = currentRule, 
              trial_type = trialType, 
-             rt = timeToCorrectResponse,
+             rt = timeToCorrectResponse, 
              accuracy,
-             isTestBlock),
+             isTestBlock) |>
+      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+                                             "Square" = "target1",		
+                                             "Triangle" = "target2",
+                                             "Circle" = "target3",				
+                                             "Blue" = "target1",		
+                                             "Red" = "target2",			
+                                             "Green" = "target3")),
     read_csv("raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv") %>%
       select(unique_id, 
-             experiment,
-             gender = participantGender,
+             experiment, 
+             participant = participantCode, 
              age = participantAge, 
+             gender = participantGender,
+             # timepoint, 
              block_order = startingRule, 
+             stimulus_number = target, 
+             block_number = blockPairNumber,
              block_type = currentRule, 
              trial_type = trialType, 
-             rt = timeToCorrectResponse,
+             rt = timeToCorrectResponse, 
              accuracy,
-             isTestBlock),
+             isTestBlock) |>
+      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+                                             "Square" = "target1",		
+                                             "Triangle" = "target2",
+                                             "Circle" = "target3",				
+                                             "Blue" = "target1",		
+                                             "Red" = "target2",			
+                                             "Green" = "target3"))
   ) %>%
   filter(isTestBlock == 1) %>%
-  select(-isTestBlock) %>%
   mutate(block_type = dplyr::recode(block_type,
                                     `1` = "con",
                                     `2` = "incon"),
@@ -591,7 +820,32 @@ data_goirap <-
                                     `1` = "tt1",
                                     `2` = "tt2",
                                     `3` = "tt3",
-                                    `4` = "tt4"))
+                                    `4` = "tt4"),
+         timepoint = 1) |>
+  # wrangle acc vs rt
+  mutate(block_order = dplyr::recode(block_order,
+                                     "con" = "consistent first",
+                                     "incon" = "inconsistent first"),
+         block_type = dplyr::recode(block_type,
+                                    "con" = "consistent",
+                                    "incon" = "inconsistent"),
+         participant = as.factor(participant)) |>
+  select(unique_id, experiment, participant, 
+         age, gender, 
+         timepoint, block_order, 
+         stimulus_number, 
+         block_number, 
+         block_type, trial_type, rt, accuracy)
+
+```
+
+# Nonwords
+
+```{r}
+
+data_nonwords <- read_csv("raw/non-words/data_trial_level_nonwords.csv") |>
+  mutate(unique_id = paste(experiment, participant),
+         participant = as.character(participant))
 
 ```
 
@@ -599,20 +853,14 @@ data_goirap <-
 
 ```{r}
 
-data_trial_level_temp <- 
-  bind_rows(data_evalautive,
+data_trial_level_temp_1 <- 
+  bind_rows(data_evaluative,
             data_nonevaluative,
             data_disgust_1,
             data_sexuality_1,
             chad_personality,
-            data_goirap) %>%
-  select(-accuracy) %>%  # available for only a subset of IRAPs
-  # if no timepoint, then timepoint = 1
-  mutate(timepoint = ifelse(is.na(timepoint), 1, timepoint),
-         timepoint = ifelse(timepoint == 1, "baseline", 
-                            ifelse(timepoint == 2, "followup", timepoint)),
-         block_order = ifelse(str_detect(tolower(block_order), "incon"), "incon",
-                              ifelse(str_detect(tolower(block_order), "con"), "con", NA))) %>%
+            data_goirap,
+            data_nonwords) %>%
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
                                 "clintontrump" = "Clinton-Trump",				
@@ -636,6 +884,7 @@ data_trial_level_temp <-
                                 "ian death emma" = "Death (1)",
                                 "ian death june" = "Death (2)",
                                 "ian death tarah" = "Death (3)",
+                                "Death (self-other)" = "Death (self-other)",
                                 "Disgust (1)" = "Disgust (1)",
                                 "Disgust (2)" = "Disgust (2)",
                                 "Sexuality (1)" = "Sexuality (1)",
@@ -651,44 +900,39 @@ data_trial_level_temp <-
                                 "shapes and colors 4 truefalse fullrule" = "Shapes & colors (4)",
                                 "shapes and colors exp 2 full rule" = "Shapes & colors (5)",
                                 "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
-                                "shapes and colors exp 3" = "Shapes & colors (7)")) %>%
-  arrange(as.character(domain)) %>%
-  # calculate mean rt
-  group_by(unique_id, timepoint) %>%
-  mutate(mean_rt = round(mean(rt, na.rm = TRUE), 0)) %>%
-  ungroup() %>%
+                                "shapes and colors exp 3" = "Shapes & colors (7)",
+                                "Non-words" = "Non-words")) %>%
+  arrange(as.character(domain))
+
+
+# performance stats
+performance_criteria <- data_trial_level_temp_1 |>
+  group_by(unique_id, timepoint, block_type) %>%
+  summarize(median_rt = janitor::round_half_up(median(rt, na.rm = TRUE), 0),
+            percent_accuracy = janitor::round_half_up(mean(accuracy, na.rm = TRUE), 2)) %>%
+  ungroup() |>
+  pivot_wider(names_from = block_type,
+              values_from = c("median_rt", "percent_accuracy")) |>
+  mutate(met_performance_criteria = ifelse(median_rt_consistent <= 2000 & 
+                                             median_rt_inconsistent <= 2000 & 
+                                             percent_accuracy_consistent >= .80 |
+                                             percent_accuracy_inconsistent >= .80, TRUE, FALSE))
+
+# combine
+data_trial_level_temp_2 <- data_trial_level_temp_1 |>
+  left_join(performance_criteria, by = c("unique_id", "timepoint")) |>
   # mark odd vs even trials
   group_by(unique_id, timepoint) %>%
   mutate(row_id = row_number()) %>%
   ungroup() %>%
-  mutate(trial_odd_even = ifelse(row_id %% 2 == 1, "odd", "even")) %>%
-  select(unique_id, 
-         #participant, 
-         age, gender, domain, timepoint, 
-         # stimulus_number
-         block_order, block_type, trial_odd_even, trial_type, rt, mean_rt) %>%
-  # tidy unique_ids
-  mutate(domain = str_remove(domain, "_clinton_trump"),
-         domain = str_remove(domain, "_men_women"),
-         domain = str_remove(domain, "_rich_poor"),
-         domain = str_remove(domain, "_ADHD"),
-         domain = str_remove(domain, "_schizophrenia"),
-         domain = str_remove(domain, "_PTSD"))
-
-# do exclusions for unique ids with wrong number of trials
-data_correct_n_trials <- data_trial_level_temp %>%
-  count(unique_id, timepoint) %>%
-  # methodologically plausible number of trials
-  filter(n %in% c(144, 192, 240, 288, 384)) 
-
-data_trial_level_temp2 <- semi_join(data_trial_level_temp, data_correct_n_trials, by = c("unique_id", "timepoint"))
+  mutate(trial_odd_even = ifelse(row_id %% 2 == 1, "odd", "even")) 
 
 # task parameters
 data_task_parameters <- read_excel("../../measures/word stimuli and task parameters.xlsx") %>%
   clean_names() %>%
   select(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)
 
-data_trial_level <- data_trial_level_temp2 %>%
+data_trial_level <- data_trial_level_temp_2 %>%
   left_join(data_task_parameters, by = "domain")
 
 # write to disk
