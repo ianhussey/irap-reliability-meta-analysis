@@ -1,0 +1,1 @@
+note that the unprocessed/raw trial level data (raw.zip) is not publicly available as it contains some identifying information and, more importantly, it quite messy. It's spread across many different files with different structures and quirks. As such, I make just the processed trial level data available (data_trial_level.csv). 
