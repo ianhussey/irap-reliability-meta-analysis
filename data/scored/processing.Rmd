@@ -1,5 +1,5 @@
 ---
-title: "Process data from rts to D scores and A scores"
+title: "Process data from reaction times to D scores and PI scores"
 author: "Ian Hussey"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -11,7 +11,7 @@ output:
     toc_float: yes
 ---
 
-Scored data isn't used directly in our analyses, but is likely to have high reuse potential as D scored data is what is typically analyzed.
+Scored data isn't used directly in our analyses, but is likely to have high reuse potential as D and PI scored data is what is typically analyzed.
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message = FALSE,
@@ -27,13 +27,15 @@ set.seed(42)
 library(tidyverse)
 library(knitr)
 library(kableExtra)
+library(janitor)
 
 # function to round all numeric vars in a data frame
 round_df <- function(df, n_digits = 3) {
-  df %>% mutate_if(is.numeric, round, digits = n_digits)
+  df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
 }
 
 # using Ruscio's own code
+# implementation of the PI, which goes by many names, including "ruscio's A".
 ruscios_A_function <- function(x, y) {
     nx <- length(x)
     ny <- length(y)
@@ -58,9 +60,7 @@ options(knitr.table.format = "html")
 
 ```
 
-# Outlier detection 
-
-Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
+# Get trial level data
 
 ```{r}
 
@@ -73,6 +73,8 @@ data_all <- read.csv("../trial level/data_trial_level.csv")
 Not employed for the test-retest analyses but may be useful for others to reuse.
 
 ## D scores
+
+See Hussey, Thompson et al (2017) Interpreting and inverting with less cursing: A guide to interpreting IRAP data
 
 ```{r}
 
@@ -103,26 +105,28 @@ data_D_scores_trial_type <- data_all %>%
 
 ```
 
-## A scores
+## PI scores
+
+See De Schryver et al., (2017) The PIIRAP: An alternative scoring algorithm for the IRAP using a probabilistic semiparametric effect size measure
 
 ```{r}
 
-data_A_scores_overall <- data_all %>%
+data_PI_scores_overall <- data_all %>%
   group_by(unique_id, timepoint) %>%
-  do(A_overall = ruscios_A(data = .)) %>%
+  do(PI_overall = ruscios_A(data = .)) %>%
   ungroup() %>%
-  mutate(A_overall = as.numeric(A_overall)) 
+  mutate(PI_overall = as.numeric(PI_overall)) 
 
-data_A_scores_trial_type <- data_all %>%
+data_PI_scores_trial_type <- data_all %>%
   group_by(unique_id, timepoint, trial_type) %>%
-  do(A = ruscios_A(data = .)) %>%
+  do(PI = ruscios_A(data = .)) %>%
   ungroup() %>%
-  mutate(A = as.numeric(A)) %>%
-  spread(trial_type, A) %>%
-  rename(A_tt1 = tt1,
-         A_tt2 = tt2,
-         A_tt3 = tt3,
-         A_tt4 = tt4) 
+  mutate(PI = as.numeric(PI)) %>%
+  spread(trial_type, PI) %>%
+  rename(PI_tt1 = tt1,
+         PI_tt2 = tt2,
+         PI_tt3 = tt3,
+         PI_tt4 = tt4) 
 
 ```
 
@@ -132,8 +136,8 @@ data_A_scores_trial_type <- data_all %>%
 
 data_scored <- data_D_scores_overall %>%
   full_join(data_D_scores_trial_type, by = c("unique_id", "timepoint")) %>%
-  full_join(data_A_scores_overall, by = c("unique_id", "timepoint")) %>%
-  full_join(data_A_scores_trial_type, by = c("unique_id", "timepoint")) %>%
+  full_join(data_PI_scores_overall, by = c("unique_id", "timepoint")) %>%
+  full_join(data_PI_scores_trial_type, by = c("unique_id", "timepoint")) %>%
   left_join(data_all |>
               select(unique_id, 
                      domain, 
@@ -143,15 +147,18 @@ data_scored <- data_D_scores_overall %>%
                      trials_per_block, 
                      #number_of_pairs_of_test_blocks, 
                      #response_option_locations,
-                     met_performance_criteria) |>
+                     met_performance_criteria_typical,
+                     met_performance_criteria_stricter) |>
               distinct(unique_id, .keep_all = TRUE), 
             by = "unique_id") %>%
-  select(unique_id, domain, timepoint, 
+  select(unique_id, timepoint, 
+         domain, 
          age, gender, 
          block_order, 
-         met_performance_criteria,
+         met_performance_criteria_typical,
+         met_performance_criteria_stricter,
          D_overall, D_tt1, D_tt2, D_tt3, D_tt4,
-         A_overall, A_tt1, A_tt2, A_tt3, A_tt4)
+         PI_overall, PI_tt1, PI_tt2, PI_tt3, PI_tt4)
 
 write_csv(data_scored, "data_scored.csv")
 

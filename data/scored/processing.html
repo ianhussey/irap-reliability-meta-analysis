@@ -11,9 +11,9 @@
 
 <meta name="author" content="Ian Hussey" />
 
-<meta name="date" content="2023-01-21" />
+<meta name="date" content="2023-01-23" />
 
-<title>Process data from rts to D scores and A scores</title>
+<title>Process data from reaction times to D scores and PI scores</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1667,16 +1667,16 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">Process data from rts to D scores and A
-scores</h1>
+<h1 class="title toc-ignore">Process data from reaction times to D
+scores and PI scores</h1>
 <h4 class="author">Ian Hussey</h4>
-<h4 class="date">21 January 2023</h4>
+<h4 class="date">23 January 2023</h4>
 
 </div>
 
 
 <p>Scored data isn’t used directly in our analyses, but is likely to
-have high reuse potential as D scored data is what is typically
+have high reuse potential as D and PI scored data is what is typically
 analyzed.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed for computational reproducibility</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
@@ -1685,38 +1685,38 @@ analyzed.</p>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># function to round all numeric vars in a data frame</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>round_df <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">n_digits =</span> <span class="dv">3</span>) {</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span> <span class="fu">mutate_if</span>(is.numeric, round, <span class="at">digits =</span> n_digits)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># using Ruscio&#39;s own code</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>ruscios_A_function <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    nx <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    ny <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    rx <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(<span class="fu">c</span>(x, y))[<span class="dv">1</span><span class="sc">:</span>nx])</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">=</span> (rx <span class="sc">/</span> nx <span class="sc">-</span> (nx <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">/</span> ny</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(A)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>ruscios_A <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">variable =</span> <span class="st">&quot;rt&quot;</span>, <span class="at">group =</span> <span class="st">&quot;block_type&quot;</span>, <span class="at">value1 =</span> <span class="st">&quot;inconsistent&quot;</span>, <span class="at">value2 =</span> <span class="st">&quot;consistent&quot;</span>) {</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure data is a data frame (e.g., not a tbl_data)</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(data)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the observations for group 1</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> data[data[[group]] <span class="sc">==</span> value1, variable]</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the observations for group 2</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> data[data[[group]] <span class="sc">==</span> value2, variable]</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  A.obs <span class="ot">&lt;-</span> <span class="fu">ruscios_A_function</span>(x, y)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">as.numeric</span>(A.obs))</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># table format in output</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">knitr.table.format =</span> <span class="st">&quot;html&quot;</span>) </span></code></pre></div>
-<div id="outlier-detection" class="section level1">
-<h1>Outlier detection</h1>
-<p>Exclude outliers on the basis of median mean_rt +/- 2MAD by
-domain</p>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># function to round all numeric vars in a data frame</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>round_df <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">n_digits =</span> <span class="dv">3</span>) {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span> <span class="fu">mutate_if</span>(is.numeric, janitor<span class="sc">::</span>round_half_up, <span class="at">digits =</span> n_digits)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># using Ruscio&#39;s own code</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># implementation of the PI, which goes by many names, including &quot;ruscio&#39;s A&quot;.</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ruscios_A_function <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    nx <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    ny <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    rx <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(<span class="fu">c</span>(x, y))[<span class="dv">1</span><span class="sc">:</span>nx])</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">=</span> (rx <span class="sc">/</span> nx <span class="sc">-</span> (nx <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">/</span> ny</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(A)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>ruscios_A <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">variable =</span> <span class="st">&quot;rt&quot;</span>, <span class="at">group =</span> <span class="st">&quot;block_type&quot;</span>, <span class="at">value1 =</span> <span class="st">&quot;inconsistent&quot;</span>, <span class="at">value2 =</span> <span class="st">&quot;consistent&quot;</span>) {</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure data is a data frame (e.g., not a tbl_data)</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(data)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the observations for group 1</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> data[data[[group]] <span class="sc">==</span> value1, variable]</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the observations for group 2</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> data[data[[group]] <span class="sc">==</span> value2, variable]</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  A.obs <span class="ot">&lt;-</span> <span class="fu">ruscios_A_function</span>(x, y)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">as.numeric</span>(A.obs))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># table format in output</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">knitr.table.format =</span> <span class="st">&quot;html&quot;</span>) </span></code></pre></div>
+<div id="get-trial-level-data" class="section level1">
+<h1>Get trial level data</h1>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_all <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;../trial level/data_trial_level.csv&quot;</span>) </span></code></pre></div>
 </div>
 <div id="calculate-scores" class="section level1">
@@ -1725,6 +1725,8 @@ domain</p>
 others to reuse.</p>
 <div id="d-scores" class="section level2">
 <h2>D scores</h2>
+<p>See Hussey, Thompson et al (2017) Interpreting and inverting with
+less cursing: A guide to interpreting IRAP data</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data_D_scores_overall <span class="ot">&lt;-</span> data_all <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rt <span class="sc">&lt;=</span> <span class="dv">10000</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint) <span class="sc">%&gt;%</span></span>
@@ -1750,31 +1752,34 @@ others to reuse.</p>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">D_tt3 =</span> tt3,</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">D_tt4 =</span> tt4) </span></code></pre></div>
 </div>
-<div id="a-scores" class="section level2">
-<h2>A scores</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_A_scores_overall <span class="ot">&lt;-</span> data_all <span class="sc">%&gt;%</span></span>
+<div id="pi-scores" class="section level2">
+<h2>PI scores</h2>
+<p>See De Schryver et al., (2017) The PIIRAP: An alternative scoring
+algorithm for the IRAP using a probabilistic semiparametric effect size
+measure</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_PI_scores_overall <span class="ot">&lt;-</span> data_all <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint) <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="at">A_overall =</span> <span class="fu">ruscios_A</span>(<span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="at">PI_overall =</span> <span class="fu">ruscios_A</span>(<span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">A_overall =</span> <span class="fu">as.numeric</span>(A_overall)) </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PI_overall =</span> <span class="fu">as.numeric</span>(PI_overall)) </span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>data_A_scores_trial_type <span class="ot">&lt;-</span> data_all <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>data_PI_scores_trial_type <span class="ot">&lt;-</span> data_all <span class="sc">%&gt;%</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint, trial_type) <span class="sc">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="at">A =</span> <span class="fu">ruscios_A</span>(<span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="at">PI =</span> <span class="fu">ruscios_A</span>(<span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">A =</span> <span class="fu">as.numeric</span>(A)) <span class="sc">%&gt;%</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(trial_type, A) <span class="sc">%&gt;%</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">A_tt1 =</span> tt1,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">A_tt2 =</span> tt2,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">A_tt3 =</span> tt3,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">A_tt4 =</span> tt4) </span></code></pre></div>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PI =</span> <span class="fu">as.numeric</span>(PI)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(trial_type, PI) <span class="sc">%&gt;%</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">PI_tt1 =</span> tt1,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">PI_tt2 =</span> tt2,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">PI_tt3 =</span> tt3,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">PI_tt4 =</span> tt4) </span></code></pre></div>
 </div>
 <div id="combine" class="section level2">
 <h2>Combine</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data_scored <span class="ot">&lt;-</span> data_D_scores_overall <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(data_D_scores_trial_type, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(data_A_scores_overall, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(data_A_scores_trial_type, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(data_PI_scores_overall, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(data_PI_scores_trial_type, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_all <span class="sc">|&gt;</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(unique_id, </span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                     domain, </span>
@@ -1784,19 +1789,22 @@ others to reuse.</p>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                     trials_per_block, </span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#number_of_pairs_of_test_blocks, </span></span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#response_option_locations,</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                     met_performance_criteria) <span class="sc">|&gt;</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>              <span class="fu">distinct</span>(unique_id, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_id, domain, timepoint, </span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>         age, gender, </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>         block_order, </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>         met_performance_criteria,</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>         D_overall, D_tt1, D_tt2, D_tt3, D_tt4,</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>         A_overall, A_tt1, A_tt2, A_tt3, A_tt4)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(data_scored, <span class="st">&quot;data_scored.csv&quot;</span>)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co"># data_scored &lt;- read_csv(&quot;data_scored.csv&quot;)</span></span></code></pre></div>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                     met_performance_criteria_typical,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                     met_performance_criteria_stricter) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>              <span class="fu">distinct</span>(unique_id, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">&quot;unique_id&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_id, timepoint, </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>         domain, </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>         age, gender, </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>         block_order, </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>         met_performance_criteria_typical,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>         met_performance_criteria_stricter,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>         D_overall, D_tt1, D_tt2, D_tt3, D_tt4,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>         PI_overall, PI_tt1, PI_tt2, PI_tt3, PI_tt4)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(data_scored, <span class="st">&quot;data_scored.csv&quot;</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co"># data_scored &lt;- read_csv(&quot;data_scored.csv&quot;)</span></span></code></pre></div>
 </div>
 </div>
 <div id="session-info" class="section level1">
@@ -1817,9 +1825,9 @@ others to reuse.</p>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] kableExtra_1.3.4 knitr_1.41       forcats_0.5.2    stringr_1.5.0   
-##  [5] dplyr_1.0.10     purrr_0.3.5      readr_2.1.3      tidyr_1.2.1     
-##  [9] tibble_3.1.8     ggplot2_3.4.0    tidyverse_1.3.2 
+##  [1] janitor_2.1.0    kableExtra_1.3.4 knitr_1.41       forcats_0.5.2   
+##  [5] stringr_1.5.0    dplyr_1.0.10     purrr_0.3.5      readr_2.1.3     
+##  [9] tidyr_1.2.1      tibble_3.1.8     ggplot2_3.4.0    tidyverse_1.3.2 
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] svglite_2.1.0       lubridate_1.8.0     assertthat_0.2.1   
@@ -1838,12 +1846,12 @@ others to reuse.</p>
 ## [40] lifecycle_1.0.3     DBI_1.1.3           magrittr_2.0.3     
 ## [43] scales_1.2.1        vroom_1.6.0         cli_3.4.1          
 ## [46] stringi_1.7.8       cachem_1.0.6        fs_1.5.2           
-## [49] xml2_1.3.3          bslib_0.4.2         ellipsis_0.3.2     
-## [52] generics_0.1.3      vctrs_0.5.1         tools_4.2.1        
-## [55] bit64_4.0.5         glue_1.6.2          hms_1.1.2          
-## [58] parallel_4.2.1      fastmap_1.1.0       yaml_2.3.6         
-## [61] colorspace_2.0-3    gargle_1.2.1        rvest_1.0.3        
-## [64] haven_2.5.1         sass_0.4.4</code></pre>
+## [49] snakecase_0.11.0    xml2_1.3.3          bslib_0.4.2        
+## [52] ellipsis_0.3.2      generics_0.1.3      vctrs_0.5.1        
+## [55] tools_4.2.1         bit64_4.0.5         glue_1.6.2         
+## [58] hms_1.1.2           parallel_4.2.1      fastmap_1.1.0      
+## [61] yaml_2.3.6          colorspace_2.0-3    gargle_1.2.1       
+## [64] rvest_1.0.3         haven_2.5.1         sass_0.4.4</code></pre>
 </div>
 
 
