@@ -102,6 +102,13 @@ data_D_scores_test_retest_r <-
 data_D_scores_test_retest_icc <- 
   read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc.csv")
 
+# using stricter exclusion criteria
+data_D_scores_internal_consistency_permuted_estimates_stricter <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates_stricter.csv")
+
+data_D_scores_test_retest_icc_stricter <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc_stricter.csv")
+
 ```
 
 # Demographics 
@@ -911,6 +918,45 @@ tibble(response_options = c("static", "moving"),
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+## Use stricter performance exclusion criteria
+
+Internal consistency using permutation approach sensitivity analysis, moderator meta analysis between criteria.
+
+- Typical criteria require accuracy >= 78% and median RT < 2000ms on both con and incon blocks. It has a roughly 10% exclusion rate. 
+- Stricter criteria require accuracy >= 78% and median RT < 2000ms on both con and incon blocks *and within each block*. It has a roughly 28% exclusion rate.
+
+```{r fig.height=9.5, fig.width=8}
+
+fit_internal_consistency_performance_criteria <- 
+  bind_rows(data_D_scores_internal_consistency_permuted_estimates %>%
+              filter(!str_detect(domain, "Sexuality")) %>%
+              mutate(exclusions = "typical"),
+            data_D_scores_internal_consistency_permuted_estimates_stricter %>%
+              filter(!str_detect(domain, "Sexuality")) %>%
+              mutate(exclusions = "stricter")) %>%
+  mutate(exclusions = fct_relevel(exclusions, "typical", "stricter")) %>%
+  filter(!str_detect(domain, "Sexuality") &
+           !is.na(exclusions)) %>%
+  rma(yi   = yi, 
+      V    = vi, 
+      mods = ~ exclusions,
+      random = ~ 1 | domain,
+      data = .,
+      slab = paste(domain, exclusions))
+
+fit_internal_consistency_performance_criteria
+
+# tibble(response_options = c("static", "moving"),
+#        alpha = c(0.8937, 0.8937-0.2246),
+#        ci_lower = c(0.6707, 0.8937-0.4784),
+#        ci_upper = c(1.1167, 0.8937+0.0293)) %>%
+#   mutate_if(is.numeric, transf.iabt) %>%
+#   mutate_if(is.numeric, round, digits = 2) %>%
+#   kable() %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
