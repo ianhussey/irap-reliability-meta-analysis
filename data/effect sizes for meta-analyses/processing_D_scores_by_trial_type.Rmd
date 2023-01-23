@@ -104,7 +104,7 @@ data_outliers <- read_csv("../trial level/data_trial_level.csv") |>
                                    "2" = "followup"))
 
 data_outliers_removed <- data_outliers |>
-  filter(met_performance_criteria == TRUE)
+  filter(met_performance_criteria_typical == TRUE)
 
 # subset ic
 data_ic <- data_outliers_removed %>%
