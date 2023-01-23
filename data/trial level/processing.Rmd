@@ -711,29 +711,70 @@ chad_personality <-
 
 data_goirap <- 
   bind_rows(
-    read_csv("raw/GO-IRAP format files/ian countries 2 acknowledge.csv") %>%
-      select(unique_id,
+    read_csv("raw/GO-IRAP format files/aoife negative gender stereotypes IRAP dataset raw.csv", show_col_types = FALSE) %>%
+      select(participant,
+             experiment,
+             gender,
+             age,
+             block_order = startingRule,
+             block_number = blockPairNumber,
+             stimulus_number = targetNum,
+             block_type = currentRule,
+             trial_type = trialType,
+             rt,
+             accuracy,
+             isTestBlock) |>
+      mutate(participant = as.character(participant),
+             unique_id = paste(experiment, participant),
+             stimulus_number = paste0("target", stimulus_number)),
+    read_csv("raw/GO-IRAP format files/aoife positive gender stereotypes IRAP dataset raw - used in De Schryver 2017.csv", show_col_types = FALSE) %>%
+      mutate(experiment = "Gender stereotypes positive") |>
+      select(participant = unique_participant_identifier,
+             experiment,
+             gender,
+             age,
+             block_order = starting_rule,
+             block_number = blockPairNumber,
+             stimulus_number = targetNum,
+             block_type = currentRule,
+             trial_type = trialType,
+             rt,
+             accuracy,
+             isTestBlock) |>
+      mutate(participant = as.character(participant),
+             unique_id = paste(experiment, participant),
+             stimulus_number = paste0("target", stimulus_number)),
+    read_csv("raw/GO-IRAP format files/ian countries 2 acknowledge.csv", show_col_types = FALSE) %>%
+      select(participant = unique_id,
              experiment,
              gender = participantGender,
              age = participantAge,
              block_order = startingRule,
+             block_number = blockPairNumber,
+             stimulus_number = targetNum,
              block_type = currentRule,
              trial_type = trialType,
              rt = timeToCorrectResponse,
              accuracy,
-             isTestBlock),
-    read_csv("raw/GO-IRAP format files/ian countries 2 care.csv") %>%
-      select(unique_id,
+             isTestBlock) |>
+      mutate(stimulus_number = paste0("target", stimulus_number),
+             unique_id = paste(experiment, participant),),
+    read_csv("raw/GO-IRAP format files/ian countries 2 care.csv", show_col_types = FALSE) %>%
+      select(participant = unique_id,
              experiment,
              gender = participantGender,
              age = participantAge,
              block_order = startingRule,
+             block_number = blockPairNumber, # TODO
+             stimulus_number = targetNum, # TODO
              block_type = currentRule,
              trial_type = trialType,
              rt = timeToCorrectResponse,
              accuracy,
-             isTestBlock),
-    read_csv("raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv") %>%
+             isTestBlock) |>
+      mutate(stimulus_number = paste0("target", stimulus_number),
+             unique_id = paste(experiment, participant),),
+    read_csv("raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv", show_col_types = FALSE) %>%
       select(unique_id, 
              experiment, 
              participant = participantCode, 
@@ -748,14 +789,15 @@ data_goirap <-
              rt = timeToCorrectResponse, 
              accuracy,
              isTestBlock) |>
-      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+      mutate(participant = as.character(participant),
+             stimulus_number = dplyr::recode(stimulus_number, 
                                              "Square" = "target1",		
                                              "Triangle" = "target2",
                                              "Circle" = "target3",				
                                              "Blue" = "target1",		
                                              "Red" = "target2",			
                                              "Green" = "target3")),
-    read_csv("raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv") %>%
+    read_csv("raw/GO-IRAP format files/ian shapes and colors 2 YNcorrect.csv", show_col_types = FALSE) %>%
       select(unique_id, 
              experiment, 
              participant = participantCode, 
@@ -770,14 +812,15 @@ data_goirap <-
              rt = timeToCorrectResponse, 
              accuracy,
              isTestBlock) |>
-      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+      mutate(participant = as.character(participant),
+             stimulus_number = dplyr::recode(stimulus_number, 
                                              "Square" = "target1",		
                                              "Triangle" = "target2",
                                              "Circle" = "target3",				
                                              "Blue" = "target1",		
                                              "Red" = "target2",			
                                              "Green" = "target3")),
-    read_csv("raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv") %>%
+    read_csv("raw/GO-IRAP format files/ian shapes and colors 3 TFcorrect.csv", show_col_types = FALSE) %>%
       select(unique_id, 
              experiment, 
              participant = participantCode, 
@@ -792,14 +835,15 @@ data_goirap <-
              rt = timeToCorrectResponse, 
              accuracy,
              isTestBlock) |>
-      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+      mutate(participant = as.character(participant),
+             stimulus_number = dplyr::recode(stimulus_number, 
                                              "Square" = "target1",		
                                              "Triangle" = "target2",
                                              "Circle" = "target3",				
                                              "Blue" = "target1",		
                                              "Red" = "target2",			
                                              "Green" = "target3")),
-    read_csv("raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv") %>%
+    read_csv("raw/GO-IRAP format files/ian shapes and colors 4 TFrule.csv", show_col_types = FALSE) %>%
       select(unique_id, 
              experiment, 
              participant = participantCode, 
@@ -814,7 +858,8 @@ data_goirap <-
              rt = timeToCorrectResponse, 
              accuracy,
              isTestBlock) |>
-      mutate(stimulus_number = dplyr::recode(stimulus_number, 
+      mutate(participant = as.character(participant),
+             stimulus_number = dplyr::recode(stimulus_number, 
                                              "Square" = "target1",		
                                              "Triangle" = "target2",
                                              "Circle" = "target3",				
@@ -824,11 +869,11 @@ data_goirap <-
   ) %>%
   filter(isTestBlock == 1) %>%
   mutate(block_type = dplyr::recode(block_type,
-                                    `1` = "con",
-                                    `2` = "incon"),
+                                    `1` = "consistent",
+                                    `2` = "inconsistent"),
          block_order = dplyr::recode(block_order,
-                                     `1` = "con",
-                                     `2` = "incon"),
+                                     `1` = "consistent first",
+                                     `2` = "inconsistent first"),
          trial_type = dplyr::recode(trial_type,
                                     `1` = "tt1",
                                     `2` = "tt2",
@@ -836,19 +881,19 @@ data_goirap <-
                                     `4` = "tt4"),
          timepoint = 1) |>
   # wrangle acc vs rt
-  mutate(block_order = dplyr::recode(block_order,
-                                     "con" = "consistent first",
-                                     "incon" = "inconsistent first"),
-         block_type = dplyr::recode(block_type,
-                                    "con" = "consistent",
-                                    "incon" = "inconsistent"),
-         participant = as.factor(participant)) |>
-  select(unique_id, experiment, participant, 
-         age, gender, 
-         timepoint, block_order, 
+  select(unique_id, 
+         experiment, 
+         participant, 
+         age, 
+         gender, 
+         timepoint, 
+         block_order, 
          stimulus_number, 
          block_number, 
-         block_type, trial_type, rt, accuracy)
+         block_type, 
+         trial_type, 
+         rt, 
+         accuracy)
 
 ```
 
@@ -877,7 +922,6 @@ data_trial_level_temp_1 <-
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
                                 "clintontrump" = "Clinton-Trump",				
-                                "menwomen" = "Gender (2)",				
                                 "richpoor" = "Rich-Poor",
                                 "ADHD" = "Stigma - ADHD",				
                                 "PTSD" = "Stigma - PTSD",				
@@ -889,7 +933,10 @@ data_trial_level_temp_1 <-
                                 "openness" = "Personality - Openness",
                                 "chad bodyimage" = "Body image",
                                 "chad friendenemy" = "Friend-Enemy",
-                                "chad gender" = "Gender (1)",
+                                "chad gender" = "Gender stereotypes (1)", # chad's dataset
+                                "menwomen" = "Gender stereotypes (2)",	# ian's dataset
+                                "Gender stereotypes positive" = "Gender stereotypes (3)", # aoife's datasets
+                                "Gender stereotypes negative" = "Gender stereotypes (4)", # aoife's datasets
                                 "chad lincolnhitler" = "Lincoln-Hitler",
                                 "chad race"	 = "Race (1)",
                                 "ian race" = "Race (2)",
