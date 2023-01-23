@@ -1,0 +1,1 @@
+note that this data is not used within the current meta analysis. it is produced because it's likely that others who want to reuse this data will want it in this form. it uses the standard D IRAP algorithm to score the data (Hussey, Thompson et al., 2015) as well as the PI (De Schryver et al., 2017).

@@ -114,7 +114,7 @@ data_outliers <- read_csv("../trial level/data_trial_level.csv") |>
                                    "2" = "followup"))
 
 data_outliers_removed <- data_outliers |>
-  filter(met_performance_criteria == TRUE)
+  filter(met_performance_criteria_typical == TRUE)
 
 # subset ic
 data_ic <- data_outliers_removed %>%
@@ -144,7 +144,7 @@ Save demographics data to disk
 # write demographics to disk
 data_demographics <- data_outliers_removed %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id, domain, age, gender, met_performance_criteria) %>%
+  select(unique_id, domain, age, gender, met_performance_criteria_typical) %>%
   filter(!domain %in% c("Clinton-Trump",
                         "Disgust (1)",
                         "Disgust (2)",
@@ -171,7 +171,7 @@ data_additional_demographics <- read_csv("../trial level/additional_demographics
 data_demographics_combined <- 
   bind_rows(data_demographics,
             data_additional_demographics) %>%
-  select(-unique_id, -participant, -met_performance_criteria) %>%
+  select(-unique_id, -participant, -met_performance_criteria_typical) %>%
   filter(!is.na(age) | !is.na(gender))
 
 write_csv(data_demographics_combined, "data_demographics.csv")
@@ -185,7 +185,7 @@ Sample sizes
 # print sample sizes
 data_outliers_removed %>%
   distinct(unique_id, .keep_all = TRUE) %>%
-  count(met_performance_criteria) %>%
+  count(met_performance_criteria_typical) %>%
   rename(n_outlier_exclusions = n) %>%
   kable() %>%
   kable_classic(full_width = FALSE)
@@ -706,7 +706,7 @@ write_csv(data_A_scores_internal_consistency_permuted_estimates,
 
 ```
 
-## Difrerences in block order
+## Differences in block order
 
 ### Score
 
