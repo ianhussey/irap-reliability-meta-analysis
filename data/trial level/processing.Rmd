@@ -919,21 +919,46 @@ data_trial_level_temp_1 <-
 
 
 # performance stats
-performance_criteria <- data_trial_level_temp_1 |>
+performance_criteria_typical <- data_trial_level_temp_1 |>
   group_by(unique_id, timepoint, block_type) %>%
   summarize(median_rt = janitor::round_half_up(median(rt, na.rm = TRUE), 0),
             percent_accuracy = janitor::round_half_up(mean(accuracy, na.rm = TRUE), 2)) %>%
   ungroup() |>
-  pivot_wider(names_from = block_type,
+  pivot_wider(names_from = "block_type",
               values_from = c("median_rt", "percent_accuracy")) |>
-  mutate(met_performance_criteria = ifelse(median_rt_consistent <= 2000 & 
-                                             median_rt_inconsistent <= 2000 & 
-                                             percent_accuracy_consistent >= .80 |
-                                             percent_accuracy_inconsistent >= .80, TRUE, FALSE))
+  mutate(met_performance_criteria_typical = 
+           ifelse(median_rt_consistent <= 2000 & 
+                    median_rt_inconsistent <= 2000 & 
+                    percent_accuracy_consistent >= .78 &
+                    percent_accuracy_inconsistent >= .78, TRUE, FALSE)) |>
+  select(unique_id, timepoint, met_performance_criteria_typical)
+
+performance_criteria_stricter <- data_trial_level_temp_1 |>
+  group_by(unique_id, timepoint, block_type, block_number) |>
+  summarize(median_rt = janitor::round_half_up(median(rt, na.rm = TRUE), 0),
+            percent_accuracy = janitor::round_half_up(mean(accuracy, na.rm = TRUE), 2),
+            .groups = "drop") |>
+  pivot_wider(names_from = c("block_type", "block_number"),
+              values_from = c("median_rt", "percent_accuracy")) |>
+  mutate(met_performance_criteria_stricter = 
+           ifelse(median_rt_consistent_1 <= 2000 & 
+                    median_rt_consistent_2 <= 2000 & 
+                    median_rt_consistent_3 <= 2000 & 
+                    median_rt_inconsistent_1 <= 2000 & 
+                    median_rt_inconsistent_2 <= 2000 & 
+                    median_rt_inconsistent_3 <= 2000 & 
+                    percent_accuracy_consistent_1 >= .78 &
+                    percent_accuracy_consistent_2 >= .78 &
+                    percent_accuracy_consistent_3 >= .78 &
+                    percent_accuracy_inconsistent_1 >= .78 &
+                    percent_accuracy_inconsistent_2 >= .78 &
+                    percent_accuracy_inconsistent_3 >= .78, TRUE, FALSE)) |>
+  select(unique_id, timepoint, met_performance_criteria_stricter)
 
 # combine
 data_trial_level_temp_2 <- data_trial_level_temp_1 |>
-  left_join(performance_criteria, by = c("unique_id", "timepoint")) |>
+  left_join(performance_criteria_typical, by = c("unique_id", "timepoint")) |>
+  left_join(performance_criteria_stricter, by = c("unique_id", "timepoint")) |>
   # mark odd vs even trials
   group_by(unique_id, timepoint) %>%
   mutate(row_id = row_number()) %>%
@@ -951,12 +976,39 @@ data_trial_level_temp_3 <- data_trial_level_temp_2 %>%
 data_trial_level <- data_trial_level_temp_3 |>
   # remove spurious age data
   mutate(age = ifelse(age > 999, NA, age),
-         age = ifelse(age < 18, NA, age))
+         age = ifelse(age < 18, NA, age)) |>
+  # order columns
+  select(
+    # participant details
+    unique_id, 
+    timepoint, 
+    domain, 
+    participant, 
+    age, 
+    gender, 
+    # performance criteria
+    met_performance_criteria_typical, 
+    met_performance_criteria_stricter, 
+    # procedural details
+    trials_per_block, 
+    number_of_pairs_of_test_blocks, 
+    response_option_locations,
+    # condition and trial details
+    block_order, 
+    block_number, 
+    block_type, 
+    trial_type, 
+    stimulus_number, 
+    trial_odd_even,
+    # responses
+    rt, 
+    accuracy
+  )
 
 # write to disk
 write_csv(data_trial_level, "data_trial_level.csv")
 
-data_trial_level <- read_csv("data_trial_level.csv")
+#data_trial_level <- read_csv("data_trial_level.csv")
 
 ```
 
