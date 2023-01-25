@@ -201,8 +201,8 @@ metafor::forest(fit_oddeven,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_oddeven))
-text(-1.4, 41, "Study", pos = 4)
-text(1.6, 41, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 43, "Study", pos = 4)
+text(1.6, 43, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -254,8 +254,8 @@ metafor::forest(fit_firstsecond,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond))
-text(-1.4, 41, "Study", pos = 4)
-text(1.6, 41, "Spearman-Brown correlation [95% CI]", pos = 2)
+text(-1.4, 43, "Study", pos = 4)
+text(1.6, 43, "Spearman-Brown correlation [95% CI]", pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -324,8 +324,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates))
-text(-1.4, 41, "Study", pos = 4)
-text(1.6, 41, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 43, "Study", pos = 4)
+text(1.6, 43, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -452,8 +452,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
-text(-1.4, 39, "Study", pos = 4)
-text(1.6, 39, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 41, "Study", pos = 4)
+text(1.6, 41, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -853,9 +853,15 @@ fit_internal_consistency_D_vs_A_scores <-
 fit_internal_consistency_D_vs_A_scores
 
 tibble(response_options = c("D", "A"),
-       alpha = c(0.7382, 0.7382+0.0460),
-       ci_lower = c(0.6139, 0.7382-0.1047),
-       ci_upper = c(0.8626, 0.7382+0.1967)) %>%
+       alpha = c(fit_internal_consistency_D_vs_A_scores$b[1],
+                 fit_internal_consistency_D_vs_A_scores$b[1] + 
+                   fit_internal_consistency_D_vs_A_scores$b[2]),
+       ci_lower = c(fit_internal_consistency_D_vs_A_scores$ci.lb[1],
+                    fit_internal_consistency_D_vs_A_scores$b[1] +
+                      fit_internal_consistency_D_vs_A_scores$ci.lb[2]),
+       ci_upper = c(fit_internal_consistency_D_vs_A_scores$ci.ub[1], 
+                    fit_internal_consistency_D_vs_A_scores$b[1] + 
+                      fit_internal_consistency_D_vs_A_scores$ci.ub[2])) %>%
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
@@ -882,9 +888,15 @@ fit_internal_consistency_block_order <-
 fit_internal_consistency_block_order
 
 tibble(block_order = c("con first", "incon first"),
-       alpha = c(0.6086, 0.6086+0.0630),
-       ci_lower = c(0.4002, 0.6086-0.2466),
-       ci_upper = c(0.8169,  0.6086+0.3726)) %>%
+       alpha = c(fit_internal_consistency_block_order$b[1],
+                 fit_internal_consistency_block_order$b[1] + 
+                   fit_internal_consistency_block_order$b[2]),
+       ci_lower = c(fit_internal_consistency_block_order$ci.lb[1],
+                    fit_internal_consistency_block_order$b[1] +
+                      fit_internal_consistency_block_order$ci.lb[2]),
+       ci_upper = c(fit_internal_consistency_block_order$ci.ub[1], 
+                    fit_internal_consistency_block_order$b[1] + 
+                      fit_internal_consistency_block_order$ci.ub[2])) %>%
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
@@ -911,9 +923,15 @@ fit_internal_consistency_response_option_locations <-
 fit_internal_consistency_response_option_locations
 
 tibble(response_options = c("static", "moving"),
-       alpha = c(0.8937, 0.8937-0.2246),
-       ci_lower = c(0.6707, 0.8937-0.4784),
-       ci_upper = c(1.1167, 0.8937+0.0293)) %>%
+       alpha = c(fit_internal_consistency_response_option_locations$b[1],
+                 fit_internal_consistency_response_option_locations$b[1] + 
+                   fit_internal_consistency_response_option_locations$b[2]),
+       ci_lower = c(fit_internal_consistency_response_option_locations$ci.lb[1],
+                    fit_internal_consistency_response_option_locations$b[1] +
+                      fit_internal_consistency_response_option_locations$ci.lb[2]),
+       ci_upper = c(fit_internal_consistency_response_option_locations$ci.ub[1], 
+                    fit_internal_consistency_response_option_locations$b[1] + 
+                      fit_internal_consistency_response_option_locations$ci.ub[2])) %>%
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
@@ -940,23 +958,29 @@ fit_internal_consistency_performance_criteria <-
   mutate(exclusions = fct_relevel(exclusions, "typical", "stricter")) %>%
   filter(!str_detect(domain, "Sexuality") &
            !is.na(exclusions)) %>%
-  rma(yi   = yi, 
-      V    = vi, 
-      mods = ~ exclusions,
-      random = ~ 1 | domain,
-      data = .,
-      slab = paste(domain, exclusions))
+  rma.mv(yi   = yi, 
+         V    = vi, 
+         mods = ~ exclusions,
+         random = ~ 1 | domain,
+         data = .,
+         slab = paste(domain, exclusions))
 
 fit_internal_consistency_performance_criteria
 
-# tibble(response_options = c("static", "moving"),
-#        alpha = c(0.8937, 0.8937-0.2246),
-#        ci_lower = c(0.6707, 0.8937-0.4784),
-#        ci_upper = c(1.1167, 0.8937+0.0293)) %>%
-#   mutate_if(is.numeric, transf.iabt) %>%
-#   mutate_if(is.numeric, round, digits = 2) %>%
-#   kable() %>%
-#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+tibble(exclusions = c("typical", "stricter"),
+       alpha = c(fit_internal_consistency_performance_criteria$b[1],
+                 fit_internal_consistency_performance_criteria$b[1] + 
+                   fit_internal_consistency_performance_criteria$b[2]),
+       ci_lower = c(fit_internal_consistency_performance_criteria$ci.lb[1],
+                    fit_internal_consistency_performance_criteria$b[1] +
+                      fit_internal_consistency_performance_criteria$ci.lb[2]),
+       ci_upper = c(fit_internal_consistency_performance_criteria$ci.ub[1], 
+                    fit_internal_consistency_performance_criteria$b[1] + 
+                      fit_internal_consistency_performance_criteria$ci.ub[2])) %>%
+  mutate_if(is.numeric, transf.iabt) %>%
+  mutate_if(is.numeric, round, digits = 2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
