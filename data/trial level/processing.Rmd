@@ -777,7 +777,7 @@ data_goirap <-
              accuracy,
              isTestBlock) |>
       mutate(stimulus_number = paste0("target", stimulus_number),
-             unique_id = paste(experiment, participant),),
+             unique_id = paste(experiment, participant)),
     read_csv("raw/GO-IRAP format files/ian countries 2 care.csv", show_col_types = FALSE) %>%
       select(participant = unique_id,
              experiment,
@@ -792,7 +792,7 @@ data_goirap <-
              accuracy,
              isTestBlock) |>
       mutate(stimulus_number = paste0("target", stimulus_number),
-             unique_id = paste(experiment, participant),),
+             unique_id = paste(experiment, participant)),
     read_csv("raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv", show_col_types = FALSE) %>%
       select(unique_id, 
              experiment, 
