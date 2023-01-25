@@ -352,86 +352,68 @@ Meta effect: `r meta_effect`.
 
 Heterogeneity: `r meta_heterogeneity`.
 
-### GOSH
+### Detection of effect sizes with undue influence on the meta effect size
 
-Sexuality IRAP seems to be an outlier
+#### Iteration 1
 
-```{r fig.height=5, fig.width=5}
+```{r fig.height=12, fig.width=7}
 
-if(!file.exists("models/fit_gosh_ic.rds")){
-  
-  fit_gosh_ic <- gosh(fit_internal_consistency_permuted_estimates, 
-                      subsets = 10000,
-                      parallel = "multicore",  # change to "snow" on windows
-                      ncpus = parallel::detectCores())
-  
-  write_rds(fit_gosh_ic, "models/fit_gosh_ic.rds")
-  
-} else {
-  
-  fit_gosh_ic <- read_rds("models/fit_gosh_ic.rds")
-  
-}
+# calculate influence diagnostics
+influence_icc_permuted <- influence(fit_internal_consistency_permuted_estimates)
+ 
+# plot the influence diagnostics
+plot(influence_icc_permuted, layout = c(8,1))
 
-data_for_plotting_ic <- 
-  bind_cols(as.tibble(fit_gosh_ic$incl) %>%
-              # the study to be separated is here listed by order (counting down from top of forest plot)
-              select(include1 = "23",
-                     include2 = "24"),  
-            as.tibble(fit_gosh_ic$res)) %>%
-  mutate(IRAP = ifelse(include1 | include2, "Sexuality", "All other domains"),
-         alpha = transf.iabt(estimate)) %>%
-  # randomize rows to improve plotting
-  sample_frac(size = 1)
-
-p1 <- 
-  ggplot(data_for_plotting_ic, aes(alpha, I2, color = IRAP)) +
-  geom_point(alpha = 0.5) +
-  scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
-  theme_classic() + 
-  xlab(expression("Internal consistency (" * alpha * ")")) +
-  ylab(expression("Heterogeneity (" * italic("I")^"2" * ")")) +
-  theme(legend.position = c(0.2, 0.85), 
-        legend.background = element_rect(fill = scales::alpha("white", 0)))
-
-plot_gosh_ic <- 
-  ggMarginal(p1, 
-             type = "densigram",
-             size = 4,
-             margins = "both",
-             groupFill = TRUE)
-
-plot_gosh_ic
-
-write_rds(plot_gosh_ic, "models/plot_gosh_ic.rds")
-
-data_for_plotting_ic %>%
-  group_by(IRAP) %>%
-  summarize(alpha_median = median(alpha, na.rm = TRUE),
-            alpha_ci_lower = quantile(alpha, 0.025, na.rm = TRUE),
-            alpha_ci_upper = quantile(alpha, 0.975, na.rm = TRUE),
-            I2_median = median(I2, na.rm = TRUE),
-            I2_ci_lower = quantile(I2, 0.025, na.rm = TRUE),
-            I2_ci_upper = quantile(I2, 0.975, na.rm = TRUE),
-            H2_median = median(H2, na.rm = TRUE),
-            H2_ci_lower = quantile(H2, 0.025, na.rm = TRUE),
-            H2_ci_upper = quantile(H2, 0.975, na.rm = TRUE)) %>%
-  round_df(2) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+data_D_scores_internal_consistency_permuted_estimates |>
+  mutate(number = row_number()) |>
+  select(number, domain) |>
+  kable() |>
+  kable_classic(full_width = FALSE)
 
 ```
 
+- Sexuality domains should be excluded based on tau2.del
+
+#### Iteration 2
+
+```{r fig.height=12, fig.width=7}
+
+fit_temp <- 
+  data_D_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain)
+
+# calculate influence diagnostics
+influence_icc_permuted_2 <- influence(fit_temp)
+ 
+# plot the influence diagnostics
+plot(influence_icc_permuted_2, layout = c(8,1))
+
+data_D_scores_internal_consistency_permuted_estimates |>
+  filter(!str_detect(domain, "Sexuality")) |>
+  mutate(number = row_number()) |>
+  select(number, domain) |>
+  kable() |>
+  kable_classic(full_width = FALSE)
+
+```
+
+- Gender stereotypes (3) should be excluded based on tau2.del
+
 ### Sensitivity analysis
 
-excluding Sexuality IRAPs as outliers
+excluding Sexuality (1), Sexuality (2) and Gender (3) as outliers with undue influence on the meta effect size. Without these domains, heterogeneity is reduced to zero.
 
 ```{r fig.height=9.5, fig.width=8}
 
 # fit random Effects model 
 fit_internal_consistency_permuted_estimates_sensitivity <- 
   data_D_scores_internal_consistency_permuted_estimates %>%
-  filter(!str_detect(domain, "Sexuality")) %>%
+  filter(!str_detect(domain, "Sexuality")) |>
+  filter(!domain %in% c("Gender stereotypes (3)")) %>%
   rma(yi   = yi, 
       vi   = vi, 
       data = .,
@@ -452,8 +434,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 xlim = c(-1.4, 1.6),
                 at = c(0, 0.25, 0.5, 0.75, 1),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
-text(-1.4, 41, "Study", pos = 4)
-text(1.6, 41, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
+text(-1.4, 40, "Study", pos = 4)
+text(1.6, 40, bquote(paste("Cronbach's ", alpha, " [95% CI]")), pos = 2)
 
 # summarize results
 meta_effect <- 
@@ -479,69 +461,6 @@ write_rds(fit_internal_consistency_permuted_estimates_sensitivity, "models/fit_i
 Meta effect: `r meta_effect`.
 
 Heterogeneity: `r meta_heterogeneity`.
-
-#### GOSH
-
-```{r fig.height=5, fig.width=5}
-
-if(!file.exists("models/fit_gosh_ic_sensitivity.rds")){
-  
-  fit_gosh_ic_sensitivity <- gosh(fit_internal_consistency_permuted_estimates_sensitivity, 
-                                  subsets = 10000,
-                                  parallel = "multicore",  # change to "snow" on windows
-                                  ncpus = parallel::detectCores())
-  
-  write_rds(fit_gosh_ic_sensitivity, "models/fit_gosh_ic_sensitivity.rds")
-  
-} else {
-  
-  fit_gosh_ic_sensitivity <- read_rds("models/fit_gosh_ic_sensitivity.rds")
-  
-}
-
-data_for_plotting_ic_sensitivity <- 
-  as.tibble(fit_gosh_ic_sensitivity$res) %>%
-  mutate(Type = "Other IRAPs",
-         alpha = transf.iabt(estimate)) %>%
-  # randomize rows to improve plotting
-  sample_frac(size = 1)
-
-p3 <- 
-  ggplot(data_for_plotting_ic_sensitivity, aes(alpha, I2, color = Type)) +
-  geom_point(alpha = 0.5) +
-  scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
-  theme_classic() + 
-  xlab(expression("Internal consistency (" * alpha * ")")) +
-  ylab(expression("Heterogeneity (" * italic("I")^"2" * ")")) +
-  theme(legend.position = c(0.2, 0.85)) +
-  theme(legend.position = "none") 
-
-plot_gosh_ic_sensitivity <- 
-  ggMarginal(p3, 
-             type = "densigram",
-             size = 4,
-             margins = "both",
-             groupFill = TRUE)
-
-plot_gosh_ic_sensitivity
-
-write_rds(plot_gosh_ic_sensitivity, "models/plot_gosh_ic_sensitivity.rds")
-
-data_for_plotting_ic_sensitivity %>%
-  summarize(alpha_median = median(alpha, na.rm = TRUE),
-            alpha_ci_lower = quantile(alpha, 0.025, na.rm = TRUE),
-            alpha_ci_upper = quantile(alpha, 0.975, na.rm = TRUE),
-            I2_median = median(I2, na.rm = TRUE),
-            I2_ci_lower = quantile(I2, 0.025, na.rm = TRUE),
-            I2_ci_upper = quantile(I2, 0.975, na.rm = TRUE),
-            H2_median = median(H2, na.rm = TRUE),
-            H2_ci_lower = quantile(H2, 0.025, na.rm = TRUE),
-            H2_ci_upper = quantile(H2, 0.975, na.rm = TRUE)) %>%
-  round_df(2) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-```
 
 # Test-retest reliability
 
@@ -670,66 +589,25 @@ Meta effect: `r meta_effect`.
 
 Heterogeneity: `r meta_heterogeneity`.
 
-### GOSH
+### Detection of effect sizes with undue influence on the meta effect size
 
-```{r fig.height=5, fig.width=5}
+```{r fig.height=12, fig.width=7}
 
-if(!file.exists("models/fit_gosh_trt.rds")){
-  
-  fit_gosh_trt <- gosh(fit_test_retest_icc, 
-                       parallel = "multicore", # change to "snow" on windows
-                       ncpus = parallel::detectCores())
-  
-  write_rds(fit_gosh_trt, "models/fit_gosh_trt.rds")
-  
-} else {
-  
-  fit_gosh_trt <- read_rds("models/fit_gosh_trt.rds")
-  
-}
+# calculate influence diagnostics
+influence_trt <- influence(fit_test_retest_icc)
+ 
+# plot the influence diagnostics
+plot(influence_trt, layout = c(8,1))
 
-data_for_plotting_trt <- 
-  as.tibble(fit_gosh_trt$res) %>%
-  mutate(Type = "Other IRAPs",
-         ICC = estimate) %>%
-  # randomize rows to improve plotting
-  sample_frac(size = 1)
-
-p2 <- 
-  ggplot(data_for_plotting_trt, aes(ICC, I2, color = Type)) +
-  geom_point(alpha = 0.8) +
-  scale_color_viridis_d(begin = 0.35, end = 0.65, direction = -1) +
-  theme_classic() + 
-  xlab("Test-retest reliability (ICC)") +
-  ylab(expression("Heterogeneity (" * italic("I")^"2" * ")")) +
-  theme(legend.position = "none") 
-
-plot_gosh_trt <- 
-  ggMarginal(p2, 
-             type = "densigram",
-             size = 4,
-             margins = "both",
-             groupFill = TRUE)
-
-plot_gosh_trt
-
-write_rds(plot_gosh_trt, "models/plot_gosh_trt.rds")
-  
-data_for_plotting_trt %>%
-  summarize(ICC_median = median(ICC, na.rm = TRUE),
-            ICC_ci_lower = quantile(ICC, 0.025, na.rm = TRUE),
-            ICC_ci_upper = quantile(ICC, 0.975, na.rm = TRUE),
-            I2_median = median(I2, na.rm = TRUE),
-            I2_ci_lower = quantile(I2, 0.025, na.rm = TRUE),
-            I2_ci_upper = quantile(I2, 0.975, na.rm = TRUE),
-            H2_median = median(H2, na.rm = TRUE),
-            H2_ci_lower = quantile(H2, 0.025, na.rm = TRUE),
-            H2_ci_upper = quantile(H2, 0.975, na.rm = TRUE)) %>%
-  round_df(2) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+data_D_scores_test_retest_icc |>
+  mutate(number = row_number()) |>
+  select(number, domain) |>
+  kable() |>
+  kable_classic(full_width = FALSE)
 
 ```
+
+No outliers detected
 
 # Power implications
 
