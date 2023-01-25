@@ -1,0 +1,14 @@
+# Datasets from our published IRAP studies that aren't included in the dataset here & reasons why
+
+## Studies that used older versions of the IRAP that did not produce trial-level data in a format that made it amenable to including in the dataset:
+
+- Drake et al. (2015) Exploring the reliability and convergent validity of implicit racial evaluations. 
+- Drake et al. (2016) Honest politics: Evaluating candidate perceptions for the 2012 US election with the Implicit Relational Assessment Procedure.
+- Hussey & Barnes-Holmes (2012) The implicit relational assessment procedure as a measure of implicit depression and the role of psychological flexibility.
+- Hussey, Ni Mhaoileoin, et al (2016) The IRAP is nonrelative but not acontextual: Changes to the contrast category influence men’s dehumanization of women. 
+- Hussey, Barnes-Holmes & Booth (2016) Individuals with current suicidal ideation demonstrate implicit 'fearlessness of death'.
+
+## Other studies and reasons
+
+- Cartwright, Hussey et al. (2017) An Investigation into the Relationship between the Gender Binary and Occupational Discrimination Using the Implicit Relational Assessment Procedure. 
+	- This data was aggregated with other and used in De Schryver et al. (2018), which is included in the current dataset.
