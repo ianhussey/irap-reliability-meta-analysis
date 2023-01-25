@@ -102,7 +102,24 @@ For meta analysis, spearman brown correlations are converted to Fischers r-to-z 
 
 ## Permutation-based split half correlations
 
-ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019). Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 10000 permutations.  
+ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019). Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 10000 permutations.
+
+Plot bonett transformed and back-transformed estimates.
+
+```{r fig.height=12, fig.width=6}
+
+ggplot(data_D_scores_internal_consistency_permuted_estimates, 
+       aes(y = transf.iabt(alpha), x = fct_rev(domain), group = trial_type)) + # , color = fct_rev(domain)
+  geom_linerange(aes(ymin = transf.iabt(alpha_ci_lower), ymax = transf.iabt(alpha_ci_upper)),
+                 position = position_dodge(width = 0.75)) +
+  geom_point(position = position_dodge(width = 0.75)) +
+  coord_flip() +
+  xlab("Domain") +
+  ylab("Alpha") +
+  theme_linedraw() +
+  scale_color_viridis_d() #begin = 0.3, end = 0.7
+
+```
 
 ### Bonett transformations, all domains
 
