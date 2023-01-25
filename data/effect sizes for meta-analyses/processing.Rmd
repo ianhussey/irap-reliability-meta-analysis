@@ -479,7 +479,6 @@ data_response_option_locations <- data_ic %>%
   distinct(domain, 
            response_option_locations, 
            trials_per_block, 
-           number_of_pairs_of_test_blocks, 
            response_option_locations)
 
 data_D_scores_internal_consistency_permuted_estimates <- data_D_scores_internal_consistency_permutations %>%
