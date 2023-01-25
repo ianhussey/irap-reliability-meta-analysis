@@ -26,6 +26,25 @@ library(janitor)
 
 ```
 
+# Task parameters
+
+```{r}
+
+# task parameters
+data_task_parameters <- read_excel("../../measures/IRAP procedural parameters, stimuli, and publication status.xlsx") %>%
+  clean_names() %>%
+  select(domain, 
+         trials_per_block, 
+         response_option_locations, 
+         block_order_between_participants = block_order,
+         data_published,	
+         measure_published) %>%
+  mutate_all(funs(str_replace(., "NA", NA_character_))) |>
+  mutate(data_published = !is.na(data_published),
+         measure_published = !is.na(measure_published))
+
+```
+
 # IRAP 2012 VB6 format files
 
 ## Evaluative IRAPs
@@ -1012,14 +1031,12 @@ data_trial_level_temp_2 <- data_trial_level_temp_1 |>
   ungroup() %>%
   mutate(trial_odd_even = ifelse(row_id %% 2 == 1, "odd", "even")) 
 
-# task parameters
-data_task_parameters <- read_excel("../../measures/word stimuli and task parameters.xlsx") %>%
-  clean_names() %>%
-  select(domain, trials_per_block, number_of_pairs_of_test_blocks, response_option_locations)
 
+# join in task parameters
 data_trial_level_temp_3 <- data_trial_level_temp_2 %>%
   left_join(data_task_parameters, by = "domain")
 
+# final tidying
 data_trial_level <- data_trial_level_temp_3 |>
   # remove spurious age data
   mutate(age = ifelse(age > 999, NA, age),
@@ -1038,8 +1055,8 @@ data_trial_level <- data_trial_level_temp_3 |>
     met_performance_criteria_stricter, 
     # procedural details
     trials_per_block, 
-    number_of_pairs_of_test_blocks, 
     response_option_locations,
+    block_order_between_participants,
     # condition and trial details
     block_order, 
     block_number, 
@@ -1049,7 +1066,10 @@ data_trial_level <- data_trial_level_temp_3 |>
     trial_odd_even,
     # responses
     rt, 
-    accuracy
+    accuracy,
+    # publication status
+    data_published,
+    measure_published
   )
 
 # write to disk
