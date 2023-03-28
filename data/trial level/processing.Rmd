@@ -926,6 +926,24 @@ data_nonwords <- read_csv("raw/non-words/data_trial_level_nonwords.csv") |>
 
 ```
 
+# Other labs' data
+
+```{r}
+
+henklain_2019 <- wrangle_data(file = "raw/shared by other labs/henklain et al 2019 - tidied/henklain_combined.csv") |>
+  mutate(experiment = "Professor competence",
+         unique_id = paste(experiment, participant))
+
+vanderkaap_competence_needs_desire <- wrangle_data(file = "raw/shared by other labs/van der kaap et al - 2018/competence needs desire irap/competence needs desire irap data.csv") |>
+  mutate(experiment = "Self-competence (am)",
+         unique_id = paste(experiment, participant))
+
+vanderkaap_competence_needs_satisfaction <- wrangle_data(file = "raw/shared by other labs/van der kaap et al - 2018/competence needs satisfaction irap/competence needs satisfaction irap data.csv") |>
+  mutate(experiment = "Self-competence (want to be)",
+         unique_id = paste(experiment, participant))
+
+```
+
 # Combine
 
 ```{r}
@@ -937,7 +955,10 @@ data_trial_level_temp_1 <-
             data_sexuality_1,
             chad_personality,
             data_goirap,
-            data_nonwords) %>%
+            data_nonwords,
+            henklain_2019,
+            vanderkaap_competence_needs_desire,
+            vanderkaap_competence_needs_satisfaction) %>%
   rename(domain = experiment) %>%
   mutate(domain = dplyr::recode(domain,
                                 "clintontrump" = "Clinton-Trump",				
@@ -980,7 +1001,10 @@ data_trial_level_temp_1 <-
                                 "shapes and colors exp 2 full rule" = "Shapes & colors (5)",
                                 "shapes and colors exp 2 minimal rule" = "Shapes & colors (6)",
                                 "shapes and colors exp 3" = "Shapes & colors (7)",
-                                "Non-words" = "Non-words")) %>%
+                                "Non-words" = "Non-words",
+                                "Self-competence (am)" = "Self-competence (am)",
+                                "Self-competence (want to be)" = "Self-competence (want to be)",
+                                "Professor competence" = "Professor competence")) %>%
   arrange(as.character(domain))
 
 

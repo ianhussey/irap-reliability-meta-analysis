@@ -11,7 +11,7 @@
 
 <meta name="author" content="Ian Hussey" />
 
-<meta name="date" content="2023-01-25" />
+<meta name="date" content="2023-03-28" />
 
 <title>Data tidying</title>
 
@@ -1669,7 +1669,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Data tidying</h1>
 <h4 class="author">Ian Hussey</h4>
-<h4 class="date">25 January 2023</h4>
+<h4 class="date">28 March 2023</h4>
 
 </div>
 
@@ -2391,7 +2391,7 @@ old IRAP data files for this headache.</p>
 <span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>             accuracy,</span>
 <span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>             isTestBlock) <span class="sc">|&gt;</span></span>
 <span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">stimulus_number =</span> <span class="fu">paste0</span>(<span class="st">&quot;target&quot;</span>, stimulus_number),</span>
-<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>             <span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant),),</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>             <span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant)),</span>
 <span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_csv</span>(<span class="st">&quot;raw/GO-IRAP format files/ian countries 2 care.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="at">participant =</span> unique_id,</span>
 <span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>             experiment,</span>
@@ -2406,7 +2406,7 @@ old IRAP data files for this headache.</p>
 <span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>             accuracy,</span>
 <span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>             isTestBlock) <span class="sc">|&gt;</span></span>
 <span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">stimulus_number =</span> <span class="fu">paste0</span>(<span class="st">&quot;target&quot;</span>, stimulus_number),</span>
-<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>             <span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant),),</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>             <span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant)),</span>
 <span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_csv</span>(<span class="st">&quot;raw/GO-IRAP format files/ian shapes and colors 1 YNrule.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(unique_id, </span>
 <span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>             experiment, </span>
@@ -2534,161 +2534,181 @@ old IRAP data files for this headache.</p>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant),</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">participant =</span> <span class="fu">as.character</span>(participant))</span></code></pre></div>
 </div>
+<div id="other-labs-data" class="section level1">
+<h1>Other labs’ data</h1>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>henklain_2019 <span class="ot">&lt;-</span> <span class="fu">wrangle_data</span>(<span class="at">file =</span> <span class="st">&quot;raw/shared by other labs/henklain et al 2019 - tidied/henklain_combined.csv&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">experiment =</span> <span class="st">&quot;Professor competence&quot;</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>vanderkaap_competence_needs_desire <span class="ot">&lt;-</span> <span class="fu">wrangle_data</span>(<span class="at">file =</span> <span class="st">&quot;raw/shared by other labs/van der kaap et al - 2018/competence needs desire irap/competence needs desire irap data.csv&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">experiment =</span> <span class="st">&quot;Self-competence (am)&quot;</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant))</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>vanderkaap_competence_needs_satisfaction <span class="ot">&lt;-</span> <span class="fu">wrangle_data</span>(<span class="at">file =</span> <span class="st">&quot;raw/shared by other labs/van der kaap et al - 2018/competence needs satisfaction irap/competence needs satisfaction irap data.csv&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">experiment =</span> <span class="st">&quot;Self-competence (want to be)&quot;</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">unique_id =</span> <span class="fu">paste</span>(experiment, participant))</span></code></pre></div>
+</div>
 <div id="combine" class="section level1">
 <h1>Combine</h1>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data_trial_level_temp_1 <span class="ot">&lt;-</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data_evaluative,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>            data_nonevaluative,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>            data_disgust_1,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>            data_sexuality_1,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            chad_personality,</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            data_goirap,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            data_nonwords) <span class="sc">%&gt;%</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">domain =</span> experiment) <span class="sc">%&gt;%</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">domain =</span> dplyr<span class="sc">::</span><span class="fu">recode</span>(domain,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;clintontrump&quot;</span> <span class="ot">=</span> <span class="st">&quot;Clinton-Trump&quot;</span>,               </span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;richpoor&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rich-Poor&quot;</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ADHD&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stigma - ADHD&quot;</span>,               </span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;PTSD&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stigma - PTSD&quot;</span>,               </span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;schizophrenia&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stigma - Schizophrenia&quot;</span>,</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;agreeableness&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Agreeableness&quot;</span>,</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;conscientiousness&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Conscientiousness&quot;</span>,</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;extraversion&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Extraversion&quot;</span>,</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;neuroticism&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Neuroticism&quot;</span>,</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;openness&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Openness&quot;</span>,</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad bodyimage&quot;</span> <span class="ot">=</span> <span class="st">&quot;Body image&quot;</span>,</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad friendenemy&quot;</span> <span class="ot">=</span> <span class="st">&quot;Friend-Enemy&quot;</span>,</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad gender&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (1)&quot;</span>, <span class="co"># chad&#39;s dataset</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;menwomen&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (2)&quot;</span>,  <span class="co"># ian&#39;s dataset</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Gender stereotypes positive&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (3)&quot;</span>, <span class="co"># aoife&#39;s datasets</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Gender stereotypes negative&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (4)&quot;</span>, <span class="co"># aoife&#39;s datasets</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad lincolnhitler&quot;</span> <span class="ot">=</span> <span class="st">&quot;Lincoln-Hitler&quot;</span>,</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad race&quot;</span>  <span class="ot">=</span> <span class="st">&quot;Race (1)&quot;</span>,</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian race&quot;</span> <span class="ot">=</span> <span class="st">&quot;Race (2)&quot;</span>,</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad religion&quot;</span> <span class="ot">=</span> <span class="st">&quot;Religion&quot;</span>,</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death emma&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (1)&quot;</span>,</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death june&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (2)&quot;</span>,</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death tarah&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (3)&quot;</span>,</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Death (self-other)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (4)&quot;</span>,</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Disgust (1)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Disgust (1)&quot;</span>,</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Disgust (2)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Disgust (2)&quot;</span>,</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Sexuality (1)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Sexuality (1)&quot;</span>,</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Sexuality (2)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Sexuality (2)&quot;</span>,</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries acknowledge 1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (1)&quot;</span>,</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries care 1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (2)&quot;</span>,</span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (3)&quot;</span>,</span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries 2 care&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (4)&quot;</span>,</span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;valenced words&quot;</span> <span class="ot">=</span> <span class="st">&quot;Valenced words&quot;</span>,</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 1 yesno fullrule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (1)&quot;</span>,</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 2 yesno respondcorrectly&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (2)&quot;</span>,</span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 3 truefalse respondcorrectly&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (3)&quot;</span>,</span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 4 truefalse fullrule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (4)&quot;</span>,</span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (5)&quot;</span>,</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (6)&quot;</span>,</span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (7)&quot;</span>,</span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Non-words&quot;</span> <span class="ot">=</span> <span class="st">&quot;Non-words&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">as.character</span>(domain))</span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co"># performance stats</span></span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>performance_criteria_typical <span class="ot">&lt;-</span> data_trial_level_temp_1 <span class="sc">|&gt;</span></span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint, block_type) <span class="sc">%&gt;%</span></span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_rt =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">median</span>(rt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>            <span class="at">percent_accuracy =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">mean</span>(accuracy, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">&quot;block_type&quot;</span>,</span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> <span class="fu">c</span>(<span class="st">&quot;median_rt&quot;</span>, <span class="st">&quot;percent_accuracy&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">met_performance_criteria_typical =</span> </span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ifelse</span>(median_rt_consistent <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent <span class="sc">&gt;=</span> .<span class="dv">78</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_id, timepoint, met_performance_criteria_typical)</span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>performance_criteria_stricter <span class="ot">&lt;-</span> data_trial_level_temp_1 <span class="sc">|&gt;</span></span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint, block_type, block_number) <span class="sc">|&gt;</span></span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_rt =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">median</span>(rt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>            <span class="at">percent_accuracy =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">mean</span>(accuracy, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>),</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="fu">c</span>(<span class="st">&quot;block_type&quot;</span>, <span class="st">&quot;block_number&quot;</span>),</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> <span class="fu">c</span>(<span class="st">&quot;median_rt&quot;</span>, <span class="st">&quot;percent_accuracy&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">met_performance_criteria_stricter =</span> </span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ifelse</span>(median_rt_consistent_1 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>                    median_rt_consistent_2 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>                    median_rt_consistent_3 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent_1 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent_2 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent_3 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent_1 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent_2 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent_3 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent_1 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent_2 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent_3 <span class="sc">&gt;=</span> .<span class="dv">78</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_id, timepoint, met_performance_criteria_stricter)</span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="co"># combine</span></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>data_trial_level_temp_2 <span class="ot">&lt;-</span> data_trial_level_temp_1 <span class="sc">|&gt;</span></span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(performance_criteria_typical, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(performance_criteria_stricter, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mark odd vs even trials</span></span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint) <span class="sc">%&gt;%</span></span>
-<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trial_odd_even =</span> <span class="fu">ifelse</span>(row_id <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>, <span class="st">&quot;odd&quot;</span>, <span class="st">&quot;even&quot;</span>)) </span>
-<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a><span class="co"># join in task parameters</span></span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a>data_trial_level_temp_3 <span class="ot">&lt;-</span> data_trial_level_temp_2 <span class="sc">%&gt;%</span></span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_task_parameters, <span class="at">by =</span> <span class="st">&quot;domain&quot;</span>)</span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a><span class="co"># final tidying</span></span>
-<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a>data_trial_level <span class="ot">&lt;-</span> data_trial_level_temp_3 <span class="sc">|&gt;</span></span>
-<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove spurious age data</span></span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">ifelse</span>(age <span class="sc">&gt;</span> <span class="dv">999</span>, <span class="cn">NA</span>, age),</span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>         <span class="at">age =</span> <span class="fu">ifelse</span>(age <span class="sc">&lt;</span> <span class="dv">18</span>, <span class="cn">NA</span>, age)) <span class="sc">|&gt;</span></span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a>  <span class="co"># order columns</span></span>
-<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>    <span class="co"># participant details</span></span>
-<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>    unique_id, </span>
-<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a>    timepoint, </span>
-<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a>    domain, </span>
-<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a>    participant, </span>
-<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a>    age, </span>
-<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a>    gender, </span>
-<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a>    <span class="co"># performance criteria</span></span>
-<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a>    met_performance_criteria_typical, </span>
-<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a>    met_performance_criteria_stricter, </span>
-<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a>    <span class="co"># procedural details</span></span>
-<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a>    trials_per_block, </span>
-<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a>    response_option_locations,</span>
-<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a>    block_order_between_participants,</span>
-<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a>    <span class="co"># condition and trial details</span></span>
-<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a>    block_order, </span>
-<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a>    block_number, </span>
-<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a>    block_type, </span>
-<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a>    trial_type, </span>
-<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a>    stimulus_number, </span>
-<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a>    trial_odd_even,</span>
-<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a>    <span class="co"># responses</span></span>
-<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a>    rt, </span>
-<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a>    accuracy,</span>
-<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a>    <span class="co"># publication status</span></span>
-<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a>    data_published,</span>
-<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a>    measure_published</span>
-<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="co"># write to disk</span></span>
-<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(data_trial_level, <span class="st">&quot;data_trial_level.csv&quot;</span>)</span>
-<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a><span class="co">#data_trial_level &lt;- read_csv(&quot;data_trial_level.csv&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data_trial_level_temp_1 <span class="ot">&lt;-</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data_evaluative,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>            data_nonevaluative,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>            data_disgust_1,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>            data_sexuality_1,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>            chad_personality,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>            data_goirap,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            data_nonwords,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>            henklain_2019,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>            vanderkaap_competence_needs_desire,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>            vanderkaap_competence_needs_satisfaction) <span class="sc">%&gt;%</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">domain =</span> experiment) <span class="sc">%&gt;%</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">domain =</span> dplyr<span class="sc">::</span><span class="fu">recode</span>(domain,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;clintontrump&quot;</span> <span class="ot">=</span> <span class="st">&quot;Clinton-Trump&quot;</span>,               </span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;richpoor&quot;</span> <span class="ot">=</span> <span class="st">&quot;Rich-Poor&quot;</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ADHD&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stigma - ADHD&quot;</span>,               </span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;PTSD&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stigma - PTSD&quot;</span>,               </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;schizophrenia&quot;</span> <span class="ot">=</span> <span class="st">&quot;Stigma - Schizophrenia&quot;</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;agreeableness&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Agreeableness&quot;</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;conscientiousness&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Conscientiousness&quot;</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;extraversion&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Extraversion&quot;</span>,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;neuroticism&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Neuroticism&quot;</span>,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;openness&quot;</span> <span class="ot">=</span> <span class="st">&quot;Personality - Openness&quot;</span>,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad bodyimage&quot;</span> <span class="ot">=</span> <span class="st">&quot;Body image&quot;</span>,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad friendenemy&quot;</span> <span class="ot">=</span> <span class="st">&quot;Friend-Enemy&quot;</span>,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad gender&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (1)&quot;</span>, <span class="co"># chad&#39;s dataset</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;menwomen&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (2)&quot;</span>,  <span class="co"># ian&#39;s dataset</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Gender stereotypes positive&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (3)&quot;</span>, <span class="co"># aoife&#39;s datasets</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Gender stereotypes negative&quot;</span> <span class="ot">=</span> <span class="st">&quot;Gender stereotypes (4)&quot;</span>, <span class="co"># aoife&#39;s datasets</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad lincolnhitler&quot;</span> <span class="ot">=</span> <span class="st">&quot;Lincoln-Hitler&quot;</span>,</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad race&quot;</span>  <span class="ot">=</span> <span class="st">&quot;Race (1)&quot;</span>,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian race&quot;</span> <span class="ot">=</span> <span class="st">&quot;Race (2)&quot;</span>,</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;chad religion&quot;</span> <span class="ot">=</span> <span class="st">&quot;Religion&quot;</span>,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death emma&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (1)&quot;</span>,</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death june&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (2)&quot;</span>,</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;ian death tarah&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (3)&quot;</span>,</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Death (self-other)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Death (4)&quot;</span>,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Disgust (1)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Disgust (1)&quot;</span>,</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Disgust (2)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Disgust (2)&quot;</span>,</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Sexuality (1)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Sexuality (1)&quot;</span>,</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Sexuality (2)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Sexuality (2)&quot;</span>,</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries acknowledge 1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (1)&quot;</span>,</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries care 1&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (2)&quot;</span>,</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries 2 acknowledge&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (3)&quot;</span>,</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;countries 2 care&quot;</span> <span class="ot">=</span> <span class="st">&quot;Countries (4)&quot;</span>,</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;valenced words&quot;</span> <span class="ot">=</span> <span class="st">&quot;Valenced words&quot;</span>,</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 1 yesno fullrule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (1)&quot;</span>,</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 2 yesno respondcorrectly&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (2)&quot;</span>,</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 3 truefalse respondcorrectly&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (3)&quot;</span>,</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors 4 truefalse fullrule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (4)&quot;</span>,</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors exp 2 full rule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (5)&quot;</span>,</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors exp 2 minimal rule&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (6)&quot;</span>,</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;shapes and colors exp 3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Shapes &amp; colors (7)&quot;</span>,</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Non-words&quot;</span> <span class="ot">=</span> <span class="st">&quot;Non-words&quot;</span>,</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Self-competence (am)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Self-competence (am)&quot;</span>,</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Self-competence (want to be)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Self-competence (want to be)&quot;</span>,</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Professor competence&quot;</span> <span class="ot">=</span> <span class="st">&quot;Professor competence&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">as.character</span>(domain))</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="co"># performance stats</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>performance_criteria_typical <span class="ot">&lt;-</span> data_trial_level_temp_1 <span class="sc">|&gt;</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint, block_type) <span class="sc">%&gt;%</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_rt =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">median</span>(rt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>            <span class="at">percent_accuracy =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">mean</span>(accuracy, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">&quot;block_type&quot;</span>,</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> <span class="fu">c</span>(<span class="st">&quot;median_rt&quot;</span>, <span class="st">&quot;percent_accuracy&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">met_performance_criteria_typical =</span> </span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ifelse</span>(median_rt_consistent <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent <span class="sc">&gt;=</span> .<span class="dv">78</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_id, timepoint, met_performance_criteria_typical)</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>performance_criteria_stricter <span class="ot">&lt;-</span> data_trial_level_temp_1 <span class="sc">|&gt;</span></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint, block_type, block_number) <span class="sc">|&gt;</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_rt =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">median</span>(rt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>            <span class="at">percent_accuracy =</span> janitor<span class="sc">::</span><span class="fu">round_half_up</span>(<span class="fu">mean</span>(accuracy, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>),</span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="fu">c</span>(<span class="st">&quot;block_type&quot;</span>, <span class="st">&quot;block_number&quot;</span>),</span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> <span class="fu">c</span>(<span class="st">&quot;median_rt&quot;</span>, <span class="st">&quot;percent_accuracy&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">met_performance_criteria_stricter =</span> </span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ifelse</span>(median_rt_consistent_1 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>                    median_rt_consistent_2 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>                    median_rt_consistent_3 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent_1 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent_2 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>                    median_rt_inconsistent_3 <span class="sc">&lt;=</span> <span class="dv">2000</span> <span class="sc">&amp;</span> </span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent_1 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent_2 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_consistent_3 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent_1 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent_2 <span class="sc">&gt;=</span> .<span class="dv">78</span> <span class="sc">&amp;</span></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>                    percent_accuracy_inconsistent_3 <span class="sc">&gt;=</span> .<span class="dv">78</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_id, timepoint, met_performance_criteria_stricter)</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a><span class="co"># combine</span></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>data_trial_level_temp_2 <span class="ot">&lt;-</span> data_trial_level_temp_1 <span class="sc">|&gt;</span></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(performance_criteria_typical, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(performance_criteria_stricter, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;unique_id&quot;</span>, <span class="st">&quot;timepoint&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mark odd vs even trials</span></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unique_id, timepoint) <span class="sc">%&gt;%</span></span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trial_odd_even =</span> <span class="fu">ifelse</span>(row_id <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>, <span class="st">&quot;odd&quot;</span>, <span class="st">&quot;even&quot;</span>)) </span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a><span class="co"># join in task parameters</span></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>data_trial_level_temp_3 <span class="ot">&lt;-</span> data_trial_level_temp_2 <span class="sc">%&gt;%</span></span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_task_parameters, <span class="at">by =</span> <span class="st">&quot;domain&quot;</span>)</span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a><span class="co"># final tidying</span></span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>data_trial_level <span class="ot">&lt;-</span> data_trial_level_temp_3 <span class="sc">|&gt;</span></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove spurious age data</span></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">ifelse</span>(age <span class="sc">&gt;</span> <span class="dv">999</span>, <span class="cn">NA</span>, age),</span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>         <span class="at">age =</span> <span class="fu">ifelse</span>(age <span class="sc">&lt;</span> <span class="dv">18</span>, <span class="cn">NA</span>, age)) <span class="sc">|&gt;</span></span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>  <span class="co"># order columns</span></span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a>    <span class="co"># participant details</span></span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a>    unique_id, </span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a>    timepoint, </span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>    domain, </span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>    participant, </span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>    age, </span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>    gender, </span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>    <span class="co"># performance criteria</span></span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>    met_performance_criteria_typical, </span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a>    met_performance_criteria_stricter, </span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a>    <span class="co"># procedural details</span></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>    trials_per_block, </span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>    response_option_locations,</span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>    block_order_between_participants,</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a>    <span class="co"># condition and trial details</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>    block_order, </span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>    block_number, </span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>    block_type, </span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>    trial_type, </span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>    stimulus_number, </span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>    trial_odd_even,</span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>    <span class="co"># responses</span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>    rt, </span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a>    accuracy,</span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>    <span class="co"># publication status</span></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>    data_published,</span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>    measure_published</span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a><span class="co"># write to disk</span></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(data_trial_level, <span class="st">&quot;data_trial_level.csv&quot;</span>)</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a><span class="co">#data_trial_level &lt;- read_csv(&quot;data_trial_level.csv&quot;)</span></span></code></pre></div>
 </div>
 <div id="session-info" class="section level1">
 <h1>Session info</h1>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.2.1 (2022-06-23)
 ## Platform: aarch64-apple-darwin20 (64-bit)
-## Running under: macOS Ventura 13.0.1
+## Running under: macOS Ventura 13.2.1
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRblas.0.dylib
@@ -2701,32 +2721,23 @@ old IRAP data files for this headache.</p>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] janitor_2.1.0   readxl_1.4.1    forcats_0.5.2   stringr_1.5.0  
-##  [5] dplyr_1.0.10    purrr_0.3.5     readr_2.1.3     tidyr_1.2.1    
-##  [9] tibble_3.1.8    ggplot2_3.4.0   tidyverse_1.3.2
+##  [1] janitor_2.1.0   readxl_1.4.2    lubridate_1.9.2 forcats_1.0.0  
+##  [5] stringr_1.5.0   dplyr_1.1.0     purrr_1.0.1     readr_2.1.4    
+##  [9] tidyr_1.3.0     tibble_3.1.8    ggplot2_3.4.1   tidyverse_2.0.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] lubridate_1.8.0     assertthat_0.2.1    digest_0.6.31      
-##  [4] utf8_1.2.2          R6_2.5.1            cellranger_1.1.0   
-##  [7] backports_1.4.1     reprex_2.0.2        evaluate_0.19      
-## [10] httr_1.4.4          pillar_1.8.1        rlang_1.0.6        
-## [13] googlesheets4_1.0.1 rstudioapi_0.14     jquerylib_0.1.4    
-## [16] rmarkdown_2.19      googledrive_2.0.0   bit_4.0.4          
-## [19] munsell_0.5.0       broom_1.0.2         compiler_4.2.1     
-## [22] modelr_0.1.9        xfun_0.35           pkgconfig_2.0.3    
-## [25] htmltools_0.5.4     tidyselect_1.2.0    fansi_1.0.3        
-## [28] crayon_1.5.2        tzdb_0.3.0          dbplyr_2.2.1       
-## [31] withr_2.5.0         grid_4.2.1          jsonlite_1.8.4     
-## [34] gtable_0.3.1        lifecycle_1.0.3     DBI_1.1.3          
-## [37] magrittr_2.0.3      scales_1.2.1        cli_3.4.1          
-## [40] stringi_1.7.8       vroom_1.6.0         cachem_1.0.6       
-## [43] fs_1.5.2            snakecase_0.11.0    xml2_1.3.3         
-## [46] bslib_0.4.2         ellipsis_0.3.2      generics_0.1.3     
-## [49] vctrs_0.5.1         tools_4.2.1         bit64_4.0.5        
-## [52] glue_1.6.2          hms_1.1.2           parallel_4.2.1     
-## [55] fastmap_1.1.0       yaml_2.3.6          colorspace_2.0-3   
-## [58] gargle_1.2.1        rvest_1.0.3         knitr_1.41         
-## [61] haven_2.5.1         sass_0.4.4</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.37        bslib_0.4.2      snakecase_0.11.0
+##  [5] colorspace_2.1-0 vctrs_0.5.2      generics_0.1.3   htmltools_0.5.4 
+##  [9] yaml_2.3.7       utf8_1.2.3       rlang_1.0.6      jquerylib_0.1.4 
+## [13] pillar_1.8.1     glue_1.6.2       withr_2.5.0      bit64_4.0.5     
+## [17] lifecycle_1.0.3  munsell_0.5.0    gtable_0.3.1     cellranger_1.1.0
+## [21] evaluate_0.20    knitr_1.42       tzdb_0.3.0       fastmap_1.1.1   
+## [25] parallel_4.2.1   fansi_1.0.4      scales_1.2.1     cachem_1.0.7    
+## [29] vroom_1.6.1      jsonlite_1.8.4   bit_4.0.5        hms_1.1.2       
+## [33] digest_0.6.31    stringi_1.7.12   grid_4.2.1       cli_3.6.0       
+## [37] tools_4.2.1      magrittr_2.0.3   sass_0.4.5       crayon_1.5.2    
+## [41] pkgconfig_2.0.3  ellipsis_0.3.2   timechange_0.2.0 rmarkdown_2.20  
+## [45] rstudioapi_0.14  R6_2.5.1         compiler_4.2.1</code></pre>
 </div>
 
 
