@@ -1,0 +1,79 @@
+---
+title: "Meta analyses of the IRAP's reliability"
+subtitle: "Summary of the component data"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+# Dependencies
+
+```{r}
+
+library(readxl)
+library(tidyverse)
+library(janitor)
+library(knitr)
+library(kableExtra)
+
+```
+
+# Data 
+
+```{r}
+
+data_parameters <- 
+  read_xlsx("../measures/IRAP procedural parameters, stimuli, and publication status.xlsx") |>
+  clean_names() |>
+  mutate(response_options = paste(response_option_1, response_option_2, sep = " / "),
+         data_published_binary = ifelse(data_published_abbreviated == "NA", FALSE, TRUE)) |>
+  select(domain, 
+         response_options, 
+         response_option_locations, 
+         trials_per_block,
+         n_test_blocks = number_of_pairs_of_test_blocks,
+         latency_feedback,
+         accuracy_practice_criterion = percent_accuracy_practice_criterion,
+         rt_practice_criterion = median_reaction_time_practice_criterion,
+         block_order,
+         data_published_abbreviated,
+         data_published_binary,
+         measure_published)
+
+```
+
+# Publication status 
+
+```{r}
+
+data_parameters |>
+  select(-data_published_binary) |>
+  kable() |>
+  kable_classic(full_width = FALSE)
+
+data_parameters |>
+  summarize(percent_published = round_half_up(mean(data_published_binary)*100, 1)) |>
+  kable() |>
+  kable_classic(full_width = FALSE)
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
+
