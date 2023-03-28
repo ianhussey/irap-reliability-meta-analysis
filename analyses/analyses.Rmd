@@ -120,27 +120,27 @@ data_demographics %>%
             sd_age = sd(age, na.rm = TRUE)) %>% 
   round_df(1) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_demographics %>%
   count(tolower(gender)) %>% 
   arrange(desc(n)) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_demographics %>%
   count(race) %>% 
   arrange(desc(n)) %>%
   drop_na() %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_demographics %>%
   count(sexuality) %>% 
   drop_na() %>%
   arrange(desc(n)) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 ```
 
@@ -151,12 +151,12 @@ data_demographics %>%
 data_D_scores_internal_consistency_permuted_estimates %>%
   summarize(total_ic_n = sum(n)) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 data_D_scores_test_retest_icc %>%
   summarize(total_trt_n = sum(n)) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 ```
 
@@ -826,9 +826,11 @@ Internal consistency using permutation approach sensitivity analysis, comparing 
 fit_internal_consistency_D_vs_A_scores <- 
   bind_rows(data_A_scores_internal_consistency_permuted_estimates %>%
               filter(!str_detect(domain, "Sexuality")) %>%
+              filter(!domain %in% c("Gender stereotypes (3)")) %>%
               mutate(scoring = "A"),
             data_D_scores_internal_consistency_permuted_estimates %>%
               filter(!str_detect(domain, "Sexuality")) %>%
+              filter(!domain %in% c("Gender stereotypes (3)")) %>%
               mutate(scoring = "D")) %>%
   mutate(scoring = fct_relevel(scoring, "D", "A")) %>%
   rma.mv(yi     = yi, 
@@ -853,7 +855,7 @@ tibble(response_options = c("D", "A"),
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 ```
 
@@ -866,6 +868,7 @@ Internal consistency using permutation approach sensitivity analysis, multilevel
 fit_internal_consistency_block_order <- 
   data_D_scores_internal_consistency_permuted_estimates_by_block_order %>%
   filter(!str_detect(domain, "Sexuality")) %>%
+  filter(!domain %in% c("Gender stereotypes (3)")) %>%
   rma.mv(yi     = yi, 
          V      = vi, 
          mods   = ~ block_order,
@@ -888,7 +891,7 @@ tibble(block_order = c("con first", "incon first"),
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
   
 ```
 
@@ -900,8 +903,9 @@ Internal consistency using permutation approach sensitivity analysis, moderator 
 
 fit_internal_consistency_response_option_locations <- 
   data_D_scores_internal_consistency_permuted_estimates %>%
-  filter(!str_detect(domain, "Sexuality") &
-           !is.na(response_option_locations)) %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  filter(!domain %in% c("Gender stereotypes (3)")) %>%
+  filter(!is.na(response_option_locations)) %>%
   rma(yi   = yi, 
       vi   = vi, 
       mods = ~ response_option_locations,
@@ -923,7 +927,7 @@ tibble(response_options = c("static", "moving"),
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 ```
 
@@ -939,13 +943,14 @@ Internal consistency using permutation approach sensitivity analysis, moderator 
 fit_internal_consistency_performance_criteria <- 
   bind_rows(data_D_scores_internal_consistency_permuted_estimates %>%
               filter(!str_detect(domain, "Sexuality")) %>%
+              filter(!domain %in% c("Gender stereotypes (3)")) %>%
               mutate(exclusions = "typical"),
             data_D_scores_internal_consistency_permuted_estimates_stricter %>%
               filter(!str_detect(domain, "Sexuality")) %>%
+              filter(!domain %in% c("Gender stereotypes (3)")) %>%
               mutate(exclusions = "stricter")) %>%
   mutate(exclusions = fct_relevel(exclusions, "typical", "stricter")) %>%
-  filter(!str_detect(domain, "Sexuality") &
-           !is.na(exclusions)) %>%
+  filter(!is.na(exclusions)) %>%
   rma.mv(yi   = yi, 
          V    = vi, 
          mods = ~ exclusions,
@@ -968,7 +973,7 @@ tibble(exclusions = c("typical", "stricter"),
   mutate_if(is.numeric, transf.iabt) %>%
   mutate_if(is.numeric, round, digits = 2) %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+  kable_classic(full_width = FALSE)
 
 ```
 
