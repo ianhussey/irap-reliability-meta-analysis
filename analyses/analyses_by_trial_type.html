@@ -1847,7 +1847,7 @@ correlations, when calculating D1 scores for each half and sampling
 <h4>Bonett transformations, excluding sexuality domain (as in main
 analaysis’s sensitivity analysis)</h4>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_ic_permuted_sensitivity <span class="ot">&lt;-</span> data_D_scores_internal_consistency_permuted_estimates <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(domain, <span class="st">&quot;Sexuality&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(domain, <span class="st">&quot;Sexuality&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>domain <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Gender stereotypes (3)&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">se =</span> (alpha_ci_upper <span class="sc">-</span> alpha_ci_lower)<span class="sc">/</span>(<span class="fl">1.96</span><span class="sc">*</span><span class="dv">2</span>))</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>

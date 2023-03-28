@@ -11,10 +11,6 @@ output:
     toc_float: yes
 ---
 
-# To do
-
-- do outlier exclusion first and then fit equivalent split half models?
-
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message = FALSE,
                       warning = FALSE)
@@ -177,112 +173,6 @@ In each case, correlations between D scores calculated from the split halves are
 
 For meta analysis, spearman brown correlations are converted to Fischers r-to-z for meta analysis. Estimates of the meta effect are then converted back for reporting. Heterogeneity metrics represent heterogeneity in Fischer's r-to-z estimates. See [here](https://stats.stackexchange.com/questions/26485/does-transformation-of-r-into-fisher-z-benefit-a-meta-analysis).
 
-## Split-half reliability via odd vs. even trials
-
-Bonett transformations 
-
-```{r fig.height=9.5, fig.width=8}
-
-# fit random Effects model 
-fit_oddeven <-  data_D_scores_internal_consistency_oddeventrials %>%
-  rma(yi   = yi, 
-      vi   = vi, 
-      data = .,
-      slab = domain)
-
-# make predictions 
-predictions_oddeven <-
-  predict(fit_oddeven, digits = 5) %>%
-  as.data.frame() %>%
-  round_df(2)
-
-# plot
-metafor::forest(fit_oddeven,
-                xlab = "Spearman-Brown correlation",
-                addcred = TRUE,
-                refline = FALSE,
-                transf = transf.iabt,
-                xlim = c(-1.4, 1.6),
-                at = c(0, 0.25, 0.5, 0.75, 1),
-                mlab = add_heterogeneity_metrics_to_forest(fit_oddeven))
-text(-1.4, 46, "Study", pos = 4)
-text(1.6, 46, "Spearman-Brown correlation [95% CI]", pos = 2)
-
-# summarize results
-meta_effect <- 
-  paste0("Meta analysis: k = ", fit_oddeven$k, 
-         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_oddeven$pred), 2), 
-         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_oddeven$ci.lb), 2), ", ", 
-         janitor::round_half_up(transf.iabt(predictions_oddeven$ci.ub), 2), "]", 
-         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_oddeven$pi.lb), 2), ", ", 
-         janitor::round_half_up(transf.iabt(predictions_oddeven$pi.ub), 2), "]") 
-
-meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_oddeven$k - 1, ") = ", janitor::round_half_up(fit_oddeven$QE, 2), 
-         ", p ", ifelse(fit_oddeven$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_oddeven$QEp, 4)))),
-         ", tau^2 = ", janitor::round_half_up(fit_oddeven$tau2, 2), 
-         ", I^2 = ",   janitor::round_half_up(fit_oddeven$I2, 2),
-         "%, H^2 = ",   janitor::round_half_up(fit_oddeven$H2, 2))
-
-```
-
-Meta effect: `r meta_effect`.
-
-Heterogeneity: `r meta_heterogeneity`.
-
-## Split-half reliability via first vs. second half of the task
-
-Bonett transformations 
-
-```{r fig.height=9.5, fig.width=8}
-
-# fit random Effects model 
-fit_firstsecond <- data_D_scores_internal_consistency_firstsecondhalves %>%
-  rma(yi   = yi, 
-      vi   = vi, 
-      data = .,
-      slab = domain)
-
-# make predictions 
-predictions_firstsecond <-
-  predict(fit_firstsecond, digits = 5) %>%
-  as.data.frame() %>%
-  round_df(2)
-
-# plot
-metafor::forest(fit_firstsecond,
-                xlab = "Spearman-Brown correlation",
-                addcred = TRUE,
-                refline = FALSE,
-                transf = transf.iabt,
-                xlim = c(-1.4, 1.6),
-                at = c(0, 0.25, 0.5, 0.75, 1),
-                mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond))
-text(-1.4, 46, "Study", pos = 4)
-text(1.6, 46, "Spearman-Brown correlation [95% CI]", pos = 2)
-
-# summarize results
-meta_effect <- 
-  paste0("Meta analysis: k = ", fit_firstsecond$k, 
-         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_firstsecond$pred), 2), 
-         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.lb), 2), ", ", 
-         janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.ub), 2), "]", 
-         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.lb), 2), ", ", 
-         janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.ub), 2), "]") 
-
-meta_heterogeneity <- 
-  paste0("Heterogeneity tests: Q(df = ", fit_firstsecond$k - 1, ") = ", janitor::round_half_up(fit_firstsecond$QE, 2), 
-         ", p ", ifelse(fit_firstsecond$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_firstsecond$QEp, 4)))),
-         ", tau^2 = ", janitor::round_half_up(fit_firstsecond$tau2, 2), 
-         ", I^2 = ",   janitor::round_half_up(fit_firstsecond$I2, 2),
-         "%, H^2 = ",   janitor::round_half_up(fit_firstsecond$H2, 2))
-
-```
-
-Meta effect: `r meta_effect`.
-
-Heterogeneity: `r meta_heterogeneity`.
-
 ## Permutation-based split half correlations 
 
 ie an estimate of alpha through large number number of random half splits (see Parsons, Kruijt, & Fox. 2019). Estimate of alpha obtained via mean of the resampled Spearman-Brown corrected split half correlations, when calculating D1 scores for each half and sampling 10000 permutations.  
@@ -416,7 +306,7 @@ excluding Sexuality (1), Sexuality (2) and Gender (3) as outliers with undue inf
 # fit random Effects model 
 fit_internal_consistency_permuted_estimates_sensitivity <- 
   data_D_scores_internal_consistency_permuted_estimates %>%
-  filter(!str_detect(domain, "Sexuality")) |>
+  filter(!str_detect(domain, "Sexuality")) %>%
   filter(!domain %in% c("Gender stereotypes (3)")) %>%
   rma(yi   = yi, 
       vi   = vi, 
@@ -459,6 +349,222 @@ meta_heterogeneity <-
 
 # save to disk for making pdf plot
 write_rds(fit_internal_consistency_permuted_estimates_sensitivity, "models/fit_internal_consistency_permuted_estimates_sensitivity.rds")
+
+```
+
+Meta effect: `r meta_effect`.
+
+Heterogeneity: `r meta_heterogeneity`.
+
+## Split-half reliability via odd vs. even trials
+
+Bonett transformations 
+
+```{r fig.height=9.5, fig.width=8}
+
+# fit random Effects model 
+fit_oddeven <-  data_D_scores_internal_consistency_oddeventrials %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain)
+
+# make predictions 
+predictions_oddeven <-
+  predict(fit_oddeven, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(fit_oddeven,
+                xlab = "Spearman-Brown correlation",
+                addcred = TRUE,
+                refline = FALSE,
+                transf = transf.iabt,
+                xlim = c(-1.4, 1.6),
+                at = c(0, 0.25, 0.5, 0.75, 1),
+                mlab = add_heterogeneity_metrics_to_forest(fit_oddeven))
+text(-1.4, 46, "Study", pos = 4)
+text(1.6, 46, "Spearman-Brown correlation [95% CI]", pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_oddeven$k, 
+         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_oddeven$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_oddeven$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_oddeven$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_oddeven$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_oddeven$pi.ub), 2), "]") 
+
+meta_heterogeneity <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_oddeven$k - 1, ") = ", janitor::round_half_up(fit_oddeven$QE, 2), 
+         ", p ", ifelse(fit_oddeven$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_oddeven$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_oddeven$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_oddeven$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_oddeven$H2, 2))
+
+```
+
+Meta effect: `r meta_effect`.
+
+Heterogeneity: `r meta_heterogeneity`.
+
+### Sensitivity analysis
+
+excluding Sexuality (1), Sexuality (2) and Gender (3) as outliers with undue influence on the meta effect size. Without these domains, heterogeneity is reduced to zero.
+
+```{r fig.height=9.5, fig.width=8}
+
+# fit random Effects model 
+fit_oddeven_sensitivity <- data_D_scores_internal_consistency_oddeventrials %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  filter(!domain %in% c("Gender stereotypes (3)")) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain)
+
+# make predictions 
+predictions_oddeven <-
+  predict(fit_oddeven_sensitivity, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(fit_oddeven_sensitivity,
+                xlab = "Spearman-Brown correlation",
+                addcred = TRUE,
+                refline = FALSE,
+                transf = transf.iabt,
+                xlim = c(-1.4, 1.6),
+                at = c(0, 0.25, 0.5, 0.75, 1),
+                mlab = add_heterogeneity_metrics_to_forest(fit_oddeven_sensitivity))
+text(-1.4, 43, "Study", pos = 4)
+text(1.6, 43, "Spearman-Brown correlation [95% CI]", pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_oddeven_sensitivity$k, 
+         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_oddeven$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_oddeven$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_oddeven$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_oddeven$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_oddeven$pi.ub), 2), "]") 
+
+meta_heterogeneity <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_oddeven_sensitivity$k - 1, ") = ", janitor::round_half_up(fit_oddeven_sensitivity$QE, 2), 
+         ", p ", ifelse(fit_oddeven_sensitivity$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_oddeven_sensitivity$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_oddeven_sensitivity$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_oddeven_sensitivity$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_oddeven_sensitivity$H2, 2))
+
+```
+
+Meta effect: `r meta_effect`.
+
+Heterogeneity: `r meta_heterogeneity`.
+
+## Split-half reliability via first vs. second half of the task
+
+Bonett transformations 
+
+```{r fig.height=9.5, fig.width=8}
+
+# fit random Effects model 
+fit_firstsecond <- data_D_scores_internal_consistency_firstsecondhalves %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain)
+
+# make predictions 
+predictions_firstsecond <-
+  predict(fit_firstsecond, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(fit_firstsecond,
+                xlab = "Spearman-Brown correlation",
+                addcred = TRUE,
+                refline = FALSE,
+                transf = transf.iabt,
+                xlim = c(-1.4, 1.6),
+                at = c(0, 0.25, 0.5, 0.75, 1),
+                mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond))
+text(-1.4, 46, "Study", pos = 4)
+text(1.6, 46, "Spearman-Brown correlation [95% CI]", pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_firstsecond$k, 
+         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_firstsecond$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.ub), 2), "]") 
+
+meta_heterogeneity <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_firstsecond$k - 1, ") = ", janitor::round_half_up(fit_firstsecond$QE, 2), 
+         ", p ", ifelse(fit_firstsecond$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_firstsecond$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_firstsecond$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_firstsecond$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_firstsecond$H2, 2))
+
+```
+
+Meta effect: `r meta_effect`.
+
+Heterogeneity: `r meta_heterogeneity`.
+
+### Sensitivity analysis
+
+excluding Sexuality (1), Sexuality (2) and Gender (3) as outliers with undue influence on the meta effect size. Without these domains, heterogeneity is reduced to zero.
+
+```{r fig.height=9.5, fig.width=8}
+
+# fit random Effects model 
+fit_firstsecond_sensitivity <- data_D_scores_internal_consistency_firstsecondhalves %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  filter(!domain %in% c("Gender stereotypes (3)")) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      slab = domain)
+
+# make predictions 
+predictions_firstsecond <-
+  predict(fit_firstsecond_sensitivity, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+# plot
+metafor::forest(fit_firstsecond_sensitivity,
+                xlab = "Spearman-Brown correlation",
+                addcred = TRUE,
+                refline = FALSE,
+                transf = transf.iabt,
+                xlim = c(-1.4, 1.6),
+                at = c(0, 0.25, 0.5, 0.75, 1),
+                mlab = add_heterogeneity_metrics_to_forest(fit_firstsecond_sensitivity))
+text(-1.4, 43, "Study", pos = 4)
+text(1.6, 43, "Spearman-Brown correlation [95% CI]", pos = 2)
+
+# summarize results
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit_firstsecond_sensitivity$k, 
+         ", r_sb = ",  janitor::round_half_up(transf.iabt(predictions_firstsecond$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_firstsecond$ci.ub), 2), "]", 
+         ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.iabt(predictions_firstsecond$pi.ub), 2), "]") 
+
+meta_heterogeneity <- 
+  paste0("Heterogeneity tests: Q(df = ", fit_firstsecond_sensitivity$k - 1, ") = ", janitor::round_half_up(fit_firstsecond_sensitivity$QE, 2), 
+         ", p ", ifelse(fit_firstsecond_sensitivity$QEp < 0.0001, "< .0001", paste0("= ", as.character(janitor::round_half_up(fit_firstsecond_sensitivity$QEp, 4)))),
+         ", tau^2 = ", janitor::round_half_up(fit_firstsecond_sensitivity$tau2, 2), 
+         ", I^2 = ",   janitor::round_half_up(fit_firstsecond_sensitivity$I2, 2),
+         "%, H^2 = ",   janitor::round_half_up(fit_firstsecond_sensitivity$H2, 2))
 
 ```
 

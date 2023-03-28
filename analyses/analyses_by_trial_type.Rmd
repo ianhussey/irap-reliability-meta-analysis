@@ -197,7 +197,7 @@ Meta effect: `r meta_effect_ic`.
 ```{r fig.height=6, fig.width=8}
 
 data_ic_permuted_sensitivity <- data_D_scores_internal_consistency_permuted_estimates %>%
-  filter(!str_detect(domain, "Sexuality")) |>
+  filter(!str_detect(domain, "Sexuality")) %>%
   filter(!domain %in% c("Gender stereotypes (3)")) %>%
   mutate(se = (alpha_ci_upper - alpha_ci_lower)/(1.96*2))
 
