@@ -11,7 +11,7 @@
 
 <meta name="author" content="Ian Hussey" />
 
-<meta name="date" content="2023-01-25" />
+<meta name="date" content="2023-03-28" />
 
 <title>Process data from reaction times to D scores and PI scores</title>
 
@@ -1670,7 +1670,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Process data from reaction times to D
 scores and PI scores</h1>
 <h4 class="author">Ian Hussey</h4>
-<h4 class="date">25 January 2023</h4>
+<h4 class="date">28 March 2023</h4>
 
 </div>
 
@@ -1812,7 +1812,7 @@ measure</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.2.1 (2022-06-23)
 ## Platform: aarch64-apple-darwin20 (64-bit)
-## Running under: macOS Ventura 13.0.1
+## Running under: macOS Ventura 13.2.1
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRblas.0.dylib
@@ -1825,33 +1825,25 @@ measure</p>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] janitor_2.1.0    kableExtra_1.3.4 knitr_1.41       forcats_0.5.2   
-##  [5] stringr_1.5.0    dplyr_1.0.10     purrr_0.3.5      readr_2.1.3     
-##  [9] tidyr_1.2.1      tibble_3.1.8     ggplot2_3.4.0    tidyverse_1.3.2 
+##  [1] janitor_2.1.0    kableExtra_1.3.4 knitr_1.42       lubridate_1.9.2 
+##  [5] forcats_1.0.0    stringr_1.5.0    dplyr_1.1.0      purrr_1.0.1     
+##  [9] readr_2.1.4      tidyr_1.3.0      tibble_3.1.8     ggplot2_3.4.1   
+## [13] tidyverse_2.0.0 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] svglite_2.1.0       lubridate_1.8.0     assertthat_0.2.1   
-##  [4] digest_0.6.31       utf8_1.2.2          R6_2.5.1           
-##  [7] cellranger_1.1.0    backports_1.4.1     reprex_2.0.2       
-## [10] evaluate_0.19       httr_1.4.4          pillar_1.8.1       
-## [13] rlang_1.0.6         googlesheets4_1.0.1 readxl_1.4.1       
-## [16] rstudioapi_0.14     jquerylib_0.1.4     rmarkdown_2.19     
-## [19] webshot_0.5.4       googledrive_2.0.0   bit_4.0.4          
-## [22] munsell_0.5.0       broom_1.0.2         compiler_4.2.1     
-## [25] modelr_0.1.9        xfun_0.35           pkgconfig_2.0.3    
-## [28] systemfonts_1.0.4   htmltools_0.5.4     tidyselect_1.2.0   
-## [31] viridisLite_0.4.1   fansi_1.0.3         crayon_1.5.2       
-## [34] tzdb_0.3.0          dbplyr_2.2.1        withr_2.5.0        
-## [37] grid_4.2.1          jsonlite_1.8.4      gtable_0.3.1       
-## [40] lifecycle_1.0.3     DBI_1.1.3           magrittr_2.0.3     
-## [43] scales_1.2.1        vroom_1.6.0         cli_3.4.1          
-## [46] stringi_1.7.8       cachem_1.0.6        fs_1.5.2           
-## [49] snakecase_0.11.0    xml2_1.3.3          bslib_0.4.2        
-## [52] ellipsis_0.3.2      generics_0.1.3      vctrs_0.5.1        
-## [55] tools_4.2.1         bit64_4.0.5         glue_1.6.2         
-## [58] hms_1.1.2           parallel_4.2.1      fastmap_1.1.0      
-## [61] yaml_2.3.6          colorspace_2.0-3    gargle_1.2.1       
-## [64] rvest_1.0.3         haven_2.5.1         sass_0.4.4</code></pre>
+##  [1] tidyselect_1.2.0  xfun_0.37         bslib_0.4.2       snakecase_0.11.0 
+##  [5] colorspace_2.1-0  vctrs_0.5.2       generics_0.1.3    htmltools_0.5.4  
+##  [9] viridisLite_0.4.1 yaml_2.3.7        utf8_1.2.3        rlang_1.0.6      
+## [13] jquerylib_0.1.4   pillar_1.8.1      glue_1.6.2        withr_2.5.0      
+## [17] bit64_4.0.5       lifecycle_1.0.3   munsell_0.5.0     gtable_0.3.1     
+## [21] rvest_1.0.3       evaluate_0.20     tzdb_0.3.0        fastmap_1.1.1    
+## [25] parallel_4.2.1    fansi_1.0.4       scales_1.2.1      cachem_1.0.7     
+## [29] vroom_1.6.1       webshot_0.5.4     jsonlite_1.8.4    bit_4.0.5        
+## [33] systemfonts_1.0.4 hms_1.1.2         digest_0.6.31     stringi_1.7.12   
+## [37] grid_4.2.1        cli_3.6.0         tools_4.2.1       magrittr_2.0.3   
+## [41] sass_0.4.5        crayon_1.5.2      pkgconfig_2.0.3   ellipsis_0.3.2   
+## [45] xml2_1.3.3        timechange_0.2.0  rmarkdown_2.20    svglite_2.1.1    
+## [49] httr_1.4.5        rstudioapi_0.14   R6_2.5.1          compiler_4.2.1</code></pre>
 </div>
 
 
