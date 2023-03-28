@@ -93,7 +93,7 @@ dir.create("permutations")
 
 # Get data and exclude outliers  
 
-Exclude outliers on the basis of median mean_rt +/- 2MAD by domain
+Exclude outliers on the basis of median mean_rt < 2000 and accuracy >=80%
 
 ```{r}
 
