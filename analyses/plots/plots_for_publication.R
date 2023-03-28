@@ -40,8 +40,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates,
                 #ilab = data_internal_consistency_permuted_estimates$n,
                 #ilab.xpos = 1.1,
                 #ilab.pos = 2)
-text(-1, 43, "Internal consistency", pos = 4)
-text(1.6, 43, bquote(paste(alpha, " [95% CI]")), pos = 2)
+text(-1, 46, "Internal consistency", pos = 4)
+text(1.6, 46, bquote(paste(alpha, " [95% CI]")), pos = 2)
 #text(1.1, 37, expression(italic("N")), pos = 2)
 
 
@@ -67,8 +67,8 @@ metafor::forest(fit_internal_consistency_permuted_estimates_sensitivity,
                 xlim = c(-1, 1.6),
                 at = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
                 mlab = add_heterogeneity_metrics_to_forest(fit_internal_consistency_permuted_estimates_sensitivity))
-text(-1, 40, "Internal consistency", pos = 4)
-text(1.6, 40, bquote(paste(alpha, " [95% CI]")), pos = 2)
+text(-1, 43, "Internal consistency", pos = 4)
+text(1.6, 43, bquote(paste(alpha, " [95% CI]")), pos = 2)
 
 p1 <- recordPlot()
 invisible(dev.off())
