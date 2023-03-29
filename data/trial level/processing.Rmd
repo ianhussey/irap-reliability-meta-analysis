@@ -1101,6 +1101,10 @@ write_csv(data_trial_level, "data_trial_level.csv")
 
 #data_trial_level <- read_csv("data_trial_level.csv")
 
+data_trial_level |>
+  distinct(unique_id, met_performance_criteria_typical) |>
+  count(met_performance_criteria_typical)
+
 ```
 
 # Session info

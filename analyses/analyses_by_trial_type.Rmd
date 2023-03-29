@@ -121,8 +121,6 @@ ggplot(data_D_scores_internal_consistency_permuted_estimates,
 
 ```
 
-### Bonett transformations, all domains
-
 ```{r fig.height=6, fig.width=8}
 
 data_ic_permuted <- data_D_scores_internal_consistency_permuted_estimates %>%
@@ -192,8 +190,6 @@ Meta effect: `r meta_effect_ic`.
 
 ### Sensitivity analyses
 
-#### Bonett transformations, excluding sexuality domain (as in main analaysis's sensitivity analysis)
-
 ```{r fig.height=6, fig.width=8}
 
 data_ic_permuted_sensitivity <- data_D_scores_internal_consistency_permuted_estimates %>%
@@ -208,6 +204,8 @@ fit_internal_consistency_permuted_estimates_sensitivity <-
          random = ~ 1 | domain,
          data   = data_ic_permuted_sensitivity,
          slab   = domain)
+
+fit_internal_consistency_permuted_estimates_sensitivity
 
 # make predictions 
 predictions_permutations_sensitivity <-
@@ -246,8 +244,8 @@ meta_effect_sensitivity <-
          ", 95% CR [", janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pi.lb), 2), ", ", 
          janitor::round_half_up(transf.iabt(predictions_permutations_sensitivity$pi.ub), 2), "]") 
 
-# save to disk for making pdf plot
-#write_rds(fit_internal_consistency_permuted_estimates_sensitivity, "models/fit_internal_consistency_permuted_estimates_sensitivity.rds")
+#save to disk for making pdf plot
+write_rds(fit_internal_consistency_permuted_estimates_sensitivity, "models/fit_internal_consistency_permuted_estimates_trial_types_sensitivity.rds")
 
 ```
 
@@ -279,6 +277,8 @@ fit_test_retest_icc <-
          random = ~ 1 | domain,
          data   = data_D_scores_test_retest_icc,
          slab   = domain)
+
+fit_test_retest_icc
 
 # make predictions 
 predictions_test_retest_icc <-

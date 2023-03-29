@@ -142,3 +142,54 @@ dev.off()
 #     height = 16)
 # p1
 # dev.off()
+
+
+data_D_scores_internal_consistency_permuted_estimates <-
+  read_csv("~/git/irap-reliability-meta-analysis/data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates_trial_types.csv")
+
+data_ic_permuted_sensitivity <- data_D_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  filter(!domain %in% c("Gender stereotypes (3)")) %>%
+  mutate(se = (alpha_ci_upper - alpha_ci_lower)/(1.96*2))
+
+# fit random Effects model 
+fit_internal_consistency_permuted_estimates_sensitivity <- 
+  rma.mv(yi     = yi, 
+         V      = vi, 
+         random = ~ 1 | domain,
+         data   = data_ic_permuted_sensitivity,
+         slab   = domain)
+
+# plot
+pdf(NULL)
+dev.control(displaylist = "enable")
+
+metafor::forest(data_ic_permuted_sensitivity$yi, 
+                data_ic_permuted_sensitivity$vi,
+                xlim = c(-0.5, 1.5), # adjust horizontal plot region limits
+                transf = transf.iabt,
+                xlab = bquote(paste("Cronbach's ", alpha)),
+                #at = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0),
+                order = "obs", # order by size of yi
+                slab = NA, 
+                annotate = FALSE, # remove study labels and annotations
+                efac = 0, # remove vertical bars at end of CIs
+                pch = 19, # changing point symbol to filled circle
+                col = "gray40", # change color of points/CIs
+                psize = 2, # increase point size
+                cex.lab = 1, cex.axis = 1, # increase size of x-axis title/labels
+                lty = c("solid", "blank")) # remove horizontal line at top of plot
+points(sort(transf.iabt(data_ic_permuted_sensitivity$yi)), 
+       nrow(data_ic_permuted_sensitivity):1, pch = 19, cex = 0.5) # draw points one more time to make them easier to see
+addpoly(fit_internal_consistency_permuted_estimates_sensitivity, mlab = "", cex = 1, addcred = TRUE) # add summary polygon at bottom and text
+#text(0, -1, "RE Model", pos = 4, offset = 0, cex = 1)
+
+p1 <- recordPlot()
+invisible(dev.off())
+
+pdf("caterpillar_plot_trial_types.pdf",
+    width = 10, 
+    height = 7)
+p1
+dev.off()
