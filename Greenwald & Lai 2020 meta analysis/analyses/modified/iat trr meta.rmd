@@ -1,0 +1,206 @@
+---
+title: "Meta analyses of the IRAP's reliability"
+author: "Lai"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+# Author: Calvin Lai
+# Creation Date: 04/02/19
+# Last updated: 04/19/19
+# Function: Analyzes data using robust variance estimation meta-analysis
+
+# INSTRUCTION: Replace C:/Users/Calvin/Documents/Dropbox/Projects/ARP/share/ with the name of your directory.
+
+library(tidyverse)
+#library(robumeta)
+library(metafor)
+#library(xlsx)
+library(psych)
+
+# Importing data ----
+#source("../original/0-meta_setup.r")
+
+data_iat <- read_csv("../../data/raw_metadataset_iat_trt.csv") %>%
+  janitor::clean_names() %>%
+  escalc(measure = "ZCOR", 
+         ri = estimate, 
+         ni = n,
+         data = .)
+
+data_iat |>
+  group_by(citation, study, sample) |>
+  summarize(n = mean(n, na.rm = TRUE)) |>
+  ungroup() |>
+  summarize(total_n = sum(n, na.rm = TRUE))
+
+```
+
+## Pearson's r correlations
+
+with r-to-z transformations.
+
+```{r}
+
+fit_test_retest_r <- data_iat %>%
+  drop_na(n, estimate) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .) 
+
+# plot
+metafor::forest(fit_test_retest_r,
+                xlab = "Pearson's r correlations",
+                transf = transf.ztor,
+                addcred = TRUE,
+                refline = FALSE)
+#                 xlim = c(-2.5, 2),
+#                 at = c(-1, -0.5, 0, 0.5, 1),
+#                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_r))
+# text(-2.5, 10, "Study", pos = 4)
+# text(2, 10, "r [95% CI]", pos = 2)
+
+fit_test_retest_r
+
+plot(influence(fit_test_retest_r))
+
+fit <- fit_test_retest_r
+
+predictions <-
+  predict(fit, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit$k, 
+         ", r = ",  janitor::round_half_up(transf.ztor(predictions$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.ztor(predictions$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions$ci.ub), 2), "]", 
+         ", 95% PI [", janitor::round_half_up(transf.ztor(predictions$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions$pi.ub), 2), "]") 
+
+```
+
+`r meta_effect`
+
+```{r}
+
+fit_test_retest_r_outlier_exclusions <- data_iat %>%
+  filter(!str_detect(citation, "Friese, M., Smith, C. T., Plischke, T., Bluemke, M.,")) %>%
+  drop_na(n, estimate) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .) 
+
+# plot
+metafor::forest(fit_test_retest_r_outlier_exclusions,
+                xlab = "Pearson's r correlations",
+                transf = transf.ztor,
+                addcred = TRUE,
+                refline = FALSE)
+#                 xlim = c(-2.5, 2),
+#                 at = c(-1, -0.5, 0, 0.5, 1),
+#                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_r))
+# text(-2.5, 10, "Study", pos = 4)
+# text(2, 10, "r [95% CI]", pos = 2)
+
+fit_test_retest_r_outlier_exclusions
+
+plot(influence(fit_test_retest_r_outlier_exclusions))
+
+fit <- fit_test_retest_r_outlier_exclusions
+
+predictions <-
+  predict(fit, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit$k, 
+         ", r = ",  janitor::round_half_up(transf.ztor(predictions$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.ztor(predictions$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions$ci.ub), 2), "]", 
+         ", 95% PI [", janitor::round_half_up(transf.ztor(predictions$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions$pi.ub), 2), "]") 
+
+```
+
+`r meta_effect`
+
+```{r}
+
+fit_test_retest_r_outlier_exclusions_mv <- data_iat %>%
+  filter(!str_detect(citation, "Friese, M., Smith, C. T., Plischke, T., Bluemke, M.,")) %>%
+  drop_na(n, estimate) %>%
+  rma.mv(yi   = yi, 
+         V   = vi, 
+         random = ~ 1 | citation,
+         #mods = ~ delay_days,
+         data = .) 
+
+# plot
+metafor::forest(fit_test_retest_r_outlier_exclusions_mv,
+                xlab = "Pearson's r correlations",
+                transf = transf.ztor,
+                addcred = TRUE,
+                refline = FALSE)
+#                 xlim = c(-2.5, 2),
+#                 at = c(-1, -0.5, 0, 0.5, 1),
+#                 mlab = add_heterogeneity_metrics_to_forest(fit_test_retest_r))
+# text(-2.5, 10, "Study", pos = 4)
+# text(2, 10, "r [95% CI]", pos = 2)
+
+fit_test_retest_r_outlier_exclusions_mv
+
+funnel(fit_test_retest_r_outlier_exclusions_mv)
+
+
+fit <- fit_test_retest_r_outlier_exclusions_mv
+
+predictions <-
+  predict(fit, digits = 5) %>%
+  as.data.frame() %>%
+  round_df(2)
+
+meta_effect <- 
+  paste0("Meta analysis: k = ", fit$k, 
+         ", r = ",  janitor::round_half_up(transf.ztor(predictions$pred), 2), 
+         ", 95% CI [", janitor::round_half_up(transf.ztor(predictions$ci.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions$ci.ub), 2), "]", 
+         ", 95% PI [", janitor::round_half_up(transf.ztor(predictions$pi.lb), 2), ", ", 
+         janitor::round_half_up(transf.ztor(predictions$pi.ub), 2), "]") 
+
+```
+
+`r meta_effect`
+
+
+```{r}
+
+IAT_TRR <- data_iat %>%
+  filter(!str_detect(citation, "Friese, M., Smith, C. T., Plischke, T., Bluemke, M.,")) %>%
+  drop_na(n, estimate) %>%
+  robu(formula = yi ~ 1, 
+       studynum = citation, 
+       var.eff.size = vi, 
+       data = .)
+
+IAT_TRR
+
+```
+
+
+
