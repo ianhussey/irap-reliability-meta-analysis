@@ -1028,22 +1028,24 @@ performance_criteria_stricter <- data_trial_level_temp_1 |>
   summarize(median_rt = janitor::round_half_up(median(rt, na.rm = TRUE), 0),
             percent_accuracy = janitor::round_half_up(mean(accuracy, na.rm = TRUE), 2),
             .groups = "drop") |>
-  pivot_wider(names_from = c("block_type", "block_number"),
-              values_from = c("median_rt", "percent_accuracy")) |>
-  mutate(met_performance_criteria_stricter = 
-           ifelse(median_rt_consistent_1 <= 2000 & 
-                    median_rt_consistent_2 <= 2000 & 
-                    median_rt_consistent_3 <= 2000 & 
-                    median_rt_inconsistent_1 <= 2000 & 
-                    median_rt_inconsistent_2 <= 2000 & 
-                    median_rt_inconsistent_3 <= 2000 & 
-                    percent_accuracy_consistent_1 >= .78 &
-                    percent_accuracy_consistent_2 >= .78 &
-                    percent_accuracy_consistent_3 >= .78 &
-                    percent_accuracy_inconsistent_1 >= .78 &
-                    percent_accuracy_inconsistent_2 >= .78 &
-                    percent_accuracy_inconsistent_3 >= .78, TRUE, FALSE)) |>
-  select(unique_id, timepoint, met_performance_criteria_stricter)
+  mutate(met_performance_criteria = ifelse(median_rt <= 2000 & percent_accuracy >= .78, TRUE, FALSE)) |>
+  group_by(unique_id, timepoint) |>
+  summarize(met_performance_criteria_stricter = ifelse(max(as.logical(met_performance_criteria)) == 0, TRUE, FALSE), 
+            .groups = "drop")
+
+# # alt suggested by reviewer produces impossibly high attrition rates (99.6%)
+# performance_criteria_stricter_alt <- data_trial_level_temp_1 |>
+#   group_by(unique_id, timepoint, block_type, trial_type) |> 
+#   summarize(median_rt = janitor::round_half_up(median(rt, na.rm = TRUE), 0),
+#             percent_accuracy = janitor::round_half_up(mean(accuracy, na.rm = TRUE), 2),
+#             .groups = "drop") |>
+#   mutate(met_performance_criteria = ifelse(median_rt <= 2000 & percent_accuracy >= .78, TRUE, FALSE)) |>
+#   group_by(unique_id, timepoint) |>
+#   summarize(met_performance_criteria_stricter = ifelse(max(as.logical(met_performance_criteria)) == 0, TRUE, FALSE), 
+#             .groups = "drop")
+# 
+# performance_criteria_stricter_alt |>
+#   count(met_performance_criteria_stricter)
 
 # combine
 data_trial_level_temp_2 <- data_trial_level_temp_1 |>
