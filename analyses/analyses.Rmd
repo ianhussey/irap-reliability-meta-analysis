@@ -158,7 +158,19 @@ data_D_scores_internal_consistency_permuted_estimates %>%
   kable() %>%
   kable_classic(full_width = FALSE)
 
+data_D_scores_internal_consistency_permuted_estimates %>%
+  group_by(domain) |>
+  summarize(total_ic_n = sum(n)) %>%
+  kable() %>%
+  kable_classic(full_width = FALSE)
+
 data_D_scores_test_retest_icc %>%
+  summarize(total_trt_n = sum(n)) %>%
+  kable() %>%
+  kable_classic(full_width = FALSE)
+
+data_D_scores_test_retest_icc %>%
+  group_by(domain) |>
   summarize(total_trt_n = sum(n)) %>%
   kable() %>%
   kable_classic(full_width = FALSE)
