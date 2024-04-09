@@ -1,0 +1,201 @@
+---
+title: "Meta analyses of the IRAP's reliability"
+subtitle: "Behavioral dynamics studies"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+
+set.seed(42)
+
+# dependencies
+library(tidyverse)
+library(metafor)
+library(knitr)
+library(kableExtra)
+library(psych)
+library(ggExtra)
+library(scales) 
+library(janitor)
+library(parallel)
+library(readxl)
+#library(ggtext) # devtools::install_github("clauswilke/ggtext")
+
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
+}
+
+probability_of_superiority_function <- function(x, y) {
+  nx <- length(x)
+  ny <- length(y)
+  rx <- sum(rank(c(x, y))[1:nx])
+  A = (rx / nx - (nx + 1) / 2) / ny
+  return(A)
+}
+
+spearman_brown_correction <- function(r_pearson) {
+  inversion <- ifelse(r_pearson < 0, -1, 1)
+  val <- janitor::round_half_up(2*abs(r_pearson)/(1 + abs(r_pearson)), 2)
+  return(val*inversion)
+}
+
+apa_p_value <- function(p){
+  p_formatted <- ifelse(p >= 0.001, paste("=", janitor::round_half_up(p, 3)),
+                        ifelse(p < 0.001, "< .001", NA))
+  p_formatted <- gsub(pattern = "0.", replacement = ".", x = p_formatted, fixed = TRUE)
+  p_formatted
+}
+
+add_heterogeneity_metrics_to_forest <- function(fit) {
+  bquote(paste("RE Model (", tau^2, " = ", .(formatC(janitor::round_half_up(fit$tau2, 2))), 
+               ", ", I^2, " = ", .(formatC(janitor::round_half_up(fit$I2, 1))),
+               "%, ", H^2," = ", .(formatC(janitor::round_half_up(fit$H2, 2))), ")"))
+}
+
+# table format in output
+options(knitr.table.format = "html") 
+
+# create directory needed to save output
+dir.create("models")
+dir.create("plots")
+
+```
+
+# Data 
+
+```{r}
+
+data_D_scores_internal_consistency_permuted_estimates <- 
+  read_csv("../data/effect sizes for meta-analyses/data_D_scores_internal_consistency_permuted_estimates.csv") |>
+  mutate(research_orientation = ifelse(str_detect(domain, "Shapes & colors"), "Behavioral dynamics", "Implicit attitudes"),
+         research_orientation = fct_relevel(research_orientation, "Implicit attitudes", "Behavioral dynamics"))
+
+# data_D_scores_test_retest_icc <- 
+#   read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc.csv") |>
+#   mutate(research_orientation = ifelse(str_detect(domain, "Shapes & colors"), "Behavioral dynamics", "Implicit attitudes"))
+# 0 rows
+
+```
+
+# Sample sizes
+
+```{r}
+
+data_D_scores_internal_consistency_permuted_estimates |>
+  count(research_orientation) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_D_scores_internal_consistency_permuted_estimates %>%
+  group_by(research_orientation) |>
+  summarize(total_ic_n = sum(n)) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+# data_D_scores_test_retest_icc %>%
+#   group_by(research_orientation) |>
+#   summarize(total_trt_n = sum(n)) %>%
+#   kable() %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+# Internal consistency
+
+## Permutation-based split half correlations 
+
+### Sensitivity analysis
+
+excluding Sexuality (1), Sexuality (2) and Gender (3) as outliers with undue influence on the meta effect size. Without these domains, heterogeneity is reduced to zero.
+
+```{r fig.height=9.5, fig.width=8}
+
+# fit random Effects model 
+fit_ic <- 
+  data_D_scores_internal_consistency_permuted_estimates %>%
+  filter(!str_detect(domain, "Sexuality")) %>%
+  filter(!domain %in% c("Gender stereotypes (3)")) %>%
+  rma(yi   = yi, 
+      vi   = vi, 
+      data = .,
+      mods = ~ research_orientation,
+      slab = domain)
+
+fit_ic
+
+# summarize results
+meta_effect_ic <-
+  tibble(research_orientation = c("Implicit attitudes", "Behavioral dynamics"),
+         alpha = fit_ic$beta,
+         ci_lower = fit_ic$ci.lb, 
+         ci_upper = fit_ic$ci.ub) |>
+  mutate(alpha = ifelse(research_orientation == "Behavioral dynamics", alpha + fit_ic$beta[1], alpha),
+         ci_lower = ifelse(research_orientation == "Behavioral dynamics", ci_lower + fit_ic$beta[1], ci_lower),
+         ci_upper = ifelse(research_orientation == "Behavioral dynamics", ci_upper + fit_ic$beta[1], ci_upper)) |>
+  mutate_if(is.numeric, transf.iabt) |>
+  round_df(2)
+
+meta_effect_ic |>
+  kable() |>
+  kable_classic(full_width = FALSE)
+
+```
+
+# Test-retest reliability
+
+## Intraclass Correlations
+
+```{r fig.height=6, fig.width=8}
+
+# # fit random Effects model 
+# fit_trt <- data_D_scores_test_retest_icc %>%
+#   mutate(domain = ifelse(domain == "Sexuality (1)", "Sexuality (1) 7-day followup", domain)) %>%
+#   rma(yi   = ICC, 
+#       sei  = se, 
+#       mods = ~ data_published_binary,
+#       data = .,
+#       slab = domain)
+# 
+# fit_trt
+# 
+# # summarize results
+# meta_effect_trt <-
+#   tibble(published = c(TRUE, FALSE),
+#          alpha = fit_trt$beta,
+#          ci_lower = fit_trt$ci.lb, 
+#          ci_upper = fit_trt$ci.ub) |>
+#   mutate(alpha = ifelse(published == FALSE, alpha + fit_trt$beta[1], alpha),
+#          ci_lower = ifelse(published == FALSE, ci_lower + fit_trt$beta[1], ci_lower),
+#          ci_upper = ifelse(published == FALSE, ci_upper + fit_trt$beta[1], ci_upper)) |>
+#   mutate_if(is.numeric, transf.iabt) |>
+#   round_df(2)
+# 
+# meta_effect_trt |>
+#   kable() |>
+#   kable_classic(full_width = FALSE)
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
+
