@@ -85,6 +85,11 @@ data_D_scores_internal_consistency_permuted_estimates <-
 data_D_scores_test_retest_icc <- 
   read_csv("../data/effect sizes for meta-analyses/data_D_scores_test_retest_icc_trial_types.csv")
 
+data_D_scores <- read_csv("../data/scored/data_scored.csv") |>
+  filter(met_performance_criteria_typical == TRUE &
+           timepoint == 1) |>
+  select(unique_id, domain, D_overall, D_tt1, D_tt2, D_tt3, D_tt4)
+
 ```
 
 # Internal consistency
@@ -313,6 +318,71 @@ meta_effect_trt <-
 ```
 
 Meta effect: `r meta_effect_trt`.
+
+# Individual level utility via Standard Error of Measurement
+
+## Calculate weighted average SD across domains
+
+```{r}
+
+# n by domain
+ns <- data_D_scores |>
+  count(domain) 
+
+# calculate weighted average (by N) of the mean and SD D score for each trial-type and domain, averaged across domains
+average_mean_and_sd_trialtype <- data_D_scores |>
+  select(-D_overall) |>
+  gather(trial_type, D, c(D_tt1, D_tt2, D_tt3, D_tt4)) |>
+  group_by(domain, trial_type) |>
+  summarize(mean = mean(D),
+            sd = sd(D),
+            .groups = "drop") |>
+  left_join(ns, by = "domain") |>
+  summarize(weighted_mean_mean = weighted.mean(mean, w = n),
+            weighted_mean_sd = weighted.mean(sd, w = n),
+            .groups = "drop") |> 
+  round_df(2)
+
+average_mean_and_sd_trialtype
+
+percentiles <- data_D_scores |>
+  select(-D_overall) |>
+  gather(trial_type, D, c(D_tt1, D_tt2, D_tt3, D_tt4)) |>
+  summarize(D_percentile_0.025 = quantile(D, probs = 0.025),
+            D_percentile_0.975 = quantile(D, probs = 0.975)) |> 
+  round_df(2)
+
+percentiles
+
+```
+
+## 95% CI on individuals' scores from SEM
+
+```{r}
+
+sem <- function(sd, r_trt){
+  sem = sd * sqrt(1 - r_trt)
+  return(sem)
+}
+
+sem_estimate <- sem(sd = average_mean_and_sd_trialtype |> pull(weighted_mean_sd), 
+                    r_trt = janitor::round_half_up(predictions_test_retest_icc$pred, 2))
+
+individual_95ci_half_width <- janitor::round_half_up(sem_estimate * 1.96, 2)
+
+```
+
+The precision of an individual's score is their (trial type level) *D* score ± `r individual_95ci_half_width`.
+
+The weighted mean *D* score across all domains and trial types is `r average_mean_and_sd_trialtype |> pull(weighted_mean_mean)`, i.e., a slightly positive effect (slightly faster on the consistent blocks than the inconsistent blocks). 
+
+However, due to the task's poor reliability, an individual who demonstrates a (trial type) *D* score = `r average_mean_and_sd_trialtype |> pull(weighted_mean_mean)` can actually only be said to have a score within the interval *D* = 95% [`r average_mean_and_sd_trialtype |> pull(weighted_mean_mean) - individual_95ci_half_width`, `r average_mean_and_sd_trialtype |> pull(weighted_mean_mean) + individual_95ci_half_width`], i.e. anywhere between *very* much faster on the consistent blocks and *very* much faster on the inconsistent blocks. 
+
+Combine this with the fact that 95% of all observed trial-type level *D* scores in the dataset lie within the range = `r as.numeric(percentiles$D_percentile_0.025)` to `r as.numeric(percentiles$D_percentile_0.975)`. This means that estimation of the average participant's score covers more than the range (`r janitor::round_half_up(individual_95ci_half_width*2 / (as.numeric(percentiles$D_percentile_0.975) - as.numeric(percentiles$D_percentile_0.025)) * 100, 2)`%) of *D* scores observed across all participants. i.e., the average individual participant cannot be distinguished from the *D* scores demonstrated by **all** other participants, from extremely positive to extremely negative.
+
+This uncertainty around individual's scores strongly limits the IRAP's utility to make inferences about individuals rather than groups. 
+
+Similar arguments have been made using other individual level estimation methods (i.e., using bootstrapping approaches, see [Hussey 2020 'The Implicit Relational Assessment Procedure is not suitable for individual use'](https://psyarxiv.com/w2ygr/)). 
 
 # Session info
 
